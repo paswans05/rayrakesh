@@ -1,7 +1,6 @@
 import Footer from "@/components/layout/footer/Footer";
 import Header from "@/components/layout/header/Header";
 import About1 from "@/components/sections/about/About1";
-import Blogs1 from "@/components/sections/blogs/Blogs1";
 import Brands1 from "@/components/sections/brands/Brands1";
 import Contact2 from "@/components/sections/contacts/Contact2";
 import Cta from "@/components/sections/cta/Cta";
@@ -36,7 +35,6 @@ export default function Home() {
 						<Testimonials1 />
 						<Faq2 type={1} />
 						<Contact2 />
-						<Blogs1 />
 						<Cta />
 					</main>
 					<Footer />

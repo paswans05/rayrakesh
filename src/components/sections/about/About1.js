@@ -53,7 +53,7 @@ const About1 = () => {
 							<div className="wow fadeInUp" data-wow-delay=".5s">
 								<ButtonPrimary
 									text={"Learn More"}
-									url={"/about"}
+									url={"/contact"}
 									isTextBtn={true}
 								/>
 							</div>

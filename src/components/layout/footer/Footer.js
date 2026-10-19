@@ -6,7 +6,7 @@ const Footer = () => {
 			<div className="footer-main-area">
 				<div className="container">
 					<div className="row justify-content-between">
-						<div className="col-xl-3 col-lg-4 col-md-6">
+						<div className="col-xl-4 col-lg-4 col-md-6">
 							<div className="footer-widget wow fadeInUp" data-wow-delay=".1s">
 								<div className="footer-logo">
 									<Link href="/">
@@ -15,7 +15,7 @@ const Footer = () => {
 								</div>
 								<div className="footer-text">
 									<p>
-										Developing personalze our customer journeys to increase
+										Developing personalized customer journeys to increase
 										satisfaction & loyalty of our expansion.
 									</p>
 								</div>
@@ -29,65 +29,42 @@ const Footer = () => {
 								</div>
 							</div>
 						</div>
-						<div className="col-xl-3 col-lg-4 col-md-6">
+						<div className="col-xl-2 col-lg-3 col-md-6">
 							<div
 								className="footer-widget widget-nav-menu wow fadeInUp"
 								data-wow-delay=".3s"
 							>
-								<h5 className="title">Services</h5>
+								<h5 className="title">Quick Links</h5>
 								<ul>
 									<li>
-										<Link href="/services/1">Customer Experience</Link>
+										<Link href="/">Home</Link>
 									</li>
 									<li>
-										<Link href="/services/2">Training Programs</Link>
-									</li>
-									<li>
-										<Link href="/services/3">Business Strategy</Link>
-									</li>
-									<li>
-										<Link href="/services/4">Training Program</Link>
-									</li>
-									<li>
-										<Link href="/services/5">ESG Consulting</Link>
-									</li>
-									<li>
-										<Link href="/services/6">Development Hub</Link>
+										<Link href="/contact">Contact Us</Link>
 									</li>
 								</ul>
 							</div>
 						</div>
-						<div className="col-xl-2 col-lg-4 col-md-6">
+						<div className="col-xl-3 col-lg-4 col-md-6">
 							<div
 								className="footer-widget widget-nav-menu wow fadeInUp"
 								data-wow-delay=".5s"
 							>
-								<h5 className="title">Resources</h5>
+								<h5 className="title">Contact Info</h5>
 								<ul>
 									<li>
-										<Link href="/contact">Contact us</Link>
+										<Link href="tel:10095447818">+1 (009) 544-7818</Link>
 									</li>
 									<li>
-										<Link href="/team">Team Member</Link>
+										<Link href="mailto:info@bexon.com">info@bexon.com</Link>
 									</li>
 									<li>
-										<Link href="#">Recognitions</Link>
-									</li>
-									<li>
-										<Link href="/careers">
-											Careers <span className="badge">New</span>
-										</Link>
-									</li>
-									<li>
-										<Link href="/blogs">News</Link>
-									</li>
-									<li>
-										<Link href="#">Feedback</Link>
+										<span>993 Renner Burg, West Rond, MT</span>
 									</li>
 								</ul>
 							</div>
 						</div>
-						<div className="col-xl-4 col-lg-5 col-md-6">
+						<div className="col-xl-3 col-lg-5 col-md-6">
 							<div
 								className="footer-widget widget-subscribe wow fadeInUp"
 								data-wow-delay=".7s"
@@ -105,10 +82,7 @@ const Footer = () => {
 										</button>
 										<label htmlFor="agree">
 											<input id="agree" type="checkbox" />
-											Agree to our{" "}
-											<Link href="/terms-and-conditions">
-												Terms & Condition?
-											</Link>
+											Agree to our privacy policy?
 										</label>
 									</form>
 								</div>
@@ -168,14 +142,11 @@ const Footer = () => {
 								</div>
 								<div className="copyright-text">
 									<p>
-										&copy; 2025 
-										<Link
-											href="https://themeforest.net/user/theme-junction/portfolio"
-											target="_blank"
-										>
+										&copy; 2025&nbsp;
+										<Link href="/">
 											Rakesh
 										</Link>{" "}
-										All right reserved
+										All rights reserved
 									</p>
 								</div>
 							</div>

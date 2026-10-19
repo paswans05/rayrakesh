@@ -14,7 +14,7 @@ const Hero = () => {
 							Driving Excellence Through Evolution and <span>Trust.</span>
 						</h1>
 						<div className="banner-desc-area wow fadeInUp" data-wow-delay=".7s">
-							<Link className="banner-link" href="/about">
+							<Link className="banner-link" href="/contact">
 								<span>
 									<i className="tji-arrow-right-big"></i>
 								</span>
@@ -33,7 +33,7 @@ const Hero = () => {
 					<div className="banner-img">
 						<Image
 							data-speed="0.8"
-							src="/images/hero/hero-img.webp"
+							src="/images/hero/hero-img.jpeg"
 							alt=""
 							width={945}
 							height={793}
