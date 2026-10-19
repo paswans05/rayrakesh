@@ -22,6 +22,9 @@ export const LanguageProvider = ({ children }) => {
 			const saved = localStorage.getItem("app_lang");
 			if (saved === "en" || saved === "ne") {
 				setLanguageState(saved);
+				if (typeof document !== "undefined") {
+					document.documentElement.lang = saved;
+				}
 			}
 		} catch (e) {
 			// localStorage not available
@@ -33,6 +36,9 @@ export const LanguageProvider = ({ children }) => {
 			setLanguageState(lang);
 			try {
 				localStorage.setItem("app_lang", lang);
+				if (typeof document !== "undefined") {
+					document.documentElement.lang = lang;
+				}
 			} catch (e) {}
 		}
 	};

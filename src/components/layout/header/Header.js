@@ -32,6 +32,7 @@ const Header = ({
 		<>
 			{/* <!-- start: Offcanvas Menu --> */}
 			<ContactMenu
+				key={isStickyHeader ? "sticky-contact-menu" : "main-contact-menu"}
 				isContactOpen={isContactOpen}
 				setIsContactOpen={setIsContactOpen}
 			/>
@@ -39,6 +40,7 @@ const Header = ({
 
 			{/* <!-- start: Offcanvas Menu --> */}
 			<MobileMenu
+				key={isStickyHeader ? "sticky-mobile-menu" : "main-mobile-menu"}
 				isMobileMenuOpen={isMobileMenuOpen}
 				setIsMobileMenuOpen={setIsMobileMenuOpen}
 			/>

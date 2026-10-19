@@ -15,6 +15,8 @@ import "./assets/css/meanmenu.css";
 import "./assets/css/nice-select2.css";
 import "./assets/css/odometer-theme-default.css";
 import "./globals.scss";
+import DomErrorBoundary from "@/components/shared/wrappers/DomErrorBoundary";
+import { LanguageProvider } from "@/context_api/LanguageContext";
 
 const bodyFont = Mona_Sans({
 	variable: "--tj-ff-body",
@@ -39,15 +41,28 @@ export const metadata = {
 		icon: "/images/logos/logo.png",
 		apple: "/images/logos/logo.png",
 	},
+	other: {
+		google: "notranslate",
+	},
 };
-
-import { LanguageProvider } from "@/context_api/LanguageContext";
 
 export default function RootLayout({ children }) {
 	return (
-		<html lang="en" data-scroll-behavior="smooth" dir="ltr">
-			<body className={`${bodyFont.variable} ${headingFont.variable}`}>
-				<LanguageProvider>{children}</LanguageProvider>
+		<html
+			lang="en"
+			data-scroll-behavior="smooth"
+			dir="ltr"
+			className="notranslate"
+			translate="no"
+			suppressHydrationWarning
+		>
+			<body
+				className={`${bodyFont.variable} ${headingFont.variable}`}
+				suppressHydrationWarning
+			>
+				<DomErrorBoundary>
+					<LanguageProvider>{children}</LanguageProvider>
+				</DomErrorBoundary>
 			</body>
 		</html>
 	);

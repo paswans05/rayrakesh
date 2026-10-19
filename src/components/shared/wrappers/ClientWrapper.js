@@ -24,10 +24,13 @@ import tjStackAnimation2 from "@/libs/tjStackAnimation2";
 import tjStackAnimation3 from "@/libs/tjStackAnimation3";
 import tjZoomInScroll from "@/libs/tjZoomInScroll";
 import { useEffect } from "react";
+
 const ClientWrapper = () => {
 	useEffect(() => {
 		import("wow.js").then(({ default: WOW }) => {
-			new WOW().init();
+			try {
+				new WOW().init();
+			} catch (e) {}
 		});
 		smoothScrollToTop();
 		const cleanup = tjMagicCursorAnimation();
@@ -35,18 +38,19 @@ const ClientWrapper = () => {
 			if (cleanup) cleanup();
 		};
 	}, []);
+
 	useGSAP((context, contextSafe) => {
 		initSmoothScroller();
 		tjRightSwipeAnimation();
 		tjLeftSwipeAnimation();
-		titleAnim();
-		titleAnim2();
-		titleAnim3();
-		textReavealAnim();
+		const cleanupTitle = titleAnim();
+		const cleanupTitle2 = titleAnim2();
+		const cleanupTitle3 = titleAnim3();
+		const cleanupText = textReavealAnim();
 		sidebarSticky();
 		arrangeAnim();
 		arrangeAnim2();
-		animateInvertText();
+		const cleanupInvert = animateInvertText();
 		fadeInRightOnScrollAnim();
 		onePageNavAnim(contextSafe);
 		progressBar();
@@ -57,7 +61,16 @@ const ClientWrapper = () => {
 		tjProgressAnimation();
 		tjZoomInScroll();
 		tjStackAnimation3();
+
+		return () => {
+			if (cleanupTitle) cleanupTitle();
+			if (cleanupTitle2) cleanupTitle2();
+			if (cleanupTitle3) cleanupTitle3();
+			if (cleanupText) cleanupText();
+			if (cleanupInvert) cleanupInvert();
+		};
 	});
+
 	return null;
 };
 

@@ -41,7 +41,8 @@ const LanguageSwitcher = ({ isMobile = false }) => {
 				}}
 				title="English"
 			>
-				<span>🇬🇧</span> ENG
+				<span>🇬🇧</span>
+				<span>ENG</span>
 			</button>
 			<button
 				type="button"
@@ -63,7 +64,8 @@ const LanguageSwitcher = ({ isMobile = false }) => {
 				}}
 				title="नेपाली"
 			>
-				<span>🇳🇵</span> नेपाली
+				<span>🇳🇵</span>
+				<span>नेपाली</span>
 			</button>
 		</div>
 	);
