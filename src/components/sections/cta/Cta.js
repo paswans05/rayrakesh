@@ -1,6 +1,10 @@
+"use client";
 import ButtonPrimary from "@/components/shared/buttons/ButtonPrimary";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Cta = () => {
+	const { t } = useLanguage();
+
 	return (
 		<section className="tj-cta-section">
 			<div className="container">
@@ -9,11 +13,11 @@ const Cta = () => {
 						<div className="cta-area">
 							<div className="cta-content">
 								<h2 className="title title-anim">
-									Let’s Build Future Together.
+									{t("cta.title", "Let’s Build Future Together.")}
 								</h2>
 								<div className="cta-btn wow fadeInUp" data-wow-delay=".6s">
 									<ButtonPrimary
-										text={"Get Started Now"}
+										text={t("cta.btn", "Get Started Now")}
 										url={"/contact"}
 										className={"btn-dark"}
 									/>

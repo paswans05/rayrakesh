@@ -1,6 +1,10 @@
+"use client";
 import Link from "next/link";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Footer = () => {
+	const { t } = useLanguage();
+
 	return (
 		<footer className="tj-footer-section footer-1 section-gap-x">
 			<div className="footer-main-area">
@@ -15,8 +19,10 @@ const Footer = () => {
 								</div>
 								<div className="footer-text">
 									<p>
-										Developing personalized customer journeys to increase
-										satisfaction & loyalty of our expansion.
+										{t(
+											"footer.desc",
+											"Developing personalized customer journeys to increase satisfaction & loyalty of our expansion."
+										)}
 									</p>
 								</div>
 								<div className="award-logo-area">
@@ -34,13 +40,13 @@ const Footer = () => {
 								className="footer-widget widget-nav-menu wow fadeInUp"
 								data-wow-delay=".3s"
 							>
-								<h5 className="title">Quick Links</h5>
+								<h5 className="title">{t("footer.quick_links", "Quick Links")}</h5>
 								<ul>
 									<li>
-										<Link href="/">Home</Link>
+										<Link href="/">{t("nav.home", "Home")}</Link>
 									</li>
 									<li>
-										<Link href="/contact">Contact Us</Link>
+										<Link href="/contact">{t("nav.contact", "Contact Us")}</Link>
 									</li>
 								</ul>
 							</div>
@@ -50,7 +56,7 @@ const Footer = () => {
 								className="footer-widget widget-nav-menu wow fadeInUp"
 								data-wow-delay=".5s"
 							>
-								<h5 className="title">Contact Info</h5>
+								<h5 className="title">{t("footer.contact_info", "Contact Info")}</h5>
 								<ul>
 									<li>
 										<Link href="tel:9779818888722">+977 981-8888722</Link>
@@ -69,20 +75,22 @@ const Footer = () => {
 								className="footer-widget widget-subscribe wow fadeInUp"
 								data-wow-delay=".7s"
 							>
-								<h3 className="title">Subscribe to Our Newsletter.</h3>
+								<h3 className="title">
+									{t("footer.newsletter_title", "Subscribe to Our Newsletter.")}
+								</h3>
 								<div className="subscribe-form">
 									<form action="#">
 										<input
 											type="email"
 											name="email"
-											placeholder="Enter email"
+											placeholder={t("footer.newsletter_placeholder", "Enter email")}
 										/>
 										<button type="submit">
 											<i className="tji-plane"></i>
 										</button>
 										<label htmlFor="agree">
 											<input id="agree" type="checkbox" />
-											Agree to our privacy policy?
+											{t("footer.agree_terms", "Agree to our privacy policy?")}
 										</label>
 									</form>
 								</div>
@@ -99,7 +107,7 @@ const Footer = () => {
 								<div className="footer-contact">
 									<ul>
 										<li>
-											<Link href="tel:10095447818">
+											<Link href="tel:9779818888722">
 												<span className="icon">
 													<i className="tji-phone-2"></i>
 												</span>
@@ -146,7 +154,7 @@ const Footer = () => {
 										<Link href="/">
 											Rakesh
 										</Link>{" "}
-										All rights reserved
+										{t("footer.rights_reserved", "All rights reserved")}
 									</p>
 								</div>
 							</div>

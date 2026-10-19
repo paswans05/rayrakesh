@@ -4,8 +4,11 @@ import getTestimonials from "@/libs/getTestimonials";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
+import { useLanguage } from "@/hooks/useLanguage";
+
 const Testimonials1 = () => {
 	const testimonials = getTestimonials()?.slice(0, 6);
+	const { t } = useLanguage();
 
 	return (
 		<section className="tj-testimonial-section section-gap section-gap-x">
@@ -14,12 +17,15 @@ const Testimonials1 = () => {
 					<div className="col-12">
 						<div className="sec-heading-wrap">
 							<span className="sub-title wow fadeInUp" data-wow-delay=".3s">
-								<i className="tji-box"></i>Clients Feedback
+								<i className="tji-box"></i>
+								{t("testimonials.subtitle", "Clients Feedback")}
 							</span>
 							<div className="heading-wrap-content">
 								<div className="sec-heading">
 									<h2 className="sec-title title-anim">
-										Success <span>Stories</span> Fuel our Innovation.
+										{t("testimonials.title_prefix", "Success ")}
+										<span>{t("testimonials.title_highlight", "Stories")}</span>
+										{t("testimonials.title_suffix", " Fuel our Innovation.")}
 									</h2>
 								</div>
 								<div

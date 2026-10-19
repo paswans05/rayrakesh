@@ -36,11 +36,13 @@ export const metadata = {
 	description: "Rakesh - Corporate Business React NextJs Template",
 };
 
+import { LanguageProvider } from "@/context_api/LanguageContext";
+
 export default function RootLayout({ children }) {
 	return (
 		<html lang="en" data-scroll-behavior="smooth" dir="ltr">
 			<body className={`${bodyFont.variable} ${headingFont.variable}`}>
-				{children}
+				<LanguageProvider>{children}</LanguageProvider>
 			</body>
 		</html>
 	);

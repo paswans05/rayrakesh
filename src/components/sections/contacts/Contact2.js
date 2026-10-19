@@ -1,9 +1,11 @@
 "use client";
 import ButtonPrimary from "@/components/shared/buttons/ButtonPrimary";
 import ReactNiceSelect from "@/components/shared/Inputs/ReactNiceSelect";
+import { useLanguage } from "@/hooks/useLanguage";
 import Link from "next/link";
 
 const Contact2 = () => {
+	const { t } = useLanguage();
 	return (
 		<section className="tj-contact-section section-gap section-gap-x">
 			<div className="container">
@@ -52,10 +54,12 @@ const Contact2 = () => {
 						>
 							<div className="sec-heading">
 								<span className="sub-title text-white">
-									<i className="tji-box"></i>Get in Touch
+									<i className="tji-box"></i>
+									{t("home_contact.subtitle", "Get in Touch")}
 								</span>
 								<h2 className="sec-title title-anim">
-									Drop Us a <span>Line.</span>
+									{t("home_contact.title_prefix", "Drop Us a ")}
+									<span>{t("home_contact.title_highlight", "Line.")}</span>
 								</h2>
 							</div>
 							<form id="contact-form-2">
@@ -65,7 +69,7 @@ const Contact2 = () => {
 											<input
 												type="text"
 												name="cfName2"
-												placeholder="Full Name *"
+												placeholder={t("home_contact.full_name", "Full Name *")}
 											/>
 										</div>
 									</div>
@@ -74,7 +78,7 @@ const Contact2 = () => {
 											<input
 												type="email"
 												name="cfEmail2"
-												placeholder="Email Address *"
+												placeholder={t("home_contact.email_address", "Email Address *")}
 											/>
 										</div>
 									</div>
@@ -83,7 +87,7 @@ const Contact2 = () => {
 											<input
 												type="tel"
 												name="cfPhone2"
-												placeholder="Phone number *"
+												placeholder={t("home_contact.phone_number", "Phone number *")}
 											/>
 										</div>
 									</div>
@@ -94,7 +98,7 @@ const Contact2 = () => {
 													<ReactNiceSelect
 														selectedIndex={0}
 														options={[
-															{ value: "0", optionName: "Chose a option" },
+															{ value: "0", optionName: t("home_contact.select_option", "Chose a option") },
 															{ value: "1", optionName: "Business Strategy" },
 															{ value: "2", optionName: "Customer Experience" },
 															{
@@ -124,12 +128,15 @@ const Contact2 = () => {
 											<textarea
 												name="cfMessage2"
 												id="message"
-												placeholder="Type message *"
+												placeholder={t("home_contact.type_message", "Type message *")}
 											></textarea>
 										</div>
 									</div>
 									<div className="submit-btn">
-										<ButtonPrimary text={"Send Message"} type={"submit"} />
+										<ButtonPrimary
+											text={t("home_contact.send_message", "Send Message")}
+											type={"submit"}
+										/>
 									</div>
 								</div>
 							</form>

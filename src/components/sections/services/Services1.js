@@ -1,6 +1,10 @@
+"use client";
 import ServicesSlider1 from "@/components/shared/services/ServicesSlider1";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Services1 = () => {
+	const { t } = useLanguage();
+
 	return (
 		<section className="tj-service-section overflow-hidden section-gap section-gap-x">
 			<div className="container">
@@ -11,10 +15,12 @@ const Services1 = () => {
 								className="sub-title text-white wow fadeInUp"
 								data-wow-delay=".3s"
 							>
-								<i className="tji-box"></i>Our Solutions
+								<i className="tji-box"></i>
+								{t("solutions.subtitle", "Our Solutions")}
 							</span>
 							<h2 className="sec-title text-white title-anim">
-								Solutions to Transform Your <span>Business.</span>
+								{t("solutions.title_prefix", "Solutions to Transform Your ")}
+								<span>{t("solutions.title_highlight", "Business.")}</span>
 							</h2>
 						</div>
 					</div>

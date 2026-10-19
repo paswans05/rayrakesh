@@ -1,7 +1,10 @@
 "use client";
 import Link from "next/link";
+import LanguageSwitcher from "@/components/shared/language/LanguageSwitcher";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const ContactMenu = ({ isContactOpen, setIsContactOpen }) => {
+	const { t } = useLanguage();
 	const handleClick = () => {
 		setIsContactOpen(false);
 	};
@@ -25,10 +28,13 @@ const ContactMenu = ({ isContactOpen, setIsContactOpen }) => {
 									<img src="/images/logos/logo-2.webp" alt="Logo" />
 								</Link>
 							</div>
-							<div className="hamburger_close">
-								<button className="hamburger_close_btn" onClick={handleClick}>
-									<i className="fa-thin fa-times"></i>
-								</button>
+							<div className="d-flex align-items-center gap-2">
+								<LanguageSwitcher isMobile={true} />
+								<div className="hamburger_close">
+									<button className="hamburger_close_btn" onClick={handleClick}>
+										<i className="fa-thin fa-times"></i>
+									</button>
+								</div>
 							</div>
 						</div>
 						<div className="offcanvas-text">
@@ -49,28 +55,30 @@ const ContactMenu = ({ isContactOpen, setIsContactOpen }) => {
 										type="search"
 										autoComplete="off"
 										name="s"
-										placeholder="Search here..."
+										placeholder={t("header.search_placeholder", "Search here...")}
 									/>
 								</form>
 							</div>
 						</div>
 						<div className="hamburger-infos">
-							<h5 className="hamburger-title">Contact Info</h5>
+							<h5 className="hamburger-title">
+								{t("header.contact_info", "Contact Info")}
+							</h5>
 							<div className="contact-info">
 								<div className="contact-item">
-									<span className="subtitle">Phone</span>
+									<span className="subtitle">{t("header.phone", "Phone")}</span>
 									<Link className="contact-link" href="tel:10095447818">
 										+977 981-8888722
 									</Link>
 								</div>
 								<div className="contact-item">
-									<span className="subtitle">Email</span>
+									<span className="subtitle">{t("header.email", "Email")}</span>
 									<Link className="contact-link" href="mailto:erakesh.ray@gmail.com ">
 										erakesh.ray@gmail.com
 									</Link>
 								</div>
 								<div className="contact-item">
-									<span className="subtitle">Location</span>
+									<span className="subtitle">{t("header.location", "Location")}</span>
 									<span className="contact-link">
 										993 Renner Burg, West Rond, MT 94251-030
 									</span>
@@ -79,7 +87,9 @@ const ContactMenu = ({ isContactOpen, setIsContactOpen }) => {
 						</div>
 					</div>
 					<div className="hamburger-socials">
-						<h5 className="hamburger-title">Follow Us</h5>
+						<h5 className="hamburger-title">
+							{t("header.follow_us", "Follow Us")}
+						</h5>
 						<div className="social-links style-3">
 							<ul>
 								<li>

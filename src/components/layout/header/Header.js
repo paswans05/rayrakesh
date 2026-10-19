@@ -3,6 +3,8 @@ import ButtonPrimary from "@/components/shared/buttons/ButtonPrimary";
 import useIsSticky from "@/hooks/useIsSticky";
 import Link from "next/link";
 import { useState } from "react";
+import LanguageSwitcher from "@/components/shared/language/LanguageSwitcher";
+import { useLanguage } from "@/hooks/useLanguage";
 import ContactMenu from "./ContactMenu";
 import HeaderTop from "./HeaderTop";
 import Logo from "./Logo";
@@ -18,6 +20,7 @@ const Header = ({
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const [isContactOpen, setIsContactOpen] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const { t } = useLanguage();
 	const isSticky = useIsSticky(isStickyHeader);
 	const handleContactTogglerClick = () => {
 		setIsContactOpen(true);
@@ -146,9 +149,15 @@ const Header = ({
 											</button>
 										</div>
 									)}
+									<div className="header-language d-none d-lg-inline-flex">
+										<LanguageSwitcher />
+									</div>
 									{headerType !== 5 ? (
 										<div className="header-button">
-											<ButtonPrimary text={"Let’s Talk"} url={"/contact"} />
+											<ButtonPrimary
+												text={t("nav.lets_talk", "Let’s Talk")}
+												url={"/contact"}
+											/>
 										</div>
 									) : (
 										""
@@ -169,14 +178,17 @@ const Header = ({
 										</div>
 									)}
 								</div>
-								{/* <!-- menu bar --> */}
-								<div
-									className="menu_bar mobile_menu_bar d-lg-none"
-									onClick={handleMobileTogglerClick}
-								>
-									<span></span>
-									<span></span>
-									<span></span>
+								{/* <!-- mobile language & menu bar --> */}
+								<div className="d-lg-none d-flex align-items-center gap-2">
+									<LanguageSwitcher isMobile={true} />
+									<div
+										className="menu_bar mobile_menu_bar"
+										onClick={handleMobileTogglerClick}
+									>
+										<span></span>
+										<span></span>
+										<span></span>
+									</div>
 								</div>
 							</div>
 						</div>

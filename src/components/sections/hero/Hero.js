@@ -1,17 +1,23 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Hero = () => {
+	const { t } = useLanguage();
+
 	return (
 		<section className="tj-banner-section section-gap-x">
 			<div className="banner-area">
 				<div className="banner-left-box">
 					<div className="banner-content">
 						<span className="sub-title wow fadeInDown" data-wow-delay=".2s">
-							<i className="tji-excellence"></i> Recognized for Excellence
+							<i className="tji-excellence"></i>{" "}
+							{t("hero.badge", "Recognized for Excellence")}
 						</span>
 						<h1 className="banner-title title-anim">
-							Driving Excellence Through Evolution and <span>Trust.</span>
+							{t("hero.title_prefix", "Driving Excellence Through Evolution and ")}
+							<span>{t("hero.title_highlight", "Trust.")}</span>
 						</h1>
 						<div className="banner-desc-area wow fadeInUp" data-wow-delay=".7s">
 							<Link className="banner-link" href="/contact">
@@ -20,8 +26,10 @@ const Hero = () => {
 								</span>
 							</Link>
 							<div className="banner-desc">
-								Represents growth, expansion, and modern business solution
-								present growth, expansion.
+								{t(
+									"hero.desc",
+									"Represents growth, expansion, and modern business solution present growth, expansion."
+								)}
 							</div>
 						</div>
 					</div>
@@ -78,10 +86,10 @@ const Hero = () => {
 								className="customers-number wow fadeInUp"
 								data-wow-delay=".5s"
 							>
-								30K
+								{t("hero.customers_count", "30K")}
 							</div>
 							<h6 className="customers-text wow fadeInUp" data-wow-delay=".5s">
-								Happy customer we have world-wide.
+								{t("hero.customers_text", "Happy customer we have world-wide.")}
 							</h6>
 						</div>
 					</div>
@@ -92,7 +100,7 @@ const Hero = () => {
 					<span>
 						<i className="tji-arrow-down-long"></i>
 					</span>
-					Scroll Down
+					{t("hero.scroll_down", "Scroll Down")}
 				</button>
 			</div>
 		</section>

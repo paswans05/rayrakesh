@@ -1,16 +1,20 @@
+"use client";
 import ButtonPrimary from "@/components/shared/buttons/ButtonPrimary";
 import FeatureCard from "@/components/shared/cards/FeatureCard";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Features = ({ type }) => {
-	const features = [
+	const { t } = useLanguage();
+
+	const defaultFeatures = [
 		{
 			title: "Innovative Solutions",
-			desc: "We stay ahead of the curve, leveraging cutting-edge technologies and strategies to keep  you competitive in a marketplace.",
+			desc: "We stay ahead of the curve, leveraging cutting-edge technologies and strategies to keep you competitive in a marketplace.",
 			icon: "tji-innovative",
 		},
 		{
 			title: "Award-Winning Expertise",
-			desc: "Recognized by industry leaders, our award-winning team has a proven record of delivering  excellence across projects.",
+			desc: "Recognized by industry leaders, our award-winning team has a proven record of delivering excellence across projects.",
 			icon: "tji-award",
 		},
 		{
@@ -20,6 +24,15 @@ const Features = ({ type }) => {
 		},
 	];
 
+	const translatedItems = t("features.items");
+	const features = Array.isArray(translatedItems)
+		? translatedItems.map((item, idx) => ({
+				...defaultFeatures[idx],
+				title: item?.title || defaultFeatures[idx]?.title,
+				desc: item?.desc || defaultFeatures[idx]?.desc,
+		  }))
+		: defaultFeatures;
+
 	return (
 		<section id="choose" className="tj-choose-section section-gap">
 			<div className="container">
@@ -28,26 +41,33 @@ const Features = ({ type }) => {
 						{type == 2 ? (
 							<div className="sec-heading-wrap">
 								<span className="sub-title wow fadeInUp" data-wow-delay=".3s">
-									<i className="tji-box"></i>Choose the Best
+									<i className="tji-box"></i>
+									{t("features.subtitle", "Choose the Best")}
 								</span>
 								<div className="heading-wrap-content">
 									<div className="sec-heading">
 										<h2 className="sec-title title-anim">
-											Empowering Business with <span>Expertise.</span>
+											{t("features.title_prefix", "Empowering Business with ")}
+											<span>{t("features.title_highlight", "Expertise.")}</span>
 										</h2>
 									</div>
 									<div className="btn-wrap wow fadeInUp" data-wow-delay=".6s">
-										<ButtonPrimary text="Request a Call" url="/contact" />
+										<ButtonPrimary
+											text={t("features.request_call", "Request a Call")}
+											url="/contact"
+										/>
 									</div>
 								</div>
 							</div>
 						) : (
 							<div className="sec-heading text-center">
 								<span className="sub-title wow fadeInUp" data-wow-delay=".3s">
-									<i className="tji-box"></i>Choose the Best
+									<i className="tji-box"></i>
+									{t("features.subtitle", "Choose the Best")}
 								</span>
 								<h2 className="sec-title title-anim">
-									Empowering Business with <span>Expertise.</span>
+									{t("features.title_prefix", "Empowering Business with ")}
+									<span>{t("features.title_highlight", "Expertise.")}</span>
 								</h2>
 							</div>
 						)}

@@ -1,8 +1,17 @@
+"use client";
+import { useLanguage } from "@/hooks/useLanguage";
 import getNavItems from "@/libs/getNavItems";
 import Link from "next/link";
 
 const MobileNavbar = () => {
 	const navItems = getNavItems();
+	const { t } = useLanguage();
+
+	const getItemName = (item) => {
+		if (item?.path === "/") return t("nav.home", item?.name);
+		if (item?.path === "/contact") return t("nav.contact", item?.name);
+		return item?.name;
+	};
 
 	return (
 		<div className="hamburger_menu">
@@ -16,7 +25,7 @@ const MobileNavbar = () => {
 									className={idx === navItems.length - 1 ? "mean-last" : ""}
 								>
 									<Link href={item?.path ? item?.path : "/"}>
-										{item?.name}
+										{getItemName(item)}
 									</Link>
 								</li>
 							))}

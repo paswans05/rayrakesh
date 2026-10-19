@@ -1,10 +1,13 @@
+"use client";
 import ButtonPrimary from "@/components/shared/buttons/ButtonPrimary";
 import FaqItem from "@/components/shared/faq/FaqItem";
 import BootstrapWrapper from "@/components/shared/wrappers/BootstrapWrapper";
+import { useLanguage } from "@/hooks/useLanguage";
 import Image from "next/image";
 import Link from "next/link";
 
 const Faq2 = ({ type = 1 }) => {
+	const { t } = useLanguage();
 	const items = [
 		{
 			title: "What services does Rakesh offer to clients?",
@@ -45,10 +48,11 @@ const Faq2 = ({ type = 1 }) => {
 							<div className="content-wrap">
 								<div className="sec-heading">
 									<span className="sub-title wow fadeInUp" data-wow-delay=".3s">
-										<i className="tji-box"></i>Common Questions
+										<i className="tji-box"></i>
+										{t("faq.subtitle", "Common Questions")}
 									</span>
 									<h2 className="sec-title title-anim">
-										Need <span>Help?</span> Start Here...
+										{t("faq.title", "Need Help? Start Here...")}
 									</h2>
 								</div>
 								<p className="desc wow fadeInUp" data-wow-delay=".6s">
@@ -56,7 +60,10 @@ const Faq2 = ({ type = 1 }) => {
 									technologies and <br /> strategies to competitive
 								</p>
 								<div className="wow fadeInUp" data-wow-delay=".8s">
-									<ButtonPrimary text={"Request a Call"} url={"/contact"} />
+									<ButtonPrimary
+										text={t("features.request_call", "Request a Call")}
+										url={"/contact"}
+									/>
 								</div>
 							</div>
 						</div>
@@ -75,12 +82,14 @@ const Faq2 = ({ type = 1 }) => {
 										height={629}
 									/>
 									<h2 className={`title ${type === 4 ? "title-anim" : ""}`}>
-										Need Help? Start Here...
+										{t("faq.title", "Need Help? Start Here...")}
 									</h2>
 								</div>
 								<div className="box-area ">
 									<div className="call-box">
-										<h4 className="title">Get Started Free Call? </h4>
+										<h4 className="title">
+											{t("faq.call_title", "Get Started Free Call?")}
+										</h4>
 										<span className="call-icon">
 											<i className="tji-phone"></i>
 										</span>

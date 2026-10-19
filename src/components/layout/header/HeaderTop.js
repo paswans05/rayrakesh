@@ -1,6 +1,10 @@
+"use client";
 import Link from "next/link";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const HeaderTop = ({ type }) => {
+	const { t } = useLanguage();
+
 	return (
 		<div className="header-top">
 			<div className="container-fluid">
@@ -8,8 +12,11 @@ const HeaderTop = ({ type }) => {
 					<div className="col-12">
 						<div className="header-top-content">
 							<p className="topbar-text">
-								<i className="tji-excellence"></i>Recognized for Excellence{" "}
-								<Link href="/contact">Join us Now</Link>
+								<i className="tji-excellence"></i>
+								{t("header.recognized", "Recognized for Excellence")}{" "}
+								<Link href="/contact">
+									{t("header.join_us", "Join us Now")}
+								</Link>
 							</p>
 							<div className="header-info">
 								<div className="info-item">
