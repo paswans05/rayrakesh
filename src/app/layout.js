@@ -35,6 +35,10 @@ export const metadata = {
 	title: "Rakesh Ray — Mayoral Election Campaign | Parsa, Nepal",
 	description:
 		"Official campaign website for Rakesh Ray, candidate for Mayor of Parsa, Sarlahi District, Madhesh Province, Nepal. A Better Parsa, Together.",
+	icons: {
+		icon: "/images/logos/logo.png",
+		apple: "/images/logos/logo.png",
+	},
 };
 
 import { LanguageProvider } from "@/context_api/LanguageContext";

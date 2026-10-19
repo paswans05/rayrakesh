@@ -14,7 +14,7 @@ const Footer8 = () => {
 										className="wow fadeInLeftBig"
 										data-wow-delay=".3s"
 									>
-										<img src="/images/logos/logo-large.webp" alt="" />
+										<img src="/images/logos/logo.png" alt="" />
 									</Link>
 								</div>
 								<div

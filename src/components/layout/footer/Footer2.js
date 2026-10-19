@@ -14,7 +14,7 @@ const Footer2 = () => {
 								data-wow-delay=".3s"
 							>
 								<div className="subscribe-logo">
-									<img src="/images/logos/logo-2.webp" alt="" />
+									<img src="/images/logos/logo.png" alt="" />
 								</div>
 								<div className="subscribe-form">
 									<form action="#">
@@ -41,7 +41,7 @@ const Footer2 = () => {
 							>
 								<div className="footer-logo">
 									<Link href="/">
-										<img src="/images/logos/logo-2.webp" alt="Logos" />
+										<img src="/images/logos/logo.png" alt="Logos" />
 									</Link>
 								</div>
 								<div className="footer-text">

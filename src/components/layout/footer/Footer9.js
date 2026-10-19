@@ -127,7 +127,7 @@ const Footer9 = () => {
 								data-wow-delay=".3s"
 							>
 								<Link href="/">
-									<img src="/images/logos/logo.webp" alt="" />
+									<img src="/images/logos/logo.png" alt="" />
 								</Link>
 								<div className="award-logo-area h9-footer-award">
 									<div className="award-logo">

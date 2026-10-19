@@ -126,7 +126,7 @@ const Footer6 = () => {
 						<div className="col-12">
 							<div className="h6-footer-logo">
 								<Link href="/" className="wow fadeInUpBig" data-wow-delay=".3s">
-									<img src="/images/logos/logo-large.webp" alt="" />
+									<img src="/images/logos/logo.png" alt="" />
 								</Link>
 							</div>
 						</div>
