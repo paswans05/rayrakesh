@@ -117,7 +117,7 @@ const Footer3 = () => {
 										<span>993 Renner Burg, West Rond, MT 94251-030, USA.</span>
 									</div>
 									<div className="contact-item">
-										<Link href="tel:10095447818">P: +1 (009) 544-7818</Link>
+										<Link href="tel:10095447818">P: +977 981-8888722</Link>
 										<Link href="mailto:support@bexon.com">
 											M: support@bexon.com
 										</Link>
@@ -186,7 +186,7 @@ const Footer3 = () => {
 							<div className="copyright-content-area">
 								<div className="copyright-text">
 									<p>
-										&copy; 2025 
+										&copy; 2025
 										<Link
 											href="https://themeforest.net/user/theme-junction/portfolio"
 											target="_blank"

@@ -129,15 +129,15 @@ const Footer7 = () => {
 												<span className="icon">
 													<i className="tji-phone-2"></i>
 												</span>
-												<span className="text">+1 (009) 544-7818</span>
+												<span className="text">+977 981-8888722</span>
 											</Link>
 										</li>
 										<li>
-											<Link href="mailto:info@bexon.com">
+											<Link href="mailto:erakesh.ray@gmail.com ">
 												<span className="icon">
 													<i className="tji-envelop-2"></i>
 												</span>
-												<span className="text">info@bexon.com</span>
+												<span className="text">erakesh.ray@gmail.com </span>
 											</Link>
 										</li>
 									</ul>
@@ -168,7 +168,7 @@ const Footer7 = () => {
 								</div>
 								<div className="copyright-text">
 									<p>
-										&copy; 2025 
+										&copy; 2025
 										<Link
 											href="https://themeforest.net/user/theme-junction/portfolio"
 											target="_blank"

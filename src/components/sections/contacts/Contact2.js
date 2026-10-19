@@ -16,7 +16,7 @@ const Contact2 = () => {
 									<div className="location-tooltip">
 										<span>Head office:</span>
 										<p>993 Renner Burg, West Rond, MT 94251-030, USA.</p>
-										<Link href="tel:10095447818">P: +1 (009) 544-7818</Link>
+										<Link href="tel:10095447818">P: +977 981-8888722</Link>
 										<Link href="mailto:support@bexon.com">
 											M: support@bexon.com
 										</Link>
@@ -36,7 +36,7 @@ const Contact2 = () => {
 									<div className="location-tooltip">
 										<span>Regional office:</span>
 										<p>32 Altamira, State of Pará, Brazil.</p>
-										<Link href="tel:10095447818">P: +1 (009) 544-7818</Link>
+										<Link href="tel:10095447818">P: +977 981-8888722</Link>
 										<Link href="mailto:support@bexon.com">
 											M: support@bexon.com
 										</Link>

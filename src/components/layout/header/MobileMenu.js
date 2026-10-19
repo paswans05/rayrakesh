@@ -13,9 +13,8 @@ const MobileMenu = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
 				onClick={handleClick}
 			></div>
 			<div
-				className={`hamburger-area d-lg-none ${
-					isMobileMenuOpen ? "opened" : ""
-				}`}
+				className={`hamburger-area d-lg-none ${isMobileMenuOpen ? "opened" : ""
+					}`}
 			>
 				<div className="hamburger_bg"></div>
 				<div className="hamburger_wrapper">
@@ -44,8 +43,8 @@ const MobileMenu = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
 								</div>
 								<div className="contact-item">
 									<span className="subtitle">Email</span>
-									<Link className="contact-link" href="mailto:info@bexon.com">
-										info@bexon.com
+									<Link className="contact-link" href="mailto:erakesh.ray@gmail.com ">
+										erakesh.ray@gmail.com
 									</Link>
 								</div>
 								<div className="contact-item">

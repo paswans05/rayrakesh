@@ -61,7 +61,7 @@ const TeamDetails1 = ({ currentItemId }) => {
 									</li>
 									<li>
 										<span>Phone number</span>
-										<a href="tel:10095447818">+1 (009) 544-7818</a>
+										<a href="tel:10095447818">+977 981-8888722</a>
 									</li>
 								</ul>
 							</div>

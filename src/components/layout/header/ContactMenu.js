@@ -13,9 +13,8 @@ const ContactMenu = ({ isContactOpen, setIsContactOpen }) => {
 				onClick={handleClick}
 			></div>
 			<div
-				className={`tj-offcanvas-area d-none d-lg-block  ${
-					isContactOpen ? "opened" : ""
-				}`}
+				className={`tj-offcanvas-area d-none d-lg-block  ${isContactOpen ? "opened" : ""
+					}`}
 			>
 				<div className="hamburger_bg"></div>
 				<div className="hamburger_wrapper">
@@ -61,13 +60,13 @@ const ContactMenu = ({ isContactOpen, setIsContactOpen }) => {
 								<div className="contact-item">
 									<span className="subtitle">Phone</span>
 									<Link className="contact-link" href="tel:10095447818">
-										+1 (009) 544-7818
+										+977 981-8888722
 									</Link>
 								</div>
 								<div className="contact-item">
 									<span className="subtitle">Email</span>
-									<Link className="contact-link" href="mailto:info@bexon.com">
-										info@bexon.com
+									<Link className="contact-link" href="mailto:erakesh.ray@gmail.com ">
+										erakesh.ray@gmail.com
 									</Link>
 								</div>
 								<div className="contact-item">

@@ -10,7 +10,7 @@ const Footer = () => {
 							<div className="footer-widget wow fadeInUp" data-wow-delay=".1s">
 								<div className="footer-logo">
 									<Link href="/">
-										<img src="/images/logos/logo.webp" alt="Logos" />
+										<img src="/images/logos/logo.png" alt="Logos" />
 									</Link>
 								</div>
 								<div className="footer-text">
@@ -53,10 +53,10 @@ const Footer = () => {
 								<h5 className="title">Contact Info</h5>
 								<ul>
 									<li>
-										<Link href="tel:10095447818">+1 (009) 544-7818</Link>
+										<Link href="tel:9779818888722">+977 981-8888722</Link>
 									</li>
 									<li>
-										<Link href="mailto:info@bexon.com">info@bexon.com</Link>
+										<Link href="mailto:erakesh.ray@gmail.com ">erakesh.ray@gmail.com </Link>
 									</li>
 									<li>
 										<span>993 Renner Burg, West Rond, MT</span>
@@ -103,15 +103,15 @@ const Footer = () => {
 												<span className="icon">
 													<i className="tji-phone-2"></i>
 												</span>
-												<span className="text">+1 (009) 544-7818</span>
+												<span className="text">+977 981-8888722</span>
 											</Link>
 										</li>
 										<li>
-											<Link href="mailto:info@bexon.com">
+											<Link href="mailto:erakesh.ray@gmail.com ">
 												<span className="icon">
 													<i className="tji-envelop-2"></i>
 												</span>
-												<span className="text">info@bexon.com</span>
+												<span className="text">erakesh.ray@gmail.com </span>
 											</Link>
 										</li>
 									</ul>
