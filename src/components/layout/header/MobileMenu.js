@@ -44,20 +44,20 @@ const MobileMenu = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
 							<div className="contact-info">
 								<div className="contact-item">
 									<span className="subtitle">{t("header.phone", "Phone")}</span>
-									<Link className="contact-link" href="tel:8089091313">
-										808-909-1313
+									<Link className="contact-link" href="tel:9779818888722">
+										+977 981-8888722
 									</Link>
 								</div>
 								<div className="contact-item">
 									<span className="subtitle">{t("header.email", "Email")}</span>
-									<Link className="contact-link" href="mailto:erakesh.ray@gmail.com ">
+									<Link className="contact-link" href="mailto:erakesh.ray@gmail.com">
 										erakesh.ray@gmail.com
 									</Link>
 								</div>
 								<div className="contact-item">
 									<span className="subtitle">{t("header.location", "Location")}</span>
 									<span className="contact-link">
-										993 Renner Burg, West Rond, MT 94251-030
+										{t("footer.location", "Parsa, Sarlahi, Madhesh Province, Nepal")}
 									</span>
 								</div>
 							</div>

@@ -6,7 +6,10 @@ const Services1 = () => {
 	const { t } = useLanguage();
 
 	return (
-		<section className="tj-service-section overflow-hidden section-gap section-gap-x">
+		<section
+			id="vision"
+			className="tj-service-section overflow-hidden section-gap section-gap-x"
+		>
 			<div className="container">
 				<div className="row">
 					<div className="col-12">
@@ -16,11 +19,11 @@ const Services1 = () => {
 								data-wow-delay=".3s"
 							>
 								<i className="tji-box"></i>
-								{t("solutions.subtitle", "Our Solutions")}
+								{t("solutions.subtitle", "Our Vision & Priorities")}
 							</span>
 							<h2 className="sec-title text-white title-anim">
-								{t("solutions.title_prefix", "Solutions to Transform Your ")}
-								<span>{t("solutions.title_highlight", "Business.")}</span>
+								{t("solutions.title_prefix", "Key Priorities for ")}
+								<span>{t("solutions.title_highlight", "Parsa.")}</span>
 							</h2>
 						</div>
 					</div>

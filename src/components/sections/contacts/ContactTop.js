@@ -13,7 +13,7 @@ const ContactTop = () => {
 						<div className="sec-heading text-center">
 							<span className="sub-title wow fadeInUp" data-wow-delay=".1s">
 								<i className="tji-box"></i>
-								{t("contact_page.subtitle", "Contact info")}
+								{t("contact_page.subtitle", "Campaign Office")}
 							</span>
 							<h2 className="sec-title title-anim">
 								<span>{t("contact_page.reach_prefix", "Reach ")}</span>{" "}
@@ -32,9 +32,9 @@ const ContactTop = () => {
 								<i className="tji-location-3"></i>
 							</div>
 							<h3 className="contact-title">
-								{t("contact_page.our_location", "Our Location")}
+								{t("contact_page.our_location", "Campaign Location")}
 							</h3>
-							<p>993 Renner Burg, West Rond, MT 94251-030</p>
+							<p>Parsa, Sarlahi District, Madhesh Province, Nepal</p>
 						</div>
 					</div>
 					<div className="col-xl-3 col-lg-6 col-sm-6">
@@ -46,14 +46,11 @@ const ContactTop = () => {
 								<i className="tji-envelop"></i>
 							</div>
 							<h3 className="contact-title">
-								{t("contact_page.email_us", "Email us")}
+								{t("contact_page.email_us", "Email Us")}
 							</h3>
 							<ul className="contact-list">
 								<li>
-									<Link href="mailto:support@bexon.com">support@bexon.com</Link>
-								</li>
-								<li>
-									<Link href="mailto:erakesh.ray@gmail.com ">
+									<Link href="mailto:erakesh.ray@gmail.com">
 										erakesh.ray@gmail.com
 									</Link>
 								</li>
@@ -69,14 +66,11 @@ const ContactTop = () => {
 								<i className="tji-phone"></i>
 							</div>
 							<h3 className="contact-title">
-								{t("contact_page.call_us", "Call us")}
+								{t("contact_page.call_us", "Call Us")}
 							</h3>
 							<ul className="contact-list">
 								<li>
-									<Link href="tel:10095447818">+977 981-8888722</Link>
-								</li>
-								<li>
-									<Link href="tel:10098801810">+1 (009) 880-1810</Link>
+									<Link href="tel:9779818888722">+977 981-8888722</Link>
 								</li>
 							</ul>
 						</div>
@@ -90,17 +84,12 @@ const ContactTop = () => {
 								<i className="tji-chat"></i>
 							</div>
 							<h3 className="contact-title">
-								{t("contact_page.live_chat", "Live chat")}
+								{t("contact_page.live_chat", "Get Connected")}
 							</h3>
 							<ul className="contact-list">
-								<li>
-									<Link href="mailto:livechat@bexon.com">
-										livechat@bexon.com
-									</Link>
-								</li>
 								<li className="active">
 									<Link href="/contact">
-										{t("contact_page.need_help", "Need help?")}
+										{t("contact_page.need_help", "Need Assistance?")}
 									</Link>
 								</li>
 							</ul>

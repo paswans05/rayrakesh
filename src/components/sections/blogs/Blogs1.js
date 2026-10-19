@@ -1,19 +1,25 @@
+"use client";
 import BlogCard1 from "@/components/shared/cards/BlogCard1";
+import { useLanguage } from "@/hooks/useLanguage";
 import getBlogs from "@/libs/getBlogs";
 
 const Blogs1 = () => {
 	const blogs = getBlogs().slice(0, 3);
+	const { t } = useLanguage();
+
 	return (
-		<section className="tj-blog-section section-gap">
+		<section id="news" className="tj-blog-section section-gap">
 			<div className="container">
 				<div className="row">
 					<div className="col-12">
 						<div className="sec-heading text-center">
 							<span className="sub-title wow fadeInUp" data-wow-delay=".3s">
-								<i className="tji-box"></i>Insights & Ideas
+								<i className="tji-box"></i>
+								{t("news.subtitle", "Latest Updates")}
 							</span>
 							<h2 className="sec-title title-anim">
-								The Ultimate <span>Resource.</span>
+								{t("news.title_prefix", "News & ")}
+								<span>{t("news.title_highlight", "Updates")}</span>
 							</h2>
 						</div>
 					</div>

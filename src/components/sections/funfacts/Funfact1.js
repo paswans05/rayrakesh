@@ -12,9 +12,9 @@ const Funfact1 = () => {
 					<div className="col-12">
 						<div className="countup-wrap">
 							<div className="countup-item">
-								<FunfactSingle currentValue={93} symbol={"%"} />
+								<FunfactSingle currentValue={7} symbol={""} />
 								<span className="count-text">
-									{t("funfacts.projects_completed", "Projects Completed.")}
+									{t("funfacts.projects_completed", "Priority Sectors for Parsa")}
 								</span>
 								<span
 									className="count-separator"
@@ -24,9 +24,9 @@ const Funfact1 = () => {
 								></span>
 							</div>
 							<div className="countup-item">
-								<FunfactSingle currentValue={20} symbol={"M"} />
+								<FunfactSingle currentValue={1} symbol={""} />
 								<span className="count-text">
-									{t("funfacts.reach_worldwide", "Reach Worldwide")}
+									{t("funfacts.reach_worldwide", "Wards & Communities")}
 								</span>
 								<span
 									className="count-separator"
@@ -36,9 +36,9 @@ const Funfact1 = () => {
 								></span>
 							</div>
 							<div className="countup-item">
-								<FunfactSingle currentValue={8.5} symbol={"X"} />
+								<FunfactSingle currentValue={100} symbol={"%"} />
 								<span className="count-text">
-									{t("funfacts.faster_growth", "Faster Growth")}
+									{t("funfacts.awards_archived", "Committed to Transparent Service")}
 								</span>
 								<span
 									className="count-separator"
@@ -48,9 +48,9 @@ const Funfact1 = () => {
 								></span>
 							</div>
 							<div className="countup-item">
-								<FunfactSingle currentValue={100} symbol={"+"} />
+								<FunfactSingle currentValue={24} symbol={"/7"} />
 								<span className="count-text">
-									{t("funfacts.awards_archived", "Awards Archived")}
+									{t("funfacts.faster_growth", "Inclusive Community Vision")}
 								</span>
 							</div>
 						</div>

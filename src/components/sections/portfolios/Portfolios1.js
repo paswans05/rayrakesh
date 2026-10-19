@@ -5,35 +5,45 @@ import { useLanguage } from "@/hooks/useLanguage";
 import getPortfolio from "@/libs/getPortfolio";
 
 const Portfolios1 = () => {
-	const portfolio = getPortfolio()?.slice(0, 4);
+	const defaultPortfolio = getPortfolio()?.slice(0, 4);
 	const { t } = useLanguage();
+	const communityItems = t("projects.items");
+
+	const portfolio = Array.isArray(communityItems)
+		? communityItems.map((item, idx) => ({
+				...defaultPortfolio[idx],
+				title: item?.title || defaultPortfolio[idx]?.title,
+				category: item?.category || defaultPortfolio[idx]?.category,
+				shortDesc: item?.shortDesc || defaultPortfolio[idx]?.shortDesc,
+		  }))
+		: defaultPortfolio;
 
 	return (
-		<section className="tj-project-section section-gap">
+		<section id="community" className="tj-project-section section-gap">
 			<div className="container">
 				<div className="row">
 					<div className="col-12">
 						<div className="sec-heading-wrap">
 							<span className="sub-title wow fadeInUp" data-wow-delay=".3s">
 								<i className="tji-box"></i>
-								{t("projects.subtitle", "Proud Projects")}
+								{t("projects.subtitle", "Community Focus")}
 							</span>
 							<div className="heading-wrap-content">
 								<div className="sec-heading">
 									<h2 className="sec-title title-anim">
-										{t("projects.title_prefix", "Breaking Boundaries, Building ")}
-										<span>{t("projects.title_highlight", "Dreams.")}</span>
+										{t("projects.title_prefix", "Empowering the People of ")}
+										<span>{t("projects.title_highlight", "Parsa.")}</span>
 									</h2>
 								</div>
 								<p className="desc wow fadeInUp" data-wow-delay=".5s">
 									{t(
 										"projects.desc",
-										"We work closely with our clients to understand their unique needs and craft tailored solutions that address challenges."
+										"Addressing the genuine needs, daily concerns, and future hopes of our community through practical initiatives and community partnership."
 									)}
 								</p>
 								<div className="btn-wrap wow fadeInUp" data-wow-delay=".6s">
 									<ButtonPrimary
-										text={t("projects.get_in_touch", "Get In Touch")}
+										text={t("projects.get_in_touch", "Share Your Suggestions")}
 										url="/contact"
 									/>
 								</div>

@@ -1,16 +1,19 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import ButtonPrimary from "../buttons/ButtonPrimary";
+import { useLanguage } from "@/hooks/useLanguage";
 
-const ServiceCard1 = ({ service, idx, lastItem }) => {
-	const { title, desc, id, totalProject, img, svg, iconName } = service || {};
+const ServiceCard1 = ({ service, idx }) => {
+	const { title, desc, img, iconName } = service || {};
+	const { t } = useLanguage();
 
 	return (
 		<div className="service-item style-1">
 			<div className="service-img">
 				<Image
 					src={img ? img : "/images/service/service-1.webp"}
-					alt="Images"
+					alt={title || "Vision"}
 					width={870}
 					height={450}
 				/>
@@ -22,12 +25,9 @@ const ServiceCard1 = ({ service, idx, lastItem }) => {
 				<h4 className="title">
 					<Link href="/contact">{title}</Link>
 				</h4>
-				<p className="desc">
-					Through a combination of data-driven insights and innovative
-					approaches, we work closely with you to develop customized.
-				</p>
+				<p className="desc">{desc}</p>
 				<ButtonPrimary
-					text={"Learn More"}
+					text={t("solutions.learn_more", "Learn More")}
 					url={"/contact"}
 					isTextBtn={true}
 				/>

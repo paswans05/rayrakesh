@@ -5,7 +5,51 @@ import { useLanguage } from "@/hooks/useLanguage";
 import Link from "next/link";
 
 const Contact2 = () => {
-	const { t } = useLanguage();
+	const { t, language } = useLanguage();
+
+	const selectOptions = [
+		{
+			value: "0",
+			optionName:
+				language === "ne" ? "विषय छान्नुहोस्" : "Select Topic",
+		},
+		{
+			value: "1",
+			optionName:
+				language === "ne" ? "सडक तथा पूर्वाधार" : "Roads & Infrastructure",
+		},
+		{
+			value: "2",
+			optionName:
+				language === "ne" ? "शिक्षा तथा विद्यालय" : "Education & Schools",
+		},
+		{
+			value: "3",
+			optionName:
+				language === "ne" ? "स्वास्थ्य सेवा" : "Healthcare & Health Posts",
+		},
+		{
+			value: "4",
+			optionName:
+				language === "ne" ? "युवा तथा रोजगारी" : "Youth & Local Employment",
+		},
+		{
+			value: "5",
+			optionName:
+				language === "ne" ? "सरसफाइ तथा वातावरण" : "Sanitation & Environment",
+		},
+		{
+			value: "6",
+			optionName:
+				language === "ne" ? "अभियानमा स्वयंसेवक बन्ने" : "Volunteer for Campaign",
+		},
+		{
+			value: "7",
+			optionName:
+				language === "ne" ? "सामान्य सुझाव" : "General Suggestion",
+		},
+	];
+
 	return (
 		<section className="tj-contact-section section-gap section-gap-x">
 			<div className="container">
@@ -13,34 +57,28 @@ const Contact2 = () => {
 					<div className="col-lg-6">
 						<div className="global-map wow fadeInUp" data-wow-delay=".3s">
 							<div className="global-map-img">
-								<img src="/images/bg/map.svg" alt="Image" />
+								<img src="/images/bg/map.svg" alt="Parsa Location Map" />
 								<div className="location-indicator loc-1">
 									<div className="location-tooltip">
-										<span>Head office:</span>
-										<p>993 Renner Burg, West Rond, MT 94251-030, USA.</p>
-										<Link href="tel:10095447818">P: +977 981-8888722</Link>
-										<Link href="mailto:support@bexon.com">
-											M: support@bexon.com
+										<span>
+											{language === "ne" ? "अभियान मुख्य कार्यालय:" : "Main Campaign Office:"}
+										</span>
+										<p>Parsa, Sarlahi, Madhesh Province, Nepal.</p>
+										<Link href="tel:9779818888722">P: +977 981-8888722</Link>
+										<Link href="mailto:erakesh.ray@gmail.com">
+											M: erakesh.ray@gmail.com
 										</Link>
 									</div>
 								</div>
 								<div className="location-indicator loc-2">
 									<div className="location-tooltip">
-										<span>Regional office:</span>
-										<p>Hessisch Lichtenau 37235, Kassel, Germany.</p>
-										<Link href="tel:10098801810">P: +1 (009) 880-1810</Link>
-										<Link href="mailto:support@bexon.com">
-											M: support@bexon.com
-										</Link>
-									</div>
-								</div>
-								<div className="location-indicator loc-3">
-									<div className="location-tooltip">
-										<span>Regional office:</span>
-										<p>32 Altamira, State of Pará, Brazil.</p>
-										<Link href="tel:10095447818">P: +977 981-8888722</Link>
-										<Link href="mailto:support@bexon.com">
-											M: support@bexon.com
+										<span>
+											{language === "ne" ? "सम्पर्क सम्पर्क केन्द्र:" : "Contact Center:"}
+										</span>
+										<p>Sarlahi District, Madhesh Province, Nepal.</p>
+										<Link href="tel:9779818888722">P: +977 981-8888722</Link>
+										<Link href="mailto:erakesh.ray@gmail.com">
+											M: erakesh.ray@gmail.com
 										</Link>
 									</div>
 								</div>
@@ -58,8 +96,8 @@ const Contact2 = () => {
 									{t("home_contact.subtitle", "Get in Touch")}
 								</span>
 								<h2 className="sec-title title-anim">
-									{t("home_contact.title_prefix", "Drop Us a ")}
-									<span>{t("home_contact.title_highlight", "Line.")}</span>
+									{t("home_contact.title_prefix", "Send Us Your ")}
+									<span>{t("home_contact.title_highlight", "Message.")}</span>
 								</h2>
 							</div>
 							<form id="contact-form-2">
@@ -97,27 +135,7 @@ const Contact2 = () => {
 												<div className="tj-select">
 													<ReactNiceSelect
 														selectedIndex={0}
-														options={[
-															{ value: "0", optionName: t("home_contact.select_option", "Chose a option") },
-															{ value: "1", optionName: "Business Strategy" },
-															{ value: "2", optionName: "Customer Experience" },
-															{
-																value: "3",
-																optionName: "Sustainability and ESG",
-															},
-															{
-																value: "4",
-																optionName: "Training and Development",
-															},
-															{
-																value: "5",
-																optionName: "IT Support & Maintenance",
-															},
-															{
-																value: "6",
-																optionName: "Marketing Strategy",
-															},
-														]}
+														options={selectOptions}
 													/>
 												</div>
 											</div>
@@ -128,7 +146,10 @@ const Contact2 = () => {
 											<textarea
 												name="cfMessage2"
 												id="message"
-												placeholder={t("home_contact.type_message", "Type message *")}
+												placeholder={t(
+													"home_contact.type_message",
+													"Write your message or suggestion *"
+												)}
 											></textarea>
 										</div>
 									</div>

@@ -1,4 +1,5 @@
 "use client";
+import ButtonPrimary from "@/components/shared/buttons/ButtonPrimary";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -13,14 +14,14 @@ const Hero = () => {
 					<div className="banner-content">
 						<span className="sub-title wow fadeInDown" data-wow-delay=".2s">
 							<i className="tji-excellence"></i>{" "}
-							{t("hero.badge", "Recognized for Excellence")}
+							{t("hero.badge", "Together for a Better Parsa")}
 						</span>
 						<h1 className="banner-title title-anim">
-							{t("hero.title_prefix", "Driving Excellence Through Evolution and ")}
-							<span>{t("hero.title_highlight", "Trust.")}</span>
+							{t("hero.title_prefix", "A Better Parsa, ")}
+							<span>{t("hero.title_highlight", "Together.")}</span>
 						</h1>
 						<div className="banner-desc-area wow fadeInUp" data-wow-delay=".7s">
-							<Link className="banner-link" href="/contact">
+							<Link className="banner-link" href="#vision">
 								<span>
 									<i className="tji-arrow-right-big"></i>
 								</span>
@@ -28,9 +29,23 @@ const Hero = () => {
 							<div className="banner-desc">
 								{t(
 									"hero.desc",
-									"Represents growth, expansion, and modern business solution present growth, expansion."
+									"Working toward a brighter future for Parsa through improved infrastructure, quality education, accessible healthcare, local opportunities, and transparent public services."
 								)}
 							</div>
+						</div>
+						<div
+							className="banner-btn-wrap d-flex flex-wrap align-items-center gap-3 mt-4 wow fadeInUp"
+							data-wow-delay=".8s"
+						>
+							<ButtonPrimary
+								text={t("hero.primary_cta", "Explore Our Vision")}
+								url="#vision"
+							/>
+							<ButtonPrimary
+								text={t("hero.secondary_cta", "Meet Rakesh Ray")}
+								url="#about"
+								isTextBtn={true}
+							/>
 						</div>
 					</div>
 					<div className="banner-shape">
@@ -42,7 +57,7 @@ const Hero = () => {
 						<Image
 							data-speed="0.8"
 							src="/images/hero/hero-img.jpeg"
-							alt=""
+							alt="Rakesh Ray"
 							width={945}
 							height={793}
 						/>
@@ -86,10 +101,10 @@ const Hero = () => {
 								className="customers-number wow fadeInUp"
 								data-wow-delay=".5s"
 							>
-								{t("hero.customers_count", "30K")}
+								{t("hero.customers_count", "Parsa")}
 							</div>
 							<h6 className="customers-text wow fadeInUp" data-wow-delay=".5s">
-								{t("hero.customers_text", "Happy customer we have world-wide.")}
+								{t("hero.customers_text", "One community. One shared future.")}
 							</h6>
 						</div>
 					</div>
@@ -100,7 +115,7 @@ const Hero = () => {
 					<span>
 						<i className="tji-arrow-down-long"></i>
 					</span>
-					{t("hero.scroll_down", "Scroll Down")}
+					{t("hero.scroll_down", "Explore Our Vision")}
 				</button>
 			</div>
 		</section>

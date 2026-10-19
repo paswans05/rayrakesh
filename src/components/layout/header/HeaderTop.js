@@ -13,9 +13,9 @@ const HeaderTop = ({ type }) => {
 						<div className="header-top-content">
 							<p className="topbar-text">
 								<i className="tji-excellence"></i>
-								{t("header.recognized", "Recognized for Excellence")}{" "}
+								{t("header.recognized", "Together for a Better Parsa")}{" "}
 								<Link href="/contact">
-									{t("header.join_us", "Join us Now")}
+									{t("header.join_us", "Join Our Campaign")}
 								</Link>
 							</p>
 							<div className="header-info">
@@ -23,13 +23,15 @@ const HeaderTop = ({ type }) => {
 									<span>
 										<i className="tji-location"></i>
 									</span>
-									<Link href="#">Find a Location!</Link>
+									<Link href="/contact">
+										{t("footer.location", "Parsa, Sarlahi, Nepal")}
+									</Link>
 								</div>
 								<div className="info-item">
 									<span>
 										<i className="tji-phone-3"></i>
 									</span>
-									<Link href="tel:8089091313">808-909-1313</Link>
+									<Link href="tel:9779818888722">+977 981-8888722</Link>
 								</div>
 								<div className="info-item">
 									<div className="social-links style-2">

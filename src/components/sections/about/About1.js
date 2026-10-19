@@ -10,7 +10,7 @@ const About1 = () => {
 	const { t } = useLanguage();
 
 	return (
-		<section className="tj-about-section section-gap">
+		<section id="about" className="tj-about-section section-gap">
 			<div className="container">
 				<div className="row">
 					<div className="col-xl-6 col-lg-6 order-lg-1 order-2">
@@ -22,7 +22,7 @@ const About1 = () => {
 								<Image
 									data-speed="0.8"
 									src="/images/about/about-1.webp"
-									alt=""
+									alt="Rakesh Ray - Parsa Development"
 									width={653}
 									height={675}
 								/>
@@ -33,13 +33,13 @@ const About1 = () => {
 									data-wow-delay=".3s"
 								>
 									<span className="sub-title">
-										{t("about.experiences", "Experiences")}
+										{t("about.experiences", "Commitment")}
 									</span>
 									<div className="customers-number">
-										{t("about.exp_years", "13+")}
+										{t("about.exp_years", "Parsa")}
 									</div>
 									<h6 className="customers-text">
-										{t("about.exp_text", "Decades of Experience, Endless Innovation")}
+										{t("about.exp_text", "Dedicated to the Development of Our Municipality")}
 									</h6>
 								</div>
 							</div>
@@ -53,19 +53,22 @@ const About1 = () => {
 							<div className="sec-heading">
 								<span className="sub-title wow fadeInUp" data-wow-delay=".3s">
 									<i className="tji-box"></i>
-									{t("about.subtitle", "Get to Know Us")}
+									{t("about.subtitle", "Candidate for Mayor, Parsa")}
 								</span>
 								<h2 className="sec-title title-anim">
-									{t(
-										"about.title_prefix",
-										"Empowering Businesses with Innovation, Expertise, and for "
-									)}
-									<span>{t("about.title_highlight", "Success.")}</span>
+									{t("about.title_prefix", "About ")}
+									<span>{t("about.title_highlight", "Rakesh Ray")}</span>
 								</h2>
+								<p className="desc mt-3 wow fadeInUp" data-wow-delay=".4s">
+									{t(
+										"about.desc",
+										"Rakesh Ray is a dedicated professional with a background in the construction business through Cloud Construction Pvt Ltd. Born and rooted in Parsa, Sarlahi District, he is committed to utilizing his practical experience in planning, infrastructure development, and organizational management to contribute toward the comprehensive development of Parsa."
+									)}
+								</p>
 							</div>
 							<div className="wow fadeInUp" data-wow-delay=".5s">
 								<ButtonPrimary
-									text={t("about.learn_more", "Learn More")}
+									text={t("about.learn_more", "Meet Rakesh Ray")}
 									url={"/contact"}
 									isTextBtn={true}
 								/>
@@ -82,16 +85,16 @@ const About1 = () => {
 								<p className="desc">
 									{t(
 										"about.quote",
-										"We believe in building lasting relationships with our clients through trust, innovation, and exceptional service."
+										"Our goal is simple and clear: to work together with every citizen of Parsa to build better roads, stronger schools, accessible clinics, and honest public governance."
 									)}
 								</p>
 								<div className="client-info-area">
 									<div className="client-info">
 										<h6 className="title">
-											{t("about.founder_name", "Esther Howard")}
+											{t("about.founder_name", "Rakesh Ray")}
 										</h6>
 										<span className="designation">
-											{t("about.founder_role", "Co.Founder")}
+											{t("about.founder_role", "Cloud Construction Pvt Ltd")}
 										</span>
 									</div>
 									<span className="quote-icon">
@@ -99,10 +102,10 @@ const About1 = () => {
 									</span>
 								</div>
 							</div>
-							<div className="video-img  wow fadeInUp" data-wow-delay=".9s">
+							<div className="video-img wow fadeInUp" data-wow-delay=".9s">
 								<Image
 									src="/images/about/about-2.webp"
-									alt=""
+									alt="Community Gathering"
 									width={224}
 									height={234}
 								/>

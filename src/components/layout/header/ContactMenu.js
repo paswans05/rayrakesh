@@ -39,13 +39,16 @@ const ContactMenu = ({ isContactOpen, setIsContactOpen }) => {
 						</div>
 						<div className="offcanvas-text">
 							<p>
-								Developing personalize our customer journeys to increase
-								satisfaction & loyalty of our expansion recognized by industry
-								leaders.
+								{t(
+									"footer.desc",
+									"Dedicated to the sustainable development, improved infrastructure, and transparent public service of Parsa, Sarlahi District, Madhesh Province, Nepal."
+								)}
 							</p>
 						</div>
 						<div className="hamburger-search-area">
-							<h5 className="hamburger-title">Search Now!</h5>
+							<h5 className="hamburger-title">
+								{t("header.search_placeholder", "Search vision and priorities...")}
+							</h5>
 							<div className="hamburger_search">
 								<form method="get" action="/">
 									<button type="submit">
@@ -55,7 +58,7 @@ const ContactMenu = ({ isContactOpen, setIsContactOpen }) => {
 										type="search"
 										autoComplete="off"
 										name="s"
-										placeholder={t("header.search_placeholder", "Search here...")}
+										placeholder={t("header.search_placeholder", "Search vision and priorities...")}
 									/>
 								</form>
 							</div>
@@ -67,20 +70,20 @@ const ContactMenu = ({ isContactOpen, setIsContactOpen }) => {
 							<div className="contact-info">
 								<div className="contact-item">
 									<span className="subtitle">{t("header.phone", "Phone")}</span>
-									<Link className="contact-link" href="tel:10095447818">
+									<Link className="contact-link" href="tel:9779818888722">
 										+977 981-8888722
 									</Link>
 								</div>
 								<div className="contact-item">
 									<span className="subtitle">{t("header.email", "Email")}</span>
-									<Link className="contact-link" href="mailto:erakesh.ray@gmail.com ">
+									<Link className="contact-link" href="mailto:erakesh.ray@gmail.com">
 										erakesh.ray@gmail.com
 									</Link>
 								</div>
 								<div className="contact-item">
 									<span className="subtitle">{t("header.location", "Location")}</span>
 									<span className="contact-link">
-										993 Renner Burg, West Rond, MT 94251-030
+										{t("footer.location", "Parsa, Sarlahi, Madhesh Province, Nepal")}
 									</span>
 								</div>
 							</div>

@@ -13,7 +13,7 @@ const Logo = ({ headerType, isStickyHeader }) => {
 							? "/images/logos/logo.png"
 							: "/images/logos/logo.png"
 					}
-					alt=""
+					alt="Rakesh Ray — A Better Parsa, Together"
 					width={544}
 					height={152}
 					style={{ height: "auto" }}

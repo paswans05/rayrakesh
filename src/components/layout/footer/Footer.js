@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useLanguage } from "@/hooks/useLanguage";
 
 const Footer = () => {
-	const { t } = useLanguage();
+	const { t, language } = useLanguage();
 
 	return (
 		<footer className="tj-footer-section footer-1 section-gap-x">
@@ -14,24 +14,19 @@ const Footer = () => {
 							<div className="footer-widget wow fadeInUp" data-wow-delay=".1s">
 								<div className="footer-logo">
 									<Link href="/">
-										<img src="/images/logos/logo.png" alt="Logos" />
+										<img src="/images/logos/logo.png" alt="Rakesh Ray Logo" />
 									</Link>
 								</div>
 								<div className="footer-text">
+									<h6 className="text-white mb-2" style={{ fontWeight: "700" }}>
+										{t("footer.brand_tagline", "Rakesh Ray — A Better Parsa, Together.")}
+									</h6>
 									<p>
 										{t(
 											"footer.desc",
-											"Developing personalized customer journeys to increase satisfaction & loyalty of our expansion."
+											"Dedicated to the sustainable development, improved infrastructure, and transparent public service of Parsa, Sarlahi District, Madhesh Province, Nepal."
 										)}
 									</p>
-								</div>
-								<div className="award-logo-area">
-									<div className="award-logo">
-										<img src="/images/footer/award-logo-1.webp" alt="" />
-									</div>
-									<div className="award-logo">
-										<img src="/images/footer/award-logo-2.webp" alt="" />
-									</div>
 								</div>
 							</div>
 						</div>
@@ -46,6 +41,12 @@ const Footer = () => {
 										<Link href="/">{t("nav.home", "Home")}</Link>
 									</li>
 									<li>
+										<Link href="#vision">{t("solutions.subtitle", "Vision & Priorities")}</Link>
+									</li>
+									<li>
+										<Link href="#about">{t("about.title_highlight", "About Rakesh Ray")}</Link>
+									</li>
+									<li>
 										<Link href="/contact">{t("nav.contact", "Contact Us")}</Link>
 									</li>
 								</ul>
@@ -56,16 +57,18 @@ const Footer = () => {
 								className="footer-widget widget-nav-menu wow fadeInUp"
 								data-wow-delay=".5s"
 							>
-								<h5 className="title">{t("footer.contact_info", "Contact Info")}</h5>
+								<h5 className="title">{t("footer.contact_info", "Campaign Contact")}</h5>
 								<ul>
 									<li>
 										<Link href="tel:9779818888722">+977 981-8888722</Link>
 									</li>
 									<li>
-										<Link href="mailto:erakesh.ray@gmail.com ">erakesh.ray@gmail.com </Link>
+										<Link href="mailto:erakesh.ray@gmail.com">erakesh.ray@gmail.com</Link>
 									</li>
 									<li>
-										<span>993 Renner Burg, West Rond, MT</span>
+										<span>
+											{t("footer.location", "Parsa, Sarlahi, Madhesh Province, Nepal")}
+										</span>
 									</li>
 								</ul>
 							</div>
@@ -76,21 +79,21 @@ const Footer = () => {
 								data-wow-delay=".7s"
 							>
 								<h3 className="title">
-									{t("footer.newsletter_title", "Subscribe to Our Newsletter.")}
+									{t("footer.newsletter_title", "Stay Informed with Campaign Updates")}
 								</h3>
 								<div className="subscribe-form">
 									<form action="#">
 										<input
 											type="email"
 											name="email"
-											placeholder={t("footer.newsletter_placeholder", "Enter email")}
+											placeholder={t("footer.newsletter_placeholder", "Enter your email address")}
 										/>
 										<button type="submit">
 											<i className="tji-plane"></i>
 										</button>
 										<label htmlFor="agree">
 											<input id="agree" type="checkbox" />
-											{t("footer.agree_terms", "Agree to our privacy policy?")}
+											{t("footer.agree_terms", "Agree to receive campaign updates?")}
 										</label>
 									</form>
 								</div>
@@ -115,11 +118,11 @@ const Footer = () => {
 											</Link>
 										</li>
 										<li>
-											<Link href="mailto:erakesh.ray@gmail.com ">
+											<Link href="mailto:erakesh.ray@gmail.com">
 												<span className="icon">
 													<i className="tji-envelop-2"></i>
 												</span>
-												<span className="text">erakesh.ray@gmail.com </span>
+												<span className="text">erakesh.ray@gmail.com</span>
 											</Link>
 										</li>
 									</ul>
@@ -150,11 +153,11 @@ const Footer = () => {
 								</div>
 								<div className="copyright-text">
 									<p>
-										&copy; 2025&nbsp;
+										&copy; 2026&nbsp;
 										<Link href="/">
-											Rakesh
+											{language === "ne" ? "राकेश राय — राम्रो पर्सा, हामी सबैको साथ" : "Rakesh Ray — A Better Parsa, Together"}
 										</Link>{" "}
-										{t("footer.rights_reserved", "All rights reserved")}
+										| {t("footer.rights_reserved", "All rights reserved.")}
 									</p>
 								</div>
 							</div>

@@ -32,8 +32,9 @@ const headingFont = Mona_Sans({
 });
 
 export const metadata = {
-	title: "Rakesh - Corporate Business React NextJs Template",
-	description: "Rakesh - Corporate Business React NextJs Template",
+	title: "Rakesh Ray — Mayoral Election Campaign | Parsa, Nepal",
+	description:
+		"Official campaign website for Rakesh Ray, candidate for Mayor of Parsa, Sarlahi District, Madhesh Province, Nepal. A Better Parsa, Together.",
 };
 
 import { LanguageProvider } from "@/context_api/LanguageContext";
