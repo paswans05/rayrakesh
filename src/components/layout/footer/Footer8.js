@@ -24,7 +24,7 @@ const Footer8 = () => {
 									<div className="footer-text">
 										<p>
 											Developing personalze our customer journeys to increase
-											satisfaction & loyalty of our expansion. Bexon has been a
+											satisfaction & loyalty of our expansion. Rakesh has been a
 											game.
 										</p>
 									</div>
@@ -187,7 +187,7 @@ const Footer8 = () => {
 											href="https://themeforest.net/user/theme-junction/portfolio"
 											target="_blank"
 										>
-											Bexon
+											Rakesh
 										</Link>{" "}
 										All right reserved
 									</p>

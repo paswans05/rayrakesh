@@ -178,7 +178,7 @@ const Footer5 = () => {
 											href="https://themeforest.net/user/theme-junction/portfolio"
 											target="_blank"
 										>
-											Bexon
+											Rakesh
 										</Link>{" "}
 										All right reserved
 									</p>

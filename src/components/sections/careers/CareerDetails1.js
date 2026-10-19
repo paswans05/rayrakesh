@@ -245,7 +245,7 @@ const CareerDetails1 = ({ currentItemId }) => {
 										</li>
 										<li>
 											<span className="first-child">Company</span>
-											<span>Bexon</span>
+											<span>Rakesh</span>
 										</li>
 										<li>
 											<span className="first-child">Website</span>
