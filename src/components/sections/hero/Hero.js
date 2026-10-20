@@ -56,7 +56,7 @@ const Hero = () => {
 					<div className="banner-img">
 						<Image
 							data-speed="0.8"
-							src="/images/hero/hero-img.jpeg"
+							src="/images/hero/hero-img.png"
 							alt="Rakesh Ray"
 							width={945}
 							height={793}
