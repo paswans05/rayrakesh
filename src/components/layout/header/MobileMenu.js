@@ -38,7 +38,7 @@ const MobileMenu = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
 								</div>
 							</div>
 						</div>
-						<MobileNavbar />
+						<MobileNavbar onClose={handleClick} />
 						<div className="hamburger-infos">
 							<h5 className="hamburger-title">{t("header.contact_info", "Contact Info")}</h5>
 							<div className="contact-info">

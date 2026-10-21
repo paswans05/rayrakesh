@@ -292,8 +292,8 @@ const MarathonHero = () => {
 							<div
 								style={{
 									position: "absolute",
-									top: "20px",
-									right: "-15px",
+									top: "16px",
+									right: "12px",
 									background: "#ff5e14",
 									color: "#ffffff",
 									padding: "10px 16px",

@@ -3,7 +3,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import getNavItems from "@/libs/getNavItems";
 import Link from "next/link";
 
-const MobileNavbar = () => {
+const MobileNavbar = ({ onClose }) => {
 	const navItems = getNavItems();
 	const { t } = useLanguage();
 
@@ -25,7 +25,12 @@ const MobileNavbar = () => {
 									key={idx}
 									className={idx === navItems.length - 1 ? "mean-last" : ""}
 								>
-									<Link href={item?.path ? item?.path : "/"}>
+									<Link
+										href={item?.path ? item?.path : "/"}
+										onClick={() => {
+											if (onClose) onClose();
+										}}
+									>
 										{getItemName(item)}
 									</Link>
 								</li>

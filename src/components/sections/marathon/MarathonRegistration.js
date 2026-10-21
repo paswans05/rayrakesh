@@ -201,7 +201,7 @@ const MarathonRegistration = ({ initialCategory = "5km" }) => {
 									background: "#ffffff",
 									color: "#0c1e21",
 									borderRadius: "24px",
-									padding: "50px 36px",
+									padding: "clamp(24px, 5vw, 50px) clamp(16px, 4vw, 36px)",
 									textAlign: "center",
 									boxShadow: "0 25px 60px rgba(0,0,0,0.4)",
 								}}
@@ -301,7 +301,7 @@ const MarathonRegistration = ({ initialCategory = "5km" }) => {
 									background: "rgba(255, 255, 255, 0.04)",
 									border: "1px solid rgba(255, 255, 255, 0.12)",
 									borderRadius: "24px",
-									padding: "45px 36px",
+									padding: "clamp(22px, 4.5vw, 45px) clamp(16px, 3.5vw, 36px)",
 									backdropFilter: "blur(12px)",
 									boxShadow: "0 25px 60px rgba(0,0,0,0.5)",
 								}}

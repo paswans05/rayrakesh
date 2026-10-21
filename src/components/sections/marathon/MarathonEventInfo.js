@@ -432,7 +432,7 @@ const MarathonEventInfo = () => {
 							style={{
 								background: "#f8fbfb",
 								borderRadius: "22px",
-								padding: "40px 32px",
+								padding: "clamp(24px, 4vw, 40px) clamp(14px, 3.5vw, 32px)",
 								border: "1px solid #dce8e6",
 							}}
 						>

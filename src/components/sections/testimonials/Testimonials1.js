@@ -7,7 +7,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useLanguage } from "@/hooks/useLanguage";
 
 const Testimonials1 = () => {
-	const testimonials = getTestimonials()?.slice(0, 6);
+	const rawTestimonials = getTestimonials() || [];
+	const testimonials =
+		rawTestimonials.length > 0 && rawTestimonials.length < 12
+			? [...rawTestimonials, ...rawTestimonials]
+			: rawTestimonials;
 	const { t } = useLanguage();
 
 	return (

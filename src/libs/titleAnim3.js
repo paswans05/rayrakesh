@@ -1,40 +1,28 @@
-import { gsap, SplitText } from "@/libs/gsap.config";
+import { gsap } from "@/libs/gsap.config";
 
 const titleAnim3 = contanerRef => {
 	const animItems = gsap.utils.toArray(".hero-text-anim");
-	const splits = [];
 
 	if (animItems.length) {
-		let staggerAmount = 0.05,
-			delayValue = 0.4,
+		let delayValue = 0.2,
 			easeType = "power1.out";
 
 		animItems.forEach(element => {
 			try {
 				element.classList.add("start-anim");
-				let animationSplitText = new SplitText(element, { type: "chars, words" });
-				splits.push(animationSplitText);
-				gsap.from(animationSplitText.chars, {
+				gsap.from(element, {
 					opacity: 0,
-					duration: 0.4,
+					y: 20,
+					duration: 0.6,
 					delay: delayValue,
 					ease: easeType,
-					stagger: staggerAmount,
 					scrollTrigger: { trigger: element, start: "top 85%" },
 				});
 			} catch (e) {}
 		});
 	}
 
-	return () => {
-		splits.forEach(s => {
-			try {
-				if (s && typeof s.revert === "function") {
-					s.revert();
-				}
-			} catch (e) {}
-		});
-	};
+	return () => {};
 };
 
 export default titleAnim3;

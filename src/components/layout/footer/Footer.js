@@ -2,11 +2,11 @@
 import Link from "next/link";
 import { useLanguage } from "@/hooks/useLanguage";
 
-const Footer = () => {
+const Footer = ({ className = "" }) => {
 	const { t, language } = useLanguage();
 
 	return (
-		<footer className="tj-footer-section footer-1 section-gap-x">
+		<footer className={`tj-footer-section footer-1 section-gap-x ${className}`}>
 			<div className="footer-main-area">
 				<div className="container">
 					<div className="row justify-content-between">

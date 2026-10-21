@@ -160,7 +160,7 @@ const MarathonAbout = () => {
 						background: "linear-gradient(135deg, #0c1e21 0%, #163136 100%)",
 						borderRadius: "24px",
 						color: "#ffffff",
-						padding: "45px 36px",
+						padding: "clamp(24px, 5vw, 45px) clamp(16px, 4vw, 36px)",
 						boxShadow: "0 20px 40px rgba(12, 30, 33, 0.18)",
 					}}
 				>

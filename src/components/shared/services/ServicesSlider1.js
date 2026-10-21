@@ -28,13 +28,16 @@ const ServicesSlider1 = () => {
 	const { t } = useLanguage();
 	const visionItems = t("solutions.items");
 	const items = Array.isArray(visionItems) ? visionItems : [];
+	// Duplicate slides to satisfy Swiper infinite loop mode requirements
+	const displayItems =
+		items.length > 0 && items.length < 14 ? [...items, ...items] : items;
 
 	return (
 		<Swiper
-			slidesPerView={1.3}
-			spaceBetween={15}
+			slidesPerView={1.15}
+			spaceBetween={12}
 			loop={true}
-			speed={1500}
+			speed={1200}
 			centeredSlides={true}
 			autoplay={{
 				delay: 4500,
@@ -68,7 +71,7 @@ const ServicesSlider1 = () => {
 			modules={[Pagination, Autoplay]}
 			className="service-slider"
 		>
-			{items.map((service, idx) => (
+			{displayItems.map((service, idx) => (
 				<SwiperSlide key={idx}>
 					<ServiceCard1
 						service={{

@@ -37,7 +37,7 @@ export default function Home() {
 						{/* <Blogs1 /> */}
 						<Cta />
 					</main>
-					<Footer />
+					<Footer className="footer-with-cta" />
 				</div>
 			</div>
 
