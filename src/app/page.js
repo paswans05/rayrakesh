@@ -2,7 +2,6 @@ import Footer from "@/components/layout/footer/Footer";
 import Header from "@/components/layout/header/Header";
 import About1 from "@/components/sections/about/About1";
 import Blogs1 from "@/components/sections/blogs/Blogs1";
-import Brands1 from "@/components/sections/brands/Brands1";
 import Contact2 from "@/components/sections/contacts/Contact2";
 import Cta from "@/components/sections/cta/Cta";
 import Faq2 from "@/components/sections/faq/Faq2";
@@ -28,7 +27,6 @@ export default function Home() {
 						<HeaderSpace />
 						<Hero />
 						<Features />
-						<Brands1 />
 						<About1 />
 						<Services1 />
 						<Portfolios1 />

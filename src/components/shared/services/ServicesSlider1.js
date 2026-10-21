@@ -15,13 +15,13 @@ const icons = [
 ];
 
 const images = [
-	"/images/service/service-1.webp",
-	"/images/service/service-2.webp",
-	"/images/service/service-3.webp",
-	"/images/service/service-4.webp",
-	"/images/service/service-5.webp",
-	"/images/service/service-6.webp",
-	"/images/service/service-1.webp",
+	"/images/service/service-1.png",
+	"/images/service/service-2.png",
+	"/images/service/service-3.png",
+	"/images/service/service-4.png",
+	"/images/service/service-5.png",
+	"/images/service/service-6.png",
+	"/images/service/service-1.png",
 ];
 
 const ServicesSlider1 = () => {
