@@ -41,6 +41,9 @@ const Footer = () => {
 										<Link href="/">{t("nav.home", "Home")}</Link>
 									</li>
 									<li>
+										<Link href="/marathon">{t("nav.marathon", "Community Marathon")}</Link>
+									</li>
+									<li>
 										<Link href="#vision">{t("solutions.subtitle", "Vision & Priorities")}</Link>
 									</li>
 									<li>

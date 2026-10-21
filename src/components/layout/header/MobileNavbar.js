@@ -9,6 +9,7 @@ const MobileNavbar = () => {
 
 	const getItemName = (item) => {
 		if (item?.path === "/") return t("nav.home", item?.name);
+		if (item?.path === "/marathon") return t("nav.marathon", item?.name);
 		if (item?.path === "/contact") return t("nav.contact", item?.name);
 		return item?.name;
 	};
