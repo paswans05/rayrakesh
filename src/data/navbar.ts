@@ -1,9 +1,9 @@
 import { Mail, CallAlt, MapPinFill } from "@/components/icons"
 
 export const CONTACT_INFO = [
-    { icon: MapPinFill, text: "Outstanding service in New York City" },
-    { icon: CallAlt, text: "+1 (123) 456-7890" },
-    { icon: Mail, text: "info@Rakesh Ray.com" },
+    { icon: MapPinFill, text: "Parsa, Sarlahi, Nepal" },
+    { icon: CallAlt, text: "+977-9818888722" },
+    { icon: Mail, text: "erakesh.ray@gmail.com " },
 ];
 
 export const NAV_ITEMS = [
