@@ -9,11 +9,7 @@ export const CONTACT_INFO = [
 export const NAV_ITEMS = [
     {
         label: "Home",
-        children: [
-            { label: "Home 1", href: "/" },
-            { label: "Home 2", href: "/home-2" },
-            { label: "Home 3", href: "/home-3" },
-        ],
+        href: "/"
     },
     { label: "About", href: "/about" },
     {
