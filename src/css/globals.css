@@ -1,0 +1,56 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
+@import "./utilities/font-faces.css";
+@import "./utilities/grid.css";
+@import "./utilities/content.css";
+@import "./components/effect.css";
+@import "./components/scroll-reveal.css";
+@import "./components/decoration.css";
+@import "./components/accordion.css";
+
+:root {
+  --menubar-height: 146px;
+  --page-gap: 1rem;
+  --radius: 1.25rem;
+
+  @media (width >=theme(--breakpoint-md)) {
+    --page-gap: 1.875rem
+  }
+}
+
+@theme {
+  --font-roboto: Roboto, sans-serif;
+  --font-libre-franklin: Libre Franklin, sans-serif;
+  --color-primary: #CAA05C;
+  --color-primary-lighter: #F5F4F1;
+  --color-primary-light: #DFCD95;
+  --color-primary-dark: #796F51;
+  --color-secondary: #A6B0BA;
+  --color-body: #4B535D;
+  --color-dark: #202a34;
+  --color-darker: #121C27;
+  --color-darkest: #191714;
+  --color-light: #CBD1D6;
+  --color-lighter: #E5E7EB;
+  --color-lightest: #F7F8F9;
+  --color-danger: #BD1F17;
+  --color-danger-lighter: #FEEBED;
+  --color-danger-light: #FF9B9B;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: var(--color-white);
+  font-family: var(--font-roboto), sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.heading {
+  font-family: var(--font-libre-franklin), sans-serif;
+}

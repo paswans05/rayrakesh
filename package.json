@@ -1,38 +1,41 @@
 {
-	"name": "rakesh",
-	"version": "0.1.0",
-	"private": true,
-	"scripts": {
-		"dev": "next dev --turbopack",
-		"build": "next build --turbopack",
-		"start": "next start"
-	},
-	"browserslist": [
-		">0.3%",
-		"not dead",
-		"not op_mini all"
-	],
-	"dependencies": {
-		"@gsap/react": "^2.1.2",
-		"bootstrap": "^5.3.7",
-		"chart.js": "^4.5.0",
-		"glightbox": "^3.3.1",
-		"gsap": "^3.13.0",
-		"imagesloaded": "^5.0.0",
-		"isotope-layout": "^3.0.6",
-		"next": "^16.0.7",
-		"nice-select2": "^2.4.0",
-		"react": "^19.2.1",
-		"react-chartjs-2": "^5.3.0",
-		"react-dom": "^19.2.1",
-		"react-intersection-observer": "^9.16.0",
-		"react-odometerjs": "^3.1.3",
-		"react-range-slider-input": "^3.2.1",
-		"sweetalert2": "^11.22.5",
-		"swiper": "^11.2.10",
-		"wow.js": "^1.2.2"
-	},
-	"devDependencies": {
-		"sass": "^1.94.2"
-	}
+  "name": "rayrakesh",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.5.0",
+    "class-variance-authority": "^0.7.1",
+    "embla-carousel": "^8.6.0",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-fade": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
+    "gsap": "^3.15.0",
+    "next": "16.3.2",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "tailwind-merge": "^3.6.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/postcss": "^4",
+    "@tailwindcss/typography": "^0.5.20",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.9",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "allowScripts": {
+    "sharp@0.34.5": true,
+    "unrs-resolver@1.12.2": true
+  }
 }

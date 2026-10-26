@@ -1,0 +1,20 @@
+import * as React from 'react';
+
+export interface IconProps extends React.SVGProps<SVGSVGElement> {}
+
+export const Monitor = React.forwardRef<SVGSVGElement, IconProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <svg
+        ref={ref}
+        viewBox="0 0 24 24"
+        className={className}
+        {...props}
+      >
+        <path d="M18.5 2h-13c-1.932 0.002-3.498 1.568-3.5 3.5v9c0.002 1.932 1.568 3.498 3.5 3.5h5.5v2h-3c-0.552 0-1 0.448-1 1s0.448 1 1 1v0h8c0.552 0 1-0.448 1-1s-0.448-1-1-1v0h-3v-2h5.5c1.932-0.002 3.498-1.568 3.5-3.5v-9c-0.002-1.932-1.568-3.498-3.5-3.5h-0zM20 14.5c-0.001 0.828-0.672 1.499-1.5 1.5h-13c-0.828-0.001-1.499-0.672-1.5-1.5v-9c0.001-0.828 0.672-1.499 1.5-1.5h13c0.828 0.001 1.499 0.672 1.5 1.5v0zM9.57 5.46c0.136 0.136 0.22 0.323 0.22 0.53s-0.084 0.395-0.22 0.53l-3 3c-0.134 0.127-0.316 0.206-0.516 0.206-0.414 0-0.75-0.336-0.75-0.75 0-0.2 0.079-0.382 0.206-0.517l3-3c0.136-0.136 0.323-0.219 0.53-0.219s0.394 0.084 0.53 0.219v0z"></path>
+      </svg>
+    );
+  }
+);
+
+Monitor.displayName = 'Monitor';

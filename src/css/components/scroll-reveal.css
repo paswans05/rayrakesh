@@ -1,0 +1,110 @@
+/* High-performance CSS Scroll Reveal Utilities */
+.reveal-item,
+.reveal-fade,
+.reveal-scale {
+  opacity: 0;
+  transform: translateY(var(--reveal-translate-y, 1.5rem)) 
+             translateX(var(--reveal-translate-x, 0px)) 
+             scaleX(var(--reveal-scale-x, 1)) 
+             scaleY(var(--reveal-scale-y, 1));
+  will-change: opacity, transform;
+}
+
+.reveal-fade {
+  --reveal-translate-y: 0px;
+  --reveal-translate-x: 0px;
+}
+
+.reveal-scale {
+  --reveal-translate-y: 0px;
+  --reveal-translate-x: 0px;
+  --reveal-scale-x: 0.9;
+  --reveal-scale-y: 0.9;
+}
+
+.reveal-item[data-reveal="true"],
+.reveal-fade[data-reveal="true"],
+.reveal-scale[data-reveal="true"],
+[data-reveal="true"] > .reveal-item,
+[data-reveal="true"] > .reveal-fade,
+[data-reveal="true"] > .reveal-scale,
+[data-reveal="true"] .reveal-item,
+[data-reveal="true"] .reveal-fade,
+[data-reveal="true"] .reveal-scale {
+  opacity: 1;
+  transform: translateY(0) 
+             translateX(0) 
+             scaleX(var(--reveal-scale-x-end, 1)) 
+             scaleY(var(--reveal-scale-y-end, 1));
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--parent-delay, 0ms) + var(--reveal-delay, 0ms));
+}
+
+/* Direction utilities using dynamic --reveal-distance variable */
+.reveal-from-top,
+[data-reveal-direction="top"],
+[data-reveal-direction="down"] {
+  --reveal-translate-y: calc(-1 * var(--reveal-distance, 1.5rem));
+}
+
+.reveal-from-bottom,
+[data-reveal-direction="bottom"],
+[data-reveal-direction="up"] {
+  --reveal-translate-y: var(--reveal-distance, 1.5rem);
+}
+
+.reveal-from-left,
+[data-reveal-direction="left"] {
+  --reveal-translate-x: calc(-1 * var(--reveal-distance, 1.5rem));
+}
+
+.reveal-from-right,
+[data-reveal-direction="right"] {
+  --reveal-translate-x: var(--reveal-distance, 1.5rem);
+}
+
+/* Dynamic Tailwind v4 Wildcard Utilities using Tailwind Spacing Scale */
+@utility reveal-delay-* {
+  transition-delay: calc(1ms * --value(integer));
+  --reveal-delay: calc(1ms * --value(integer));
+  --parent-delay: calc(1ms * --value(integer));
+}
+
+@utility reveal-distance-* {
+  --reveal-distance: --spacing(--value(integer));
+}
+
+@utility reveal-translate-y-* {
+  --reveal-translate-y: --spacing(--value(integer));
+}
+
+@utility reveal-translate-x-* {
+  --reveal-translate-x: --spacing(--value(integer));
+}
+
+/* Dynamic Scale Utilities: scale-from-[number], scale-to-[number], scale-from-x/y-[number], scale-to-x/y-[number] */
+@utility scale-from-* {
+  --reveal-scale-x: calc(--value(integer) / 100);
+  --reveal-scale-y: calc(--value(integer) / 100);
+}
+
+@utility scale-to-* {
+  --reveal-scale-x-end: calc(--value(integer) / 100);
+  --reveal-scale-y-end: calc(--value(integer) / 100);
+}
+
+@utility scale-from-x-* {
+  --reveal-scale-x: calc(--value(integer) / 100);
+}
+
+@utility scale-from-y-* {
+  --reveal-scale-y: calc(--value(integer) / 100);
+}
+
+@utility scale-to-x-* {
+  --reveal-scale-x-end: calc(--value(integer) / 100);
+}
+
+@utility scale-to-y-* {
+  --reveal-scale-y-end: calc(--value(integer) / 100);
+}

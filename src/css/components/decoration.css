@@ -1,0 +1,41 @@
+@utility bg-dot {
+  --d-gap: 24px;
+  --d-size: 2px;
+  --d-pos: 0 0, var(--d-gap) var(--d-gap);
+  --d-color: var(--color-primary);  
+  --d-style: radial-gradient(circle, currentColor var(--d-size), transparent 0), radial-gradient(circle, currentColor var(--d-size), transparent 0);
+  background-repeat: repeat;
+  background-image: var(--d-style);
+  background-size: var(--d-gap) var(--d-gap);
+  background-position: var(--d-pos);
+}
+
+@utility dot-* {
+  --d-color: --value(--color-*, [color]);
+}
+@utility dot-gap-* {
+  --d-gap: --spacing(--value(integer));
+}
+@utility dot-size-* {
+  --d-size: --spacing(--value(integer));
+}
+@utility dot-rotated {
+    --d-pos: 0 0, calc(var(--d-gap) / 2) calc(var(--d-gap) / 2);
+}
+
+@utility translate-container-start {
+  inset-inline-end:50%;
+  @media (width >= theme(--breakpoint-sm)) { translate: calc((var(--container-sm) / -2) + 50%) var(--tw-translate-y); }
+  @media (width >= theme(--breakpoint-md)) { translate: calc((var(--container-md) / -2) + 50%) var(--tw-translate-y); }
+  @media (width >= theme(--breakpoint-lg)) { translate: calc((var(--container-lg) / -2) + 50%) var(--tw-translate-y); }
+  @media (width >= theme(--breakpoint-xl)) { translate: calc((var(--container-xl) / -2) + 50%) var(--tw-translate-y); }
+  @media (width >= theme(--breakpoint-2xl)) { translate: calc((var(--container-2xl) / -2) + 50%)  var(--tw-translate-y); }
+}
+@utility translate-container-end {
+  inset-inline-start:50%;
+  @media (width >= theme(--breakpoint-sm)) { translate: calc((var(--container-sm) / 2)) var(--tw-translate-y); }
+  @media (width >= theme(--breakpoint-md)) { translate: calc((var(--container-md) / 2)) var(--tw-translate-y); }
+  @media (width >= theme(--breakpoint-lg)) { translate: calc((var(--container-lg) / 2)) var(--tw-translate-y); }
+  @media (width >= theme(--breakpoint-xl)) { translate: calc((var(--container-xl) / 2)) var(--tw-translate-y); }
+  @media (width >= theme(--breakpoint-2xl)) { translate: calc((var(--container-2xl) / 2))  var(--tw-translate-y); }
+}

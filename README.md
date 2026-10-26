@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rakesh Ray - Next.js Interior Design Landing Page Template
 
-## Getting Started
+**Rakesh Ray** is a Next.js Interior Design Landing Page Template crafted with a modern architecture, rich aesthetics, and a premium visual user experience. Built using Next.js 16 App Router, React 19, TypeScript, and Tailwind CSS v4.
 
-First, run the development server:
+---
+
+## 🌟 Key Features
+
+- **Modern Luxury Design**: Crafted with curated color palettes (warm bronze accents and deep charcoal darks), sleek typography (`Libre Franklin` headings and `Roboto` body text), and smooth micro-animations.
+- **Multi-Page Layouts**: Complete page structures for **Home**, **About Us**, **Services**, **Projects**, **Project Detail**, **Team**, **FAQs**, **Blog**, **Blog Detail**, and **Contact Us**.
+- **Interactive Direction-Aware Hero Carousel**: Built on Embla Carousel with automated CSS state transitions (`group-data-active/slide`), direction-aware background parallax effects, and staggered reveal animations.
+- **Dynamic Component Architecture**: 
+  - Dynamic 3-step process section (*How It Works*).
+  - Reusable project showcase & testimonials sliders.
+  - Interactive video modal popup (`VideoPopup`).
+  - Contact section featuring Google Maps integration & interactive service request forms.
+- **Tailwind CSS v4 `@theme` Engine**: Pure CSS design tokens with custom grid utilities (`row`, `column-6`, etc.) and animation keyframes without legacy JS configuration files.
+- **Full Type Safety**: Clean TypeScript definitions across all sections and data models.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Ensure you have **Node.js** (v18+ recommended) and `npm` installed.
+
+### Installation
+
+Clone the repository and install dependencies:
+
+```bash
+# Install project dependencies
+npm install
+```
+
+### Development Server
+
+Run the development server locally:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Build & Type Verification
 
-## Learn More
+To check TypeScript types and build the production bundle:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Typecheck codebase
+npx tsc --noEmit
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Build production bundle
+npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📁 Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+├── src/
+│   ├── app/                # Next.js 16 App Router page routes (Home, About, Services, Contact, etc.)
+│   ├── components/         # Modular UI & Section components
+│   │   ├── layout/         # Header, Footer, Navbar, Section wrappers
+│   │   ├── sections/       # Hero, About, Services, Projects, Reviews, HowItWorks, Contact
+│   │   └── ui/             # Button, Carousel, VideoPopup, Tooltip, Dropdown
+│   ├── data/               # Structured data files (services, projects, team, process, reviews)
+│   ├── css/                # Tailwind CSS v4 globals, grid system, and utility styles
+│   ├── hooks/              # Custom React hooks (useFormatDate, etc.)
+│   └── lib/                # Utility helper functions (cn, clsx)
+├── design.md               # Design system & token documentation
+└── README.md               # Project documentation
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
