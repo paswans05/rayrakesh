@@ -6,7 +6,20 @@ export const CONTACT_INFO = [
     { icon: Mail, text: "erakesh.ray@gmail.com " },
 ];
 
-export const NAV_ITEMS = [
+export interface DropdownChild {
+    label: string;
+    href?: string;
+    icon?: string;
+    children?: DropdownChild[];
+}
+
+export interface NavItem {
+    label: string;
+    href?: string;
+    children?: DropdownChild[];
+}
+
+export const NAV_ITEMS: NavItem[] = [
     {
         label: "Home",
         href: "/"

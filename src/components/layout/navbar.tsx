@@ -12,21 +12,9 @@ import { useSetHeightRoot } from "@/hooks/useSetHeightRoot";
 import { cn } from "@/lib/utils";
 
 import { FacebookCircle, TwitterRound, PinterestCircle, LinkedinRound } from "@/components/icons"
-import { NAV_ITEMS, CONTACT_INFO } from "@/data/navbar";
+import { NAV_ITEMS, CONTACT_INFO, type NavItem, type DropdownChild } from "@/data/navbar";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { useNavbar } from "@/context/navbar-context";
-
-interface DropdownChild {
-  label: string;
-  href?: string;
-  icon?: string;
-  children?: DropdownChild[];
-}
-interface NavItem {
-  label: string;
-  href?: string;
-  children?: DropdownChild[];
-}
 interface NavLinkProps {
   href: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
