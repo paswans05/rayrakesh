@@ -12,19 +12,5 @@ export const NAV_ITEMS = [
         href: "/"
     },
     { label: "About", href: "/about" },
-    {
-        label: "Services", href: "/services"
-    },
-    {
-        label: "Projects", href: "/projects"
-    },
-    {
-        label: "Pages",
-        children: [
-            { label: "Team", href: "/team" },
-            { label: "FAQs", href: "/faqs" },
-            { label: "Blog", href: "/blog" },
-        ],
-    },
     { label: "Contact", href: "/contact" },
 ];
