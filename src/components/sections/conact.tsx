@@ -57,7 +57,7 @@ export default function Contact({ gap = "default", className }: ContactProps) {
                 <div className="relative w-full h-100 lg:h-137.5 overflow-hidden">
                   <iframe
                     title="Office Location Map"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d158858.47340002633!2d-0.24168144921176767!3d51.528558241761614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47d8a00baf21de75%3A0x52963a5addd52a99!2sLondon%2C%20UK!5e0!3m2!1sen!2s!4v1700000000000!5m2!1sen!2s"
+                    src="https://maps.google.com/maps?q=VMQ9%2BCXM+Jingadawa,+Madhesh+Province,+Nepal&t=&z=14&ie=UTF8&iwloc=&output=embed"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
@@ -149,7 +149,7 @@ export default function Contact({ gap = "default", className }: ContactProps) {
 
                   {/* Submit Button */}
                   <div className="column-12 pt-2">
-                    <Button variant="default" size="xl" className="rounded-none">
+                    <Button variant="default" size="xl" className="rounded-none" disabled>
                       <span>Send Message</span>
                     </Button>
                   </div>

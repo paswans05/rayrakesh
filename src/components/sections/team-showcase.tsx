@@ -21,7 +21,7 @@ export default function TeamShowcase({
   className,
   limit,
   subtitle = "Meet Our Team",
-  title = "Every Great Design Begins With an Inspired Mind.",
+  title = "Every Great Structure Begins With a Strong Foundation.",
 }: TeamShowcaseProps) {
   const members = limit ? TEAM_MEMBERS_DATA.slice(0, limit) : TEAM_MEMBERS_DATA;
 

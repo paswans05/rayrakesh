@@ -30,7 +30,7 @@ export default function TeamCarousel({
                   Meet Our Team
                 </span>
                 <h2 className="text-darker font-bold text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl leading-[1.17]">
-                  Every Great Design Begins With an Inspired Mind.
+                  Every Great Structure Begins With a Strong Foundation.
                 </h2>
               </ScrollReveal>
             </div>

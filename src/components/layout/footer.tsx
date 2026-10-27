@@ -36,7 +36,7 @@ const SOCIAL_LINKS = [
 
 const CONTACT_INFO = [
   { icon: Mail, title: 'Email', label: 'erakesh.ray@gmail.com', href: "mailto:erakesh.ray@gmail.com" },
-  { icon: MapPin, title: 'Address', label: 'Parsa 4, jingarwa, Nepal', href: "https://maps.google.com" },
+  { icon: MapPin, title: 'Address', label: 'Jingadawa, Madhesh Province, Nepal', href: "https://www.google.com/maps/search/?api=1&query=VMQ9%2BCXM+Jingadawa,+Madhesh+Province,+Nepal" },
 ];
 
 export default function Footer({ className }: FooterProps) {

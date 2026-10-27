@@ -1,7 +1,7 @@
 import { Mail, CallAlt, MapPinFill } from "@/components/icons"
 
 export const CONTACT_INFO = [
-    { icon: MapPinFill, text: "Parsa, Sarlahi, Nepal" },
+    { icon: MapPinFill, text: "Jingadawa, Madhesh Province, Nepal" },
     { icon: CallAlt, text: "+977-9818888722" },
     { icon: Mail, text: "erakesh.ray@gmail.com" },
 ];

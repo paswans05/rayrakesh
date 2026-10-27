@@ -24,7 +24,7 @@ export default function AboutPage() {
       <CTA />
       <WhyChooseUs />
       <TeamCarousel />
-      <Reviews />
+
     </main>
   );
 }

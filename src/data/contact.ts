@@ -4,17 +4,17 @@ export const CONTACT_INFO_CONFIG = [
   {
     icon: Location,
     title: 'Our Address',
-    info: '123 Stree New York City , United States Of America,NY 10011'
+    info: 'Jingadawa, Madhesh Province, Nepal'
   },
   {
     icon: CallAlt,
     title: 'Phone Number',
-    info: '1-800-222-4545, 1-800-222-4545'
+    info: '+977-9818888722'
   },
   {
     icon: Mail,
     title: 'Email Address',
-    info: 'support@website.com'
+    info: 'erakesh.ray@gmail.com'
   },
 ];
 
