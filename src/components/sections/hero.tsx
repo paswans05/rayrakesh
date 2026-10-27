@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, PlayFill } from "@/components/icons";
 import { Carousel, CarouselContent, CarouselItem, CarouselNow, CarouselDots } from "@/components/ui/carousel";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import heroBgA from "@/images/hero-bg-a.jpg";
+import heroBgA from "@/images/hero-bg-a.png";
 import heroBgB from "@/images/hero-bg-b.jpg";
 import heroBgC from "@/images/hero-bg-c.jpg";
 import videoCoverA from "@/images/hero-video-cover-a.jpg";
@@ -68,13 +68,11 @@ export default function Hero({ className, wrapperClassName }: HeroProps) {
                       </div>
 
                       <div className="flex flex-wrap items-center gap-4 xl:gap-7.5 pt-8 lg:pt-12 xl:pt-17 transition-all duration-700 ease-out transform translate-y-12 opacity-0 group-data-active/slide:translate-y-0 group-data-active/slide:opacity-100 group-data-active/slide:delay-500">
-                        <Button nativeButton={false} render={<Link href="/contact" />} variant="default" pill size="xl" icon={<ArrowRight />}>
-                          <span>Book Free Consultation</span>
+                        <Button nativeButton={false} render={<Link href="https://docs.google.com/forms/d/e/1FAIpQLSdeLXNSeAYzclsVT8_4sxq3RsUI5PQJ5h86swz-_eiSq2gvkg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer"/>} variant="default" pill size="xl" icon={<ArrowRight />}>
+                          <span>Register Now</span>
                         </Button>
 
-                        <Button nativeButton={false} render={<Link href="/projects" />} variant="outline" pill size="xl" icon={<ArrowRight />}>
-                          <span>View Projects</span>
-                        </Button>
+                        
                       </div>
                     </div>
                   </div>
@@ -104,13 +102,11 @@ export default function Hero({ className, wrapperClassName }: HeroProps) {
                       </p>
 
                       <div className="flex flex-wrap items-center justify-center gap-4 xl:gap-7.5 pt-8 lg:pt-12.5 transition-all duration-700 ease-out transform translate-y-12 opacity-0 group-data-active/slide:translate-y-0 group-data-active/slide:opacity-100 group-data-active/slide:delay-500">
-                        <Button nativeButton={false} render={<Link href="/contact" />} variant="default" pill size="xl" icon={<ArrowRight />}>
-                          <span>Book Free Consultation</span>
+                        <Button nativeButton={false} render={<Link href="https://docs.google.com/forms/d/e/1FAIpQLSdeLXNSeAYzclsVT8_4sxq3RsUI5PQJ5h86swz-_eiSq2gvkg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer"/>} variant="default" pill size="xl" icon={<ArrowRight />}>
+                          <span>Register Now</span>
                         </Button>
 
-                        <Button nativeButton={false} render={<Link href="/projects" />} variant="outline" pill size="xl" className="border-white/40 text-white hover:bg-white hover:text-darker" icon={<ArrowRight />}>
-                          <span>View Projects</span>
-                        </Button>
+                        
                       </div>
                     </div>
                   </div>
@@ -150,8 +146,8 @@ export default function Hero({ className, wrapperClassName }: HeroProps) {
                       </p>
 
                       <div className="flex flex-wrap items-center gap-4 xl:gap-7.5 pt-8 transition-all duration-700 ease-out transform translate-y-12 opacity-0 group-data-active/slide:translate-y-0 group-data-active/slide:opacity-100 group-data-active/slide:delay-500">
-                        <Button nativeButton={false} render={<Link href="/contact" />} variant="default" pill size="xl" icon={<ArrowRight />}>
-                          <span>Book Free Consultation</span>
+                        <Button nativeButton={false} render={<Link href="https://docs.google.com/forms/d/e/1FAIpQLSdeLXNSeAYzclsVT8_4sxq3RsUI5PQJ5h86swz-_eiSq2gvkg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer"/>} variant="default" pill size="xl" icon={<ArrowRight />}>
+                          <span>Register Now</span>
                         </Button>
                       </div>
                     </div>

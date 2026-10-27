@@ -516,8 +516,8 @@ export default function Menubar({
                 </Link>
                 <nav className="hidden lg:flex items-center self-center w-full py-5.5" >
                   <NavContent className="flex items-center mx-auto gap-3 lg:gap-6 xl:gap-10" onNavigate={closeMobile} />
-                  <Button nativeButton={false} render={<Link href="/contact" />} className="capitalize" variant="default">
-                    Get Free Consulting
+                  <Button nativeButton={false} render={<Link href="https://docs.google.com/forms/d/e/1FAIpQLSdeLXNSeAYzclsVT8_4sxq3RsUI5PQJ5h86swz-_eiSq2gvkg/viewform?usp=dialog"  target="_blank" rel="noopener noreferrer"/>}      className="capitalize" variant="default">
+                    Register Now
                   </Button>
                 </nav>
                 <div className="ml-auto self-center my-4">
@@ -533,8 +533,8 @@ export default function Menubar({
       <aside className={drawerStyle({ open: mobileOpen })} aria-hidden={!mobileOpen} >
         <nav className="px-6 pb-10 pt-10 flex flex-1 flex-col">
           <NavContent className="flex flex-1 flex-col gap-1" onNavigate={closeMobile} />
-          <Button nativeButton={false} render={<Link href="/contact" />} className="capitalize" variant="default">
-            Get Free Consulting
+          <Button nativeButton={false} render={<Link href="https://docs.google.com/forms/d/e/1FAIpQLSdeLXNSeAYzclsVT8_4sxq3RsUI5PQJ5h86swz-_eiSq2gvkg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer"/>}   className="capitalize" variant="default">
+            Register Now
           </Button>
         </nav>
       </aside>
