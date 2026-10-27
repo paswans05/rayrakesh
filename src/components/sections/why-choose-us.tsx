@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Section, SectionContent } from "@/components/layout/section";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import whyA from "@/images/why-a.jpg";
+import whyA from "@/images/why-a.png";
 import buildingLineC from "@/images/decoration/building-line-c.png";
 import { WHY_CHOOSE_US_DATA, type WhyChooseUsItem } from "@/data/why-choose-us";
 
@@ -27,7 +27,7 @@ export default function WhyChooseUs({ gap = "default", className }: WhyChooseUsP
               {/* Left Image */}
               <div className="lg:column-6">
                 <div className="relative w-full h-full">
-                  <Image src={whyA} alt="Designing with Quality and care" className="w-full h-full object-cover max-h-130 lg:max-h-none" />
+                  <Image src={whyA} alt="Rakesh Ray campaign profile and priorities for Parsa" className="w-full h-full object-cover max-h-130 lg:max-h-none" />
                 </div>
               </div>
 
@@ -35,10 +35,10 @@ export default function WhyChooseUs({ gap = "default", className }: WhyChooseUsP
               <div className="lg:column-6">
                 <div className="w-full bg-primary-dark text-white p-8 md:p-12 xl:p-20 2xl:px-25 2xl:py-30 flex flex-col justify-center h-full">
                   <div className="flex items-center gap-5 text-sm lg:text-base uppercase tracking-widest font-semibold mb-2.5 md:mb-4 lg:mb-5 xl:mb-6 pt-0.5 before:content-[''] before:block before:w-14 md:before:w-22 before:h-0.5 text-white before:bg-white">
-                    Why Choose Us
+                    Why Rakesh Ray for Mayor
                   </div>
                   <h2 className="font-bold text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl leading-[1.17] text-white mb-5 lg:mb-10">
-                    Designing with Quality and care.
+                    Practical leadership for a stronger Parsa.
                   </h2>
 
                   <div className="flex flex-col gap-4 lg:gap-6">

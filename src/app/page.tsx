@@ -18,8 +18,6 @@ export default function Home() {
         <Projects />
         <CTA />
         <WhyChooseUs />
-        <Reviews />
-        <Blog />
       </main>
     </React.Fragment>
   );

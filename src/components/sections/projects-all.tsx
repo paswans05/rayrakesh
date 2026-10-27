@@ -48,8 +48,8 @@ export default function ProjectsAll({ gap = "default", className }: ProjectsAllP
           <div className="row g-0">
             <div className="lg:column-6 xl:column-5">
               <ScrollReveal mode="fade" direction="bottom" delay={100} className="flex flex-col items-start">
-                <span className="flex items-center gap-5 text-sm lg:text-base uppercase tracking-widest text-primary font-semibold mb-2.5 md:mb-4 lg:mb-5 xl:mb-6 pt-0.5 before:content-[''] before:block before:w-14 md:before:w-22 before:h-0.5 before:bg-primary">RECENT WORKS</span>
-                <h2 className="text-darker font-bold text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl leading-[1.17]">Some of our Rakesh Ray made with love</h2>
+                <span className="flex items-center gap-5 text-sm lg:text-base uppercase tracking-widest text-primary font-semibold mb-2.5 md:mb-4 lg:mb-5 xl:mb-6 pt-0.5 before:content-[''] before:block before:w-14 md:before:w-22 before:h-0.5 before:bg-primary">CONSTRUCTION & COMMUNITY</span>
+                <h2 className="text-darker font-bold text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl leading-[1.17]">Rakesh Ray&apos;s business and community focus in Parsa</h2>
               </ScrollReveal>
             </div>
           </div>

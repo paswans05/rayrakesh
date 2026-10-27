@@ -31,8 +31,8 @@ export default function Services({ gap = "default", boxed = true, headAlign = "c
           <div className={cn("row", headAlign == "center" && "justify-center text-center", headAlign == "start" && "justify-start text-start", headAlign == "end" && "justify-end text-end")}>
             <div className="lg:column-10 xl:column-9">
               <ScrollReveal mode="fade" direction="bottom" className={cn("flex flex-col items-center", headAlign == "center" && "2xl:px-8 items-center", headAlign == "start" && "items-start", headAlign == "end" && "items-end")}>
-                <span className={cn("flex items-center gap-5 text-sm lg:text-base uppercase tracking-widest font-semibold mb-2.5 md:mb-4 lg:mb-5 xl:mb-6 pt-0.5 before:content-[''] before:block before:w-14 md:before:w-22 before:h-0.5", headAlign == "end" && "flex-row-reverse", mode === "theme" ? "text-white before:bg-white" : "text-primary before:bg-primary")}>Our Services</span>
-                <h2 className={cn("font-bold text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl leading-[1.17]", mode === "theme" ? "text-white" : "text-darker")}>Expert Solutions for Architecture, Interiors, and Custom Design</h2>
+                <span className={cn("flex items-center gap-5 text-sm lg:text-base uppercase tracking-widest font-semibold mb-2.5 md:mb-4 lg:mb-5 xl:mb-6 pt-0.5 before:content-[''] before:block before:w-14 md:before:w-22 before:h-0.5", headAlign == "end" && "flex-row-reverse", mode === "theme" ? "text-white before:bg-white" : "text-primary before:bg-primary")}>Business &amp; Community</span>
+                <h2 className={cn("font-bold text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl leading-[1.17]", mode === "theme" ? "text-white" : "text-darker")}>Rakesh Ray, Cloud Construction, and the Parsa Community</h2>
               </ScrollReveal>
             </div>
           </div>

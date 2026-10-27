@@ -18,22 +18,13 @@ const FOOTER_LINKS = [
     title: "Quick Menu",
     links: [
       { label: "Home", href: "/" },
+      { label: "Marathon", href: "/marathon" },
       { label: "About us", href: "/about" },
-      { label: "Services", href: "/services" },
-      { label: "Blog", href: "/blog" },
+
       { label: "Contact us", href: "/contact" },
     ]
   },
-  {
-    title: "Services",
-    links: [
-      { label: "Retirement Planning ", href: "" },
-      { label: "Creative Ideas ", href: "" },
-      { label: "Technology Solution", href: "" },
-      { label: "Market Research", href: "" },
-      { label: "Investment Advisory", href: "" },
-    ]
-  }
+
 ];
 
 const SOCIAL_LINKS = [
@@ -45,7 +36,7 @@ const SOCIAL_LINKS = [
 
 const CONTACT_INFO = [
   { icon: Mail, title: 'Email', label: 'erakesh.ray@gmail.com', href: "mailto:erakesh.ray@gmail.com" },
-  { icon: MapPin, title: 'Address', label: '15h Street, Office 478 Berlin, De 81566', href: "https://maps.google.com" },
+  { icon: MapPin, title: 'Address', label: 'Parsa 4, jingarwa, Nepal', href: "https://maps.google.com" },
 ];
 
 export default function Footer({ className }: FooterProps) {
@@ -69,7 +60,7 @@ export default function Footer({ className }: FooterProps) {
                     </Link>
                     <div className="my-6 max-w-sm">
                       <p className="text-lg/relaxed text-white/80">
-                        We help Startup's, SMEs, and enterprises overcome challenges, streamline operations, and achieve sustainable growth. With expert insights, proven strategies, and tailored business plans.
+                        Rakesh Ray is committed to listening to Parsa residents, addressing local challenges, and working together for practical development and a stronger community.
                       </p>
                     </div>
                     <ul className="flex flex-wrap gap-4">

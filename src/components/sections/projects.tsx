@@ -31,7 +31,7 @@ function ProjectCard({ project, isTall = false }: { project: Project; isTall?: b
       {isTall && (
         <div className="hidden md:block mt-5 xl:mt-8">
           <Button nativeButton={false} render={<Link href="/contact" />} variant="default" pill size="xl" icon={<ArrowRight />}>
-            <span>Contact us</span>
+            <span>Contact Rakesh</span>
           </Button>
         </div>
       )}
@@ -56,10 +56,10 @@ export default function Projects({ gap = "default", className }: ProjectsProps) 
               {/* Header */}
               <ScrollReveal mode="fade" direction="bottom" delay={100} className="mb-10 lg:mb-15 xl:mb-20">
                 <span className="flex items-center gap-5 text-sm lg:text-base uppercase tracking-widest text-primary font-semibold mb-2.5 md:mb-4 lg:mb-5 xl:mb-6 pt-0.5 before:content-[''] before:block before:w-14 md:before:w-22 before:h-0.5 before:bg-primary">
-                  Recent Works
+                  Construction & Community
                 </span>
                 <h2 className="text-darker font-bold text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl leading-[1.17]">
-                  Some of our portline made with love
+                  Construction and community priorities in Parsa
                 </h2>
               </ScrollReveal>
 
@@ -87,7 +87,7 @@ export default function Projects({ gap = "default", className }: ProjectsProps) 
           </div>
           <div className="mt-5 xl:mt-8 md:hidden">
             <Button nativeButton={false} render={<Link href="/contact" />} variant="default" pill size="xl" icon={<ArrowRight />}>
-              <span>Contact us</span>
+              <span>Contact Rakesh</span>
             </Button>
           </div>
         </div>
