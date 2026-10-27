@@ -52,7 +52,7 @@ export default function MarathonRegistration() {
     phone: "+977 ",
     age: "",
     gender: "prefer-not-to-say",
-    address: "Kathmandu, Nepal",
+    address: "Parsa, Nepal",
     emergencyName: "",
     emergencyPhone: "+977 ",
     understandsDistance: false,
@@ -177,7 +177,7 @@ export default function MarathonRegistration() {
       phone: "+977 ",
       age: "",
       gender: "prefer-not-to-say",
-      address: "Kathmandu, Nepal",
+      address: "Parsa, Nepal",
       emergencyName: "",
       emergencyPhone: "+977 ",
       understandsDistance: false,
@@ -201,7 +201,7 @@ export default function MarathonRegistration() {
               Register for 15 KM Marathon
             </h2>
             <p className="mt-4 text-base sm:text-lg text-body">
-              Join fellow runners in Kathmandu. Complimentary community registration with full timing chip, race bib, and finisher medal.
+              Join fellow runners in Parsa. Every participant receives a certificate, and the top 10 finishers receive medals. The top three also compete for cash prizes.
             </p>
           </ScrollReveal>
         </SectionHead>
@@ -219,7 +219,7 @@ export default function MarathonRegistration() {
                   <span className="text-xs font-bold uppercase tracking-widest text-primary">Registration Confirmed</span>
                   <h3 className="text-3xl font-black text-white mt-1">You Are Officially Registered!</h3>
                   <p className="text-sm text-white/75 mt-2">
-                    Welcome to the 15 KM Rakesh Marathon in Kathmandu. Keep your registration ID handy for bib collection.
+                    Welcome to the 15 KM Rakesh Marathon in Parsa. Keep your registration ID handy for bib collection.
                   </p>
                 </div>
 
@@ -419,7 +419,7 @@ export default function MarathonRegistration() {
                           type="text"
                           value={formData.address}
                           onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                          placeholder="e.g. Baneshwor, Kathmandu"
+                          placeholder="e.g. Birgunj, Parsa"
                           className={cn(
                             "w-full px-4 py-3 rounded-xl border bg-white text-darker text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all",
                             errors.address ? "border-danger" : "border-lighter"
@@ -510,7 +510,7 @@ export default function MarathonRegistration() {
                         className="mt-1 size-4 rounded accent-primary text-primary focus:ring-primary"
                       />
                       <label htmlFor={`${formId}-terms-check`} className="text-xs sm:text-sm text-darker leading-relaxed cursor-pointer select-none">
-                        I agree to follow official marshal safety instructions, traffic rules, and accept the event liability waiver and privacy terms for race coordination in Kathmandu.
+                        I agree to follow official marshal safety instructions, traffic rules, and accept the event liability waiver and privacy terms for race coordination in Parsa.
                       </label>
                     </div>
                     {errors.acceptsTerms && <p className="text-xs text-danger">{errors.acceptsTerms}</p>}

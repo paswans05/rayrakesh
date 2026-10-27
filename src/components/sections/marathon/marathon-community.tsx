@@ -53,7 +53,7 @@ export default function MarathonCommunity() {
                       <p className="text-xs text-primary font-medium tracking-wider uppercase">Community Initiative Leader</p>
                     </div>
                     <div className="px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-mono font-bold">
-                      Kathmandu • Nepal
+                      Parsa • Nepal
                     </div>
                   </div>
                 </div>
@@ -92,7 +92,7 @@ export default function MarathonCommunity() {
                       <div className="text-xs text-white/60 mt-0.5 uppercase tracking-wider">Single Distance</div>
                     </div>
                     <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                      <div className="text-2xl font-black text-white">NPR 29K</div>
+                      <div className="text-2xl font-black text-white">NPR 50K</div>
                       <div className="text-xs text-white/60 mt-0.5 uppercase tracking-wider">Prize Pool</div>
                     </div>
                   </div>
@@ -137,7 +137,7 @@ export default function MarathonCommunity() {
               Be Part of Rakesh Marathon
             </h3>
             <p className="text-sm sm:text-base text-white/75 mt-3 max-w-xl mx-auto">
-              Run for fitness, race for the podium prizes, and unite with hundreds of athletes in Kathmandu. Free community registration is currently open.
+              Run for fitness, compete for the podium prizes, and join the community in Parsa. Every participant receives a certificate, and the top 10 finishers receive medals.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
               <Button

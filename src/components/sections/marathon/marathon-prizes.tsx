@@ -26,7 +26,7 @@ export default function MarathonPrizes() {
               {MARATHON_DETAILS.prizesHeading}
             </h2>
             <p className="mt-4 text-base sm:text-lg text-white/70">
-              Total Prize Pool: <span className="text-primary font-bold">{MARATHON_DETAILS.totalPrizePool}</span>. Rewarding the dedication, speed, and endurance of our top 15 KM finishers in Kathmandu.
+              Total Prize Pool: <span className="text-primary font-bold">{MARATHON_DETAILS.totalPrizePool}</span>. Cash awards for the top three, medals for the top 10, and a certificate for every participant in the 15 KM race.
             </p>
           </ScrollReveal>
         </SectionHead>
@@ -157,7 +157,7 @@ export default function MarathonPrizes() {
           <div className="mt-12 text-center">
             <p className="text-xs sm:text-sm text-white/60 bg-white/5 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10">
               <span className="size-2 rounded-full bg-primary" />
-              Notice: The Rakesh Marathon features solely the <strong>15 KM</strong> distance category. Prizes apply to verified 15 KM race finishers.
+              Notice: The Rakesh Marathon features solely the <strong>15 KM</strong> distance category. Cash prizes and medals are awarded based on verified race results; every participant receives a certificate.
             </p>
           </div>
         </SectionContent>

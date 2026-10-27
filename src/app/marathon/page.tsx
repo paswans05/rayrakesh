@@ -8,13 +8,13 @@ import MarathonCommunity from "@/components/sections/marathon/marathon-community
 import MarathonRegistration from "@/components/sections/marathon/marathon-registration";
 
 export const metadata: Metadata = {
-  title: "Rakesh Marathon | 15 KM Community Race in Kathmandu, Nepal",
+  title: "Rakesh Marathon | 15 KM Community Race in Parsa, Nepal",
   description:
-    "Join the Rakesh Marathon in Kathmandu, Nepal. An exclusive 15 KM single-distance community race with NPR 29,000 in total prizes (1st: NPR 15,000, 2nd: NPR 9,000, 3rd: NPR 5,000). Free online registration.",
+    "Join the Rakesh Marathon in Parsa, Nepal. The top three share NPR 50,000 in cash prizes; all participants receive a certificate, and the top 10 finishers receive medals. Emergency support is planned.",
   keywords: [
     "Rakesh Marathon",
     "15 KM Marathon",
-    "Kathmandu Marathon",
+    "Parsa Marathon",
     "Nepal Marathon",
     "Rakesh Ray",
     "Running in Nepal",
@@ -22,17 +22,17 @@ export const metadata: Metadata = {
     "Marathon Prizes NPR",
   ],
   openGraph: {
-    title: "Rakesh Marathon | 15 KM Community Race in Kathmandu, Nepal",
+    title: "Rakesh Marathon | 15 KM Community Race in Parsa, Nepal",
     description:
-      "15 KM. One Challenge. One Community. NPR 29,000 total prize pool. Free online registration open for Kathmandu runners.",
+      "15 KM. One Challenge. One Community. NPR 50,000 in cash prizes. Certificates for all participants and medals for the top 10.",
     type: "website",
     locale: "en_US",
     siteName: "Rakesh Ray",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rakesh Marathon — 15 KM Kathmandu Race",
-    description: "Run Together. Build a Better Tomorrow. 15 KM race with NPR 29,000 in prizes.",
+    title: "Rakesh Marathon — 15 KM Parsa Race",
+    description: "Run Together. Build a Better Tomorrow. 15 KM race with NPR 50,000 in prizes.",
   },
 };
 

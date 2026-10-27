@@ -60,7 +60,7 @@ export default function MarathonInfo() {
               Race Information & Schedule
             </h2>
             <p className="mt-4 text-base sm:text-lg text-body">
-              Everything you need to know about the 15 KM Rakesh Marathon in Kathmandu. Official permits and route coordination are actively progressing.
+              Everything you need to know about the 15 KM Rakesh Marathon in Parsa, Nepal. Official event details will be announced when confirmed.
             </p>
           </ScrollReveal>
         </SectionHead>
@@ -125,7 +125,11 @@ export default function MarathonInfo() {
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircleFill className="size-5 text-primary shrink-0 mt-0.5" />
-                    <span><strong>Finisher Medals & Refreshments:</strong> All 15 KM finishers receive an official commemorative medal, hydration, and nutritional packs post-finish.</span>
+                    <span><strong>Participant Awards:</strong> Every participant receives a certificate. Medals are awarded to the top 10 finishers.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircleFill className="size-5 text-primary shrink-0 mt-0.5" />
+                    <span><strong>Emergency Support:</strong> The race safety plan calls for one ambulance, first-aid kits, and a support bike following the runners for emergency assistance.</span>
                   </li>
                 </ul>
               </div>
@@ -166,7 +170,7 @@ export default function MarathonInfo() {
                   </div>
 
                   <div className="mt-6 p-4 rounded-xl bg-primary/10 border border-primary/20 text-xs text-darker leading-relaxed">
-                    <strong>Notice:</strong> Official dates and venue permits are subject to regulatory clearance with Kathmandu Metropolitan City authorities. Confirmation alerts will be dispatched to all registered emails.
+                    <strong>Notice:</strong> Official date, route, and venue details for Parsa will be shared when confirmed.
                   </div>
                 </div>
               </div>

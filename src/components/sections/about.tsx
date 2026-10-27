@@ -40,33 +40,33 @@ export default function About({ gap = "default", className }: AboutProps) {
           <div className="row gx-4 sm:gx-7">
             <div className="lg:column-4 xl:column-4 column-6">
               <ScrollReveal direction="bottom" delay={100} className="relative 2xl:-me-4 h-full">
-                <Image src={aboutA} alt="Innovative Space Design Experts" className="w-full min-h-full object-cover" />
+                <Image src={aboutA} alt="Rakesh Ray campaign" className="w-full min-h-full object-cover" />
               </ScrollReveal>
             </div>
 
             <div className="lg:column-3 xl:column-3 column-6 lg:order-last">
               <ScrollReveal mode="fade" direction="bottom" delay={200} className="relative 2xl:-ms-10">
-                <Image src={aboutB} alt="Interior Showcase 2" className="object-cover w-full" />
+                <Image src={aboutB} alt="Rakesh Ray campaign" className="object-cover w-full" />
               </ScrollReveal>
             </div>
 
             <div className="lg:column-5 xl:column-5">
               <ScrollReveal mode="fade" direction="bottom" delay={150} className="2xl:px-10">
                 <span className="flex items-center gap-5 text-sm lg:text-base uppercase tracking-widest text-primary font-semibold mb-2.5 md:mb-4 lg:mb-5 xl:mb-6 pt-0.5 before:content-[''] before:block before:w-14 md:before:w-22 before:h-0.5 before:bg-primary">
-                  About Us
+                  About Rakesh
                 </span>
                 <h2 className="text-darker font-bold text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl leading-[1.17] mb-4 lg:mb-6">
-                  Innovative Space Design Experts
+                  Rakesh Ray: Construction Professional
                 </h2>
                 <p className="text-body text-base xl:text-lg leading-loose mb-3 lg:mb-4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus fringilla dui amet faucibus nam. Erat id laoreet posuere etiam morbi.
+                  Rakesh Ray is associated with Cloud Construction Pvt. Ltd., a construction company. His work in construction gives him a practical perspective on planning and development in local communities.
                 </p>
                 <p className="text-body text-base xl:text-lg leading-loose">
-                  Tempor dolor elementum tellus non ipsum faucibus. Justo, magna mauris posuere auctor justo. Habitant proin aliquet volutpat leo
+                  To connect with Rakesh’s campaign, call <a className="text-darker underline decoration-primary underline-offset-4" href="tel:+9779818888722">+977981-8888722</a> or email <a className="text-darker underline decoration-primary underline-offset-4" href="mailto:erakesh.ray@gmail.com">erakesh.ray@gmail.com</a>.
                 </p>
                 <div className="mt-6">
-                  <Button nativeButton={false} render={<Link href="/about" />} variant="default" pill size="xl" icon={<ArrowRight />}>
-                    <span>Read More</span>
+                  <Button nativeButton={false} render={<Link href="mailto:erakesh.ray@gmail.com" />} variant="default" pill size="xl" icon={<ArrowRight />}>
+                    <span>Contact Rakesh</span>
                   </Button>
                 </div>
               </ScrollReveal>

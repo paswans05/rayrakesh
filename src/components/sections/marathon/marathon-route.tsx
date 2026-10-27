@@ -30,7 +30,7 @@ export default function MarathonRoute() {
               15 KM Route & Preparation
             </h2>
             <p className="mt-4 text-base sm:text-lg text-body">
-              An exhilarating 15-kilometer loop across Kathmandu, mapped with continuous hydration, medical aid stations, and chip-timed checkpoints.
+              The 15-kilometer Parsa course is being finalized. The official route, aid points, and checkpoints will be announced once confirmed.
             </p>
           </ScrollReveal>
         </SectionHead>
@@ -42,7 +42,7 @@ export default function MarathonRoute() {
               <div className="relative aspect-16/9 w-full max-h-[550px] overflow-hidden">
                 <Image
                   src={marathonRouteMap}
-                  alt="Kathmandu 15 KM Marathon Official Route Map Blueprint"
+                  alt="Proposed 15 KM Rakesh Marathon route map for Parsa"
                   width={1600}
                   height={900}
                   className="w-full h-full object-cover object-center"
@@ -55,7 +55,7 @@ export default function MarathonRoute() {
                 <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-darker/90 backdrop-blur-md border border-white/15 text-white">
                   <div>
                     <span className="text-xs font-bold uppercase tracking-widest text-primary">Course Map Blueprint</span>
-                    <h4 className="text-lg sm:text-xl font-bold text-white">Kathmandu 15 KM Elevation & Landmark Profile</h4>
+                    <h4 className="text-lg sm:text-xl font-bold text-white">Parsa 15 KM Elevation &amp; Landmark Profile</h4>
                   </div>
                   <div className="text-xs px-3 py-1.5 rounded-full bg-primary/20 text-primary border border-primary/40 font-mono">
                     Official Map Pending Final Traffic Clearance

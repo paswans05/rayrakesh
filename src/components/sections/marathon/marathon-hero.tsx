@@ -20,7 +20,7 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none bg-darker rounded-[inherit]">
         <Image
           src={marathonAthletes}
-          alt="Rakesh Marathon 15 KM Athletes in Kathmandu Nepal"
+          alt="Rakesh Marathon 15 KM Athletes in Parsa Nepal"
           priority
           width={1920}
           height={1080}
@@ -68,7 +68,7 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
 
                 {/* Supporting Text */}
                 <p className="text-base sm:text-lg md:text-xl text-white/85 max-w-2xl leading-relaxed font-normal">
-                  Challenge yourself, celebrate fitness, and run toward a stronger community in Nepal. Join runners across Kathmandu in this premier single-distance community marathon.
+                  Challenge yourself, celebrate fitness, and run toward a stronger community in Nepal. Join runners across Parsa in this 15 KM community marathon.
                 </p>
 
                 {/* Primary CTA Buttons */}
@@ -119,7 +119,7 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
               </div>
               <div className="flex items-center gap-2 text-xs sm:text-sm text-white/70">
                 <span className="px-2.5 py-1 rounded bg-white/10 text-white font-mono">15 KM Exclusively</span>
-                <span>• Podium Ceremony Post-Race</span>
+                <span>• Top 10: Medals • All Participants: Certificates</span>
               </div>
             </div>
 
