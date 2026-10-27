@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import marathonAthletes from "@/images/marathon-athletes.jpg";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import { MARATHON_DETAILS, MARATHON_PRIZES } from "@/data/marathon";
+import { MARATHON_DETAILS, MARATHON_PRIZES, MARATHON_REGISTRATION_URL } from "@/data/marathon";
 import { MedalFill, MapPinFill, CalendarAlt, ClockFill, ArrowDown } from "@/components/icons";
 
 interface MarathonHeroProps {
@@ -76,7 +76,7 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
                   <Button
                     size="xl"
                     variant="default"
-                    render={<a href="#register" />}
+                    render={<a href={MARATHON_REGISTRATION_URL} target="_blank" rel="noopener noreferrer" />}
                     className="font-bold shadow-xl shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all"
                   >
                     Register Now

@@ -3,7 +3,7 @@
 import { Section, SectionHead, SectionContent } from "@/components/layout/section";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { Button } from "@/components/ui/button";
-import { COMMUNITY_PILLARS, MARATHON_DETAILS } from "@/data/marathon";
+import { COMMUNITY_PILLARS, MARATHON_DETAILS, MARATHON_REGISTRATION_URL } from "@/data/marathon";
 import { QuoteLeft, HeartFill, Activity, CheckCircleFill } from "@/components/icons";
 
 export default function MarathonCommunity() {
@@ -74,7 +74,7 @@ export default function MarathonCommunity() {
                     <Button
                       size="lg"
                       variant="default"
-                      render={<a href="#register" />}
+                      render={<a href={MARATHON_REGISTRATION_URL} target="_blank" rel="noopener noreferrer" />}
                       full
                       className="font-bold text-sm shadow-lg shadow-primary/25"
                     >
@@ -143,7 +143,7 @@ export default function MarathonCommunity() {
               <Button
                 size="xl"
                 variant="default"
-                render={<a href="#register" />}
+                render={<a href={MARATHON_REGISTRATION_URL} target="_blank" rel="noopener noreferrer" />}
                 className="font-bold shadow-xl shadow-primary/25"
               >
                 Register Now for 15 KM

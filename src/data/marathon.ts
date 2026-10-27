@@ -29,6 +29,9 @@ export interface MarathonFAQ {
   answer: string;
 }
 
+export const MARATHON_REGISTRATION_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSdeLXNSeAYzclsVT8_4sxq3RsUI5PQJ5h86swz-_eiSq2gvkg/viewform?usp=dialog";
+
 export const MARATHON_DETAILS = {
   eventName: "Rakesh Marathon",
   tagline: "Run Together. Build a Better Tomorrow.",

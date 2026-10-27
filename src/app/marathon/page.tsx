@@ -45,7 +45,6 @@ export default function MarathonPage() {
         <MarathonInfo />
         <MarathonRoute />
         <MarathonCommunity />
-        <MarathonRegistration />
       </main>
     </React.Fragment>
   );

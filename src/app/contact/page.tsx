@@ -5,7 +5,7 @@ import Contact from "@/components/sections/conact";
 
 export const metadata: Metadata = {
   title: "Contact Us | Rakesh Ray",
-  description: "Rakesh Ray is a NextJS Interior Design Landing Page Template with a modern design and a premium visual experience.",
+  description: "Rakesh Ray is a politician and a social worker from Birgunj, Parsa.",
 };
 
 export default function ContactPage() {
