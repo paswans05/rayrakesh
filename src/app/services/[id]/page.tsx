@@ -64,9 +64,9 @@ function CtaCard({ className }: CtaCardProps) {
           <CallAlt className="size-4 text-primary fill-current shrink-0" />
           <span>+1 (800) 555-ARCHITECT</span>
         </a>
-        <a href="mailto:info@Rakesh Ray.com" className="flex items-center gap-3 text-white/90 hover:text-primary transition-colors">
+        <a href="mailto:erakesh.ray@gmail.com" className="flex items-center gap-3 text-white/90 hover:text-primary transition-colors">
           <Mail className="size-4 text-primary fill-current shrink-0" />
-          <span>info@Rakesh Ray.com</span>
+          <span>erakesh.ray@gmail.com</span>
         </a>
       </div>
 

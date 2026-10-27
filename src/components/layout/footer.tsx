@@ -44,7 +44,7 @@ const SOCIAL_LINKS = [
 ];
 
 const CONTACT_INFO = [
-  { icon: Mail, title: 'Email', label: 'contact@Rakesh Ray.com', href: "mailto:contact@Rakesh Ray.com" },
+  { icon: Mail, title: 'Email', label: 'erakesh.ray@gmail.com', href: "mailto:erakesh.ray@gmail.com" },
   { icon: MapPin, title: 'Address', label: '15h Street, Office 478 Berlin, De 81566', href: "https://maps.google.com" },
 ];
 

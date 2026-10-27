@@ -3,7 +3,7 @@ import { Mail, CallAlt, MapPinFill } from "@/components/icons"
 export const CONTACT_INFO = [
     { icon: MapPinFill, text: "Parsa, Sarlahi, Nepal" },
     { icon: CallAlt, text: "+977-9818888722" },
-    { icon: Mail, text: "erakesh.ray@gmail.com " },
+    { icon: Mail, text: "erakesh.ray@gmail.com" },
 ];
 
 export interface DropdownChild {
@@ -25,5 +25,6 @@ export const NAV_ITEMS: NavItem[] = [
         href: "/"
     },
     { label: "About", href: "/about" },
+    { label: "Marathon", href: "/marathon" },
     { label: "Contact", href: "/contact" },
 ];
