@@ -9,7 +9,7 @@ import { ScrollReveal, getDelayClass } from "@/components/ui/scroll-reveal";
 import { CountUp } from "@/hooks/useAnimatedCounter";
 import { cn } from "@/lib/utils";
 
-import aboutA from "@/images/about-a.jpg";
+import aboutA from "@/images/about-a.png";
 import aboutB from "@/images/about-b.png";
 import buildingLineA from "@/images/decoration/building-line-a.png";
 import { ABOUT_STATS_DATA, type AboutStatItem } from "@/data/about";
