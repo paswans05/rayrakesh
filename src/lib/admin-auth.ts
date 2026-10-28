@@ -46,20 +46,34 @@ export function verifyAdminToken(token?: string | null): boolean {
     const expectedPayload = `${username}:${timestampStr}`;
     const expectedSig = crypto.createHmac("sha256", secret).update(expectedPayload).digest("hex");
 
-    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSig));
+    const sigBuf = Buffer.from(signature);
+    const expectedBuf = Buffer.from(expectedSig);
+
+    if (sigBuf.length !== expectedBuf.length) {
+      return false;
+    }
+
+    return crypto.timingSafeEqual(sigBuf, expectedBuf);
   } catch {
     return false;
   }
 }
 
 export async function isServerAdminAuthenticated(): Promise<boolean> {
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get(ADMIN_COOKIE_NAME);
-  return verifyAdminToken(sessionCookie?.value);
+  try {
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get(ADMIN_COOKIE_NAME);
+    return verifyAdminToken(sessionCookie?.value);
+  } catch {
+    return false;
+  }
 }
 
 export function isRequestAdminAuthenticated(req: NextRequest): boolean {
-  const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
-  return verifyAdminToken(token);
+  try {
+    const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
+    return verifyAdminToken(token);
+  } catch {
+    return false;
+  }
 }
-

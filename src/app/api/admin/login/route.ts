@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminCredentials, createAdminToken, ADMIN_COOKIE_NAME } from "@/lib/admin-auth";
 
+export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
@@ -9,7 +10,7 @@ export async function POST(req: NextRequest) {
 
     if (!verifyAdminCredentials(username, password)) {
       return NextResponse.json(
-        { error: "Invalid admin username or password." },
+        { success: false, error: "Invalid admin username or password." },
         { status: 401 }
       );
     }
@@ -33,10 +34,10 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error) {
     console.error("[/api/admin/login] Error:", error);
+    const message = error instanceof Error ? error.message : "Internal server error during login.";
     return NextResponse.json(
-      { error: "Internal server error during login." },
+      { success: false, error: message },
       { status: 500 }
     );
   }
 }
-

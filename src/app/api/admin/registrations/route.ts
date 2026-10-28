@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isRequestAdminAuthenticated } from "@/lib/admin-auth";
+import { isRequestAdminAuthenticated, isServerAdminAuthenticated } from "@/lib/admin-auth";
 import { getAllRegistrations, getRegistrationStats, deleteRegistrationById } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
   try {
-    if (!isRequestAdminAuthenticated(req)) {
+    const isAuthed = (await isServerAdminAuthenticated()) || isRequestAdminAuthenticated(req);
+    if (!isAuthed) {
       return NextResponse.json(
-        { error: "Unauthorized. Please login to access registrations." },
+        { success: false, error: "Unauthorized. Please login to access registrations." },
         { status: 401 }
       );
     }
@@ -23,8 +25,9 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.error("[/api/admin/registrations GET] Error:", error);
+    const message = error instanceof Error ? error.message : "Failed to fetch registrations.";
     return NextResponse.json(
-      { error: "Failed to fetch registrations." },
+      { success: false, error: message },
       { status: 500 }
     );
   }
@@ -32,9 +35,10 @@ export async function GET(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    if (!isRequestAdminAuthenticated(req)) {
+    const isAuthed = (await isServerAdminAuthenticated()) || isRequestAdminAuthenticated(req);
+    if (!isAuthed) {
       return NextResponse.json(
-        { error: "Unauthorized." },
+        { success: false, error: "Unauthorized." },
         { status: 401 }
       );
     }
@@ -42,7 +46,7 @@ export async function DELETE(req: NextRequest) {
     const { id } = await req.json();
     if (!id) {
       return NextResponse.json(
-        { error: "Missing registration ID to delete." },
+        { success: false, error: "Missing registration ID to delete." },
         { status: 400 }
       );
     }
@@ -50,7 +54,7 @@ export async function DELETE(req: NextRequest) {
     const deleted = deleteRegistrationById(id);
     if (!deleted) {
       return NextResponse.json(
-        { error: "Registration not found or already deleted." },
+        { success: false, error: "Registration not found or already deleted." },
         { status: 404 }
       );
     }
@@ -63,10 +67,10 @@ export async function DELETE(req: NextRequest) {
     });
   } catch (error) {
     console.error("[/api/admin/registrations DELETE] Error:", error);
+    const message = error instanceof Error ? error.message : "Failed to delete registration.";
     return NextResponse.json(
-      { error: "Failed to delete registration." },
+      { success: false, error: message },
       { status: 500 }
     );
   }
 }
-

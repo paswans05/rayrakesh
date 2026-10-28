@@ -10,7 +10,10 @@ if (!fs.existsSync(dbDir)) {
 
 const dbPath = path.join(dbDir, "marathon.db");
 
-let dbInstance: Database.Database | null = null;
+// Global singleton to prevent multiple open handles across Next.js Turbopack / Fast Refresh
+const globalForDb = globalThis as unknown as {
+  marathonDbInstance?: Database.Database;
+};
 
 export interface RegistrationRecord {
   id?: number;
@@ -28,10 +31,14 @@ export interface RegistrationRecord {
 }
 
 function initDb(): Database.Database {
-  const db = new Database(dbPath);
+  const db = new Database(dbPath, { timeout: 10000 });
 
   // Enable WAL mode for high performance and concurrency
-  db.pragma("journal_mode = WAL");
+  try {
+    db.pragma("journal_mode = WAL");
+  } catch (err) {
+    console.warn("Could not enable WAL mode on SQLite, proceeding with default journal:", err);
+  }
 
   // Create registrations table if not exists
   db.exec(`
@@ -45,8 +52,8 @@ function initDb(): Database.Database {
       gender TEXT,
       tshirt_size TEXT DEFAULT 'M',
       address TEXT NOT NULL,
-      emergency_name TEXT NOT NULL,
-      emergency_phone TEXT NOT NULL,
+      emergency_name TEXT,
+      emergency_phone TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -65,10 +72,10 @@ function initDb(): Database.Database {
 }
 
 export function getDb(): Database.Database {
-  if (!dbInstance) {
-    dbInstance = initDb();
+  if (!globalForDb.marathonDbInstance) {
+    globalForDb.marathonDbInstance = initDb();
   }
-  return dbInstance;
+  return globalForDb.marathonDbInstance;
 }
 
 export function saveRegistration(record: RegistrationRecord): { success: boolean; id: string } {
@@ -98,25 +105,35 @@ export function saveRegistration(record: RegistrationRecord): { success: boolean
     record.gender || "prefer-not-to-say",
     record.tshirt_size || "M",
     record.address,
-    record.emergency_name,
-    record.emergency_phone
+    record.emergency_name || "",
+    record.emergency_phone || ""
   );
 
   return { success: true, id: record.registration_id };
 }
 
 export function getRegistrationByEmail(email: string): RegistrationRecord | null {
-  const db = getDb();
-  const stmt = db.prepare(`SELECT * FROM registrations WHERE LOWER(email) = LOWER(?) LIMIT 1`);
-  const row = stmt.get(email);
-  return (row as RegistrationRecord) || null;
+  try {
+    const db = getDb();
+    const stmt = db.prepare(`SELECT * FROM registrations WHERE LOWER(email) = LOWER(?) LIMIT 1`);
+    const row = stmt.get(email);
+    return (row as RegistrationRecord) || null;
+  } catch (err) {
+    console.error("Error in getRegistrationByEmail:", err);
+    return null;
+  }
 }
 
 export function getRegistrationById(registrationId: string): RegistrationRecord | null {
-  const db = getDb();
-  const stmt = db.prepare(`SELECT * FROM registrations WHERE registration_id = ? LIMIT 1`);
-  const row = stmt.get(registrationId);
-  return (row as RegistrationRecord) || null;
+  try {
+    const db = getDb();
+    const stmt = db.prepare(`SELECT * FROM registrations WHERE registration_id = ? LIMIT 1`);
+    const row = stmt.get(registrationId);
+    return (row as RegistrationRecord) || null;
+  } catch (err) {
+    console.error("Error in getRegistrationById:", err);
+    return null;
+  }
 }
 
 export function upsertRegistration(record: RegistrationRecord): { success: boolean; id: string; isNew: boolean } {
@@ -144,8 +161,8 @@ export function upsertRegistration(record: RegistrationRecord): { success: boole
       record.gender || "prefer-not-to-say",
       record.tshirt_size || existing.tshirt_size || "M",
       record.address,
-      record.emergency_name,
-      record.emergency_phone,
+      record.emergency_name || existing.emergency_name || "",
+      record.emergency_phone || existing.emergency_phone || "",
       existing.id
     );
 
@@ -157,45 +174,70 @@ export function upsertRegistration(record: RegistrationRecord): { success: boole
 }
 
 export function deleteRegistrationByEmail(email: string): boolean {
-  const db = getDb();
-  const stmt = db.prepare(`DELETE FROM registrations WHERE LOWER(email) = LOWER(?)`);
-  const result = stmt.run(email);
-  return result.changes > 0;
+  try {
+    const db = getDb();
+    const stmt = db.prepare(`DELETE FROM registrations WHERE LOWER(email) = LOWER(?)`);
+    const result = stmt.run(email);
+    return result.changes > 0;
+  } catch (err) {
+    console.error("Error in deleteRegistrationByEmail:", err);
+    return false;
+  }
 }
 
 export function deleteRegistrationById(id: number | string): boolean {
-  const db = getDb();
-  const stmt = db.prepare(`DELETE FROM registrations WHERE id = ? OR registration_id = ?`);
-  const result = stmt.run(id, String(id));
-  return result.changes > 0;
+  try {
+    const db = getDb();
+    const stmt = db.prepare(`DELETE FROM registrations WHERE id = ? OR registration_id = ?`);
+    const result = stmt.run(id, String(id));
+    return result.changes > 0;
+  } catch (err) {
+    console.error("Error in deleteRegistrationById:", err);
+    return false;
+  }
 }
 
 export function getRegistrationStats() {
-  const db = getDb();
-  const totalRow = db.prepare(`SELECT COUNT(*) as count FROM registrations`).get() as { count: number } | undefined;
-  const tshirtRows = db.prepare(`
-    SELECT COALESCE(tshirt_size, 'M') as size, COUNT(*) as count 
-    FROM registrations 
-    GROUP BY tshirt_size 
-    ORDER BY count DESC
-  `).all() as Array<{ size: string; count: number }>;
-  const genderRows = db.prepare(`
-    SELECT COALESCE(gender, 'prefer-not-to-say') as gender, COUNT(*) as count 
-    FROM registrations 
-    GROUP BY gender
-  `).all() as Array<{ gender: string; count: number }>;
-  const avgAgeRow = db.prepare(`SELECT ROUND(AVG(age), 1) as avgAge FROM registrations`).get() as { avgAge: number | null } | undefined;
+  try {
+    const db = getDb();
+    const totalRow = db.prepare(`SELECT COUNT(*) as count FROM registrations`).get() as { count: number } | undefined;
+    const tshirtRows = db.prepare(`
+      SELECT COALESCE(tshirt_size, 'M') as size, COUNT(*) as count 
+      FROM registrations 
+      GROUP BY tshirt_size 
+      ORDER BY count DESC
+    `).all() as Array<{ size: string; count: number }>;
+    const genderRows = db.prepare(`
+      SELECT COALESCE(gender, 'prefer-not-to-say') as gender, COUNT(*) as count 
+      FROM registrations 
+      GROUP BY gender
+    `).all() as Array<{ gender: string; count: number }>;
+    const avgAgeRow = db.prepare(`SELECT ROUND(AVG(age), 1) as avgAge FROM registrations`).get() as { avgAge: number | null } | undefined;
 
-  return {
-    total: totalRow?.count || 0,
-    tshirtSizes: tshirtRows,
-    genders: genderRows,
-    avgAge: avgAgeRow?.avgAge || 0,
-  };
+    return {
+      total: totalRow?.count || 0,
+      tshirtSizes: tshirtRows || [],
+      genders: genderRows || [],
+      avgAge: avgAgeRow?.avgAge || 0,
+    };
+  } catch (err) {
+    console.error("Error in getRegistrationStats:", err);
+    return {
+      total: 0,
+      tshirtSizes: [],
+      genders: [],
+      avgAge: 0,
+    };
+  }
 }
 
 export function getAllRegistrations(): RegistrationRecord[] {
-  const db = getDb();
-  const stmt = db.prepare(`SELECT * FROM registrations ORDER BY id DESC`);
-  return stmt.all() as RegistrationRecord[];
+  try {
+    const db = getDb();
+    const stmt = db.prepare(`SELECT * FROM registrations ORDER BY id DESC`);
+    return (stmt.all() as RegistrationRecord[]) || [];
+  } catch (err) {
+    console.error("Error in getAllRegistrations:", err);
+    return [];
+  }
 }
