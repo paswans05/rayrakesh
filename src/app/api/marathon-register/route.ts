@@ -118,13 +118,13 @@ export async function POST(req: NextRequest) {
 
     const passAttachments = passBuffer
       ? [
-          {
-            filename: passFileName,
-            content: passBuffer,
-            contentType: "image/png",
-            cid: "runner-pass-card",
-          },
-        ]
+        {
+          filename: passFileName,
+          content: passBuffer,
+          contentType: "image/png",
+          cid: "runner-pass-card",
+        },
+      ]
       : undefined;
 
     // ── Notification email to Rakesh Ray (site organizer) ──
@@ -160,15 +160,14 @@ export async function POST(req: NextRequest) {
             </p>
           </div>
 
-          ${
-            passBuffer
-              ? `
+          ${passBuffer
+        ? `
           <div style="margin-top: 14px; text-align: center;">
             <p style="font-size: 12px; color: #4B535D; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Participant Pass Card Preview</p>
             <img src="cid:runner-pass-card" alt="Participant Pass" style="width: 100%; max-width: 480px; height: auto; border-radius: 8px; border: 1px solid #CAA05C;" />
           </div>`
-              : ""
-          }
+        : ""
+      }
         </div>
         <div style="padding: 16px 32px; background: #202a34; border-radius: 0 0 12px 12px; text-align: center;">
           <p style="color: #A6B0BA; font-size: 12px; margin: 0;">Stored in SQLite Database • 15 KM Single-Distance • Parsa, Nepal</p>
@@ -234,9 +233,8 @@ export async function POST(req: NextRequest) {
           </div>
 
           <!-- Digital Runner Pass Card Preview -->
-          ${
-            passBuffer
-              ? `
+          ${passBuffer
+        ? `
           <div style="margin: 24px 0; text-align: center;">
             <div style="background: #CAA05C; color: #121C27; display: inline-block; padding: 6px 18px; border-radius: 20px; font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;">
               🎟 Your Digital Runner Pass
@@ -249,8 +247,8 @@ export async function POST(req: NextRequest) {
             </div>
           </div>
           `
-              : ""
-          }
+        : ""
+      }
 
           <div style="background: #fffbeb; border: 1px solid #CAA05C; padding: 16px 20px; border-radius: 8px; font-size: 13px; color: #202a34; line-height: 1.6; margin-top: 20px;">
             <strong>Important Next Steps:</strong><br/>
@@ -270,14 +268,6 @@ export async function POST(req: NextRequest) {
     const adminEmailRecipient = process.env.MAIL_TO || process.env.SMTP_USER;
 
     const emailTasks = [
-      // 1. Organizer notification with card attachment
-      sendMail({
-        to: adminEmailRecipient,
-        subject: `Marathon Registration: ${fullName} [${regId}]`,
-        html: adminHtml,
-        replyTo: cleanEmail,
-        attachments: passAttachments,
-      }),
       // 2. Participant confirmation with card attachment & inline CID
       sendMail({
         to: cleanEmail,
