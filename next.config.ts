@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  async rewrites() {
+    return [
+      {
+        source: "/passes/:filename*",
+        destination: "/api/marathon-pass/:filename*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
