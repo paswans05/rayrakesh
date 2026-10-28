@@ -214,11 +214,13 @@ export async function POST(req: NextRequest) {
       </div>
     `;
 
-    // ── Send emails with card attachment asynchronously ──
-    Promise.all([
+    // ── Send emails with card attachment (awaited so Next.js doesn't terminate before delivery) ──
+    const adminEmailRecipient = process.env.MAIL_TO || process.env.SMTP_USER;
+
+    const emailTasks = [
       // 1. Organizer notification with card attachment
       sendMail({
-        to: process.env.MAIL_TO,
+        to: adminEmailRecipient,
         subject: `Marathon Registration: ${fullName} [${regId}]`,
         html: adminHtml,
         replyTo: cleanEmail,
@@ -229,19 +231,33 @@ export async function POST(req: NextRequest) {
         to: cleanEmail,
         subject: `🏅 Your Official Rakesh Marathon 15 KM Pass [${regId}]`,
         html: participantHtml,
-        replyTo: process.env.MAIL_TO,
+        replyTo: adminEmailRecipient,
         attachments: passAttachments,
-      }).catch((err) => {
-        console.warn("[marathon-register] Participant email warning:", err);
       }),
-    ]).catch((err) => {
-      console.warn("[marathon-register] Email notification warning:", err);
-    });
+    ];
+
+    const [adminResult, participantResult] = await Promise.allSettled(emailTasks);
+
+    if (adminResult.status === "fulfilled") {
+      console.log(`[/api/marathon-register] Organizer notification email delivered to ${adminEmailRecipient}`);
+    } else {
+      console.error("[/api/marathon-register] Organizer email failed:", adminResult.reason);
+    }
+
+    if (participantResult.status === "fulfilled") {
+      console.log(`[/api/marathon-register] Participant confirmation email delivered to ${cleanEmail}`);
+    } else {
+      console.error("[/api/marathon-register] Participant email failed:", participantResult.reason);
+    }
 
     return NextResponse.json({
       success: true,
       registrationId: regId,
       isNew,
+      emailDelivered: {
+        admin: adminResult.status === "fulfilled",
+        participant: participantResult.status === "fulfilled",
+      },
       message: isNew
         ? "Registration successfully saved in database. Confirmation email with your runner card has been sent."
         : "Registration updated! Your official runner pass card has been sent to your email.",
