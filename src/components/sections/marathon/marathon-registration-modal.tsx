@@ -13,6 +13,7 @@ import {
   Cross,
 } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/context/language-context";
 
 interface RegistrationReceipt {
   registrationId: string;
@@ -26,6 +27,7 @@ interface RegistrationReceipt {
 }
 
 export default function MarathonRegistrationModal() {
+  const { t, isNepali } = useLanguage();
   const pathname = usePathname();
   const { isOpen, closeRegistrationModal } = useRegistrationModal();
   const formId = useId();
@@ -260,7 +262,7 @@ export default function MarathonRegistrationModal() {
             </span>
             <div>
               <h3 id="modal-title" className="text-base sm:text-lg font-bold text-white uppercase tracking-wider">
-                Rakesh Marathon Registration
+                {t("modal.heading", "Rakesh Marathon Registration")}
               </h3>
               <p className="text-xs text-primary font-medium">15 KM Single-Distance • Parsa, Nepal</p>
             </div>
@@ -448,14 +450,14 @@ export default function MarathonRegistrationModal() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
                     <label htmlFor={`${formId}-modal-name`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1">
-                      Full Name *
+                      {t("modal.full_name", "Full Name")} *
                     </label>
                     <input
                       id={`${formId}-modal-name`}
                       type="text"
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      placeholder="e.g. Ramesh Shrestha"
+                      placeholder={t("modal.full_name_placeholder", "e.g. Ramesh Shrestha")}
                       className={cn(
                         "w-full px-3.5 py-2.5 rounded-xl border bg-white text-darker text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all",
                         errors.fullName ? "border-danger" : "border-lighter"
@@ -466,14 +468,14 @@ export default function MarathonRegistrationModal() {
 
                   <div>
                     <label htmlFor={`${formId}-modal-email`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1">
-                      Email Address *
+                      {t("modal.email", "Email Address")} *
                     </label>
                     <input
                       id={`${formId}-modal-email`}
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="e.g. ramesh@example.com"
+                      placeholder={t("modal.email_placeholder", "e.g. ramesh@example.com")}
                       className={cn(
                         "w-full px-3.5 py-2.5 rounded-xl border bg-white text-darker text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all",
                         errors.email ? "border-danger" : "border-lighter"
@@ -484,7 +486,7 @@ export default function MarathonRegistrationModal() {
 
                   <div>
                     <label htmlFor={`${formId}-modal-phone`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1">
-                      Phone Number *
+                      {t("modal.phone", "Phone Number")} *
                     </label>
                     <input
                       id={`${formId}-modal-phone`}
@@ -502,7 +504,7 @@ export default function MarathonRegistrationModal() {
 
                   <div>
                     <label htmlFor={`${formId}-modal-age`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1">
-                      Age (Min 16+) *
+                      {t("modal.age", "Age (Min 16+)")} *
                     </label>
                     <input
                       id={`${formId}-modal-age`}
@@ -522,7 +524,7 @@ export default function MarathonRegistrationModal() {
 
                   <div>
                     <label htmlFor={`${formId}-modal-gender`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1">
-                      Gender (Optional)
+                      {t("modal.gender", "Gender (Optional)")}
                     </label>
                     <select
                       id={`${formId}-modal-gender`}
@@ -530,16 +532,16 @@ export default function MarathonRegistrationModal() {
                       onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-lighter bg-white text-darker text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
                     >
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
+                      <option value="male">{t("modal.gender_male", "Male")}</option>
+                      <option value="female">{t("modal.gender_female", "Female")}</option>
                       <option value="other">Other</option>
-                      <option value="prefer-not-to-say">Prefer not to say</option>
+                      <option value="prefer-not-to-say">{t("modal.gender_other", "Prefer not to say")}</option>
                     </select>
                   </div>
 
                   <div>
                     <label htmlFor={`${formId}-modal-tshirt`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1">
-                      Official T-Shirt Size *
+                      {t("modal.tshirt_size", "Official T-Shirt Size")} *
                     </label>
                     <select
                       id={`${formId}-modal-tshirt`}
@@ -556,14 +558,14 @@ export default function MarathonRegistrationModal() {
 
                   <div>
                     <label htmlFor={`${formId}-modal-address`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1">
-                      City / Residential Address *
+                      {t("modal.address", "City / Residential Address")} *
                     </label>
                     <input
                       id={`${formId}-modal-address`}
                       type="text"
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      placeholder="e.g. Parsa, Nepal"
+                      placeholder={t("modal.address_placeholder", "e.g. Parsa, Nepal")}
                       className={cn(
                         "w-full px-3.5 py-2.5 rounded-xl border bg-white text-darker text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all",
                         errors.address ? "border-danger" : "border-lighter"

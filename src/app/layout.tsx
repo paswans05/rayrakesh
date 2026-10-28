@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { NavbarProvider } from "@/context/navbar-context";
 import { RegistrationModalProvider } from "@/context/registration-modal-context";
 import MarathonRegistrationModal from "@/components/sections/marathon/marathon-registration-modal";
+import { LanguageProvider } from "@/context/language-context";
 import Preloader from "@/components/ui/preloader";
 import "@/css/globals.css";
 
@@ -57,16 +58,18 @@ export default function RootLayout({
     <html lang="en" className={`h-full antialiased`}>
       <body suppressHydrationWarning={true} className={`min-h-full flex flex-col text-body`}>
         <Preloader />
-        <NavbarProvider>
-          <RegistrationModalProvider>
-            <TooltipProvider>
-              <Navbar />
-              {children}
-              <Footer />
-              <MarathonRegistrationModal />
-            </TooltipProvider>
-          </RegistrationModalProvider>
-        </NavbarProvider>
+        <LanguageProvider>
+          <NavbarProvider>
+            <RegistrationModalProvider>
+              <TooltipProvider>
+                <Navbar />
+                {children}
+                <Footer />
+                <MarathonRegistrationModal />
+              </TooltipProvider>
+            </RegistrationModalProvider>
+          </NavbarProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

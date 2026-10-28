@@ -15,6 +15,8 @@ import { FacebookCircle, TwitterRound, PinterestCircle, LinkedinRound } from "@/
 import { NAV_ITEMS, CONTACT_INFO, type NavItem, type DropdownChild } from "@/data/navbar";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { useNavbar } from "@/context/navbar-context";
+import { useLanguage } from "@/context/language-context";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 interface NavLinkProps {
   href: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -322,13 +324,31 @@ function DropdownItem({ label, items, onNavigate, align = "left" }: DropdownItem
 
 function NavContent({ onNavigate, className }: { onNavigate: () => void; className?: string; }) {
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const getTranslatedLabel = (label: string) => {
+    switch (label.toLowerCase()) {
+      case "home":
+        return t("nav.home", "Home");
+      case "marathon":
+        return t("nav.marathon", "Marathon");
+      case "about":
+        return t("nav.about", "About");
+      case "contact":
+        return t("nav.contact", "Contact");
+      default:
+        return label;
+    }
+  };
+
   return (
     <ul className={className}>
       {NAV_ITEMS.map((item, index) => {
+        const translatedLabel = getTranslatedLabel(item.label);
         if (item.children) {
           const isLast = index === NAV_ITEMS.length - 1;
           return (
-            <DropdownItem key={item.label} label={item.label} items={item.children} onNavigate={onNavigate} align={isLast ? "right" : "left"} />
+            <DropdownItem key={item.label} label={translatedLabel} items={item.children} onNavigate={onNavigate} align={isLast ? "right" : "left"} />
           );
         }
 
@@ -337,7 +357,7 @@ function NavContent({ onNavigate, className }: { onNavigate: () => void; classNa
         return (
           <li className="relative" key={item.label}>
             <Link href={item.href || "#"} onClick={onNavigate} className={linkStyle({ active })} >
-              {item.label}
+              {translatedLabel}
             </Link>
           </li>
         );
@@ -369,6 +389,7 @@ export default function Menubar({
   fullWidth: propFullWidth,
   hideTopBar: propHideTopBar,
 }: MenubarProps = {}) {
+  const { t } = useLanguage();
   const pathname = usePathname();
   const navContext = useNavbar();
   const isFullWidth = propFullWidth ?? (navContext ? navContext.fullWidth : false);
@@ -480,13 +501,13 @@ export default function Menubar({
                       <Fragment key={index}>
                         <li className={cn("hidden lg:flex items-center justify-center gap-2.5 px-5", index === 0 ? "lg:me-auto" : "lg:border-e border-white/40")}>
                           <Icon className="h-4 w-4 fill-white" />
-                          <span className="text-base/4.5 text-white">{info.text}</span>
+                          <span className="text-base/4.5 text-white">{index === 0 ? t("contact.address", info.text) : info.text}</span>
                         </li>
                         <li className={cn("flex lg:hidden items-center justify-center gap-2.5 px-2.5")}>
                           <Tooltip>
                             <TooltipTrigger><Icon className="h-4 w-4 fill-white" /></TooltipTrigger>
                             <TooltipContent className="bg-darker text-white">
-                              <p>{info.text}</p>
+                              <p>{index === 0 ? t("contact.address", info.text) : info.text}</p>
                             </TooltipContent>
                           </Tooltip>
                         </li>
@@ -494,18 +515,20 @@ export default function Menubar({
                     );
                   })}
                 </ul>
-                <ul className="flex items-center justify-center gap-4">
-                  {SOCIAL_LINKS.map((link, index) => {
-                    const Icon = link.icon;
-                    return (
-                      <li key={index}>
-                        <a href={link.href} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-center">
-                          <Icon className="size-4.5 sm:size-6 transition-colors fill-white group-hover:fill-primary" />
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
+                <div className="flex items-center gap-4">
+                  <ul className="flex items-center justify-center gap-4">
+                    {SOCIAL_LINKS.map((link, index) => {
+                      const Icon = link.icon;
+                      return (
+                        <li key={index}>
+                          <a href={link.href} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-center">
+                            <Icon className="size-4.5 sm:size-6 transition-colors fill-white group-hover:fill-primary" />
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -519,9 +542,12 @@ export default function Menubar({
                 </Link>
                 <nav className="hidden lg:flex items-center self-center w-full py-5.5" >
                   <NavContent className="flex items-center mx-auto gap-3 lg:gap-6 xl:gap-10" onNavigate={closeMobile} />
-                  <Button type="button" data-open-register-modal="true" className="capitalize cursor-pointer" variant="default">
-                    Register Now
-                  </Button>
+                  <div className="flex items-center gap-3">
+                    <LanguageSwitcher variant="navbar" />
+                    <Button type="button" data-open-register-modal="true" className="capitalize cursor-pointer" variant="default">
+                      {t("nav.register_now", "Register Now")}
+                    </Button>
+                  </div>
                 </nav>
                 <div className="ml-auto self-center my-4">
                   <HamBurgerIcon className="" open={mobileOpen} setOpen={setMobileOpen} />
@@ -536,8 +562,9 @@ export default function Menubar({
       <aside className={drawerStyle({ open: mobileOpen })} aria-hidden={!mobileOpen} >
         <nav className="px-6 pb-10 pt-10 flex flex-1 flex-col">
           <NavContent className="flex flex-1 flex-col gap-1" onNavigate={closeMobile} />
+          <LanguageSwitcher variant="drawer" />
           <Button type="button" data-open-register-modal="true" onClick={closeMobile} className="capitalize cursor-pointer" variant="default">
-            Register Now
+            {t("nav.register_now", "Register Now")}
           </Button>
         </nav>
       </aside>

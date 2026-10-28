@@ -1,5 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
+import { useLanguage } from "@/context/language-context";
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -41,6 +42,7 @@ const CONTACT_INFO = [
 ];
 
 export default function Footer({ className }: FooterProps) {
+  const { t, isNepali } = useLanguage();
   const pathname = usePathname();
   if (pathname?.startsWith("/admin")) return null;
   return (
@@ -63,7 +65,7 @@ export default function Footer({ className }: FooterProps) {
                     </Link>
                     <div className="my-6 max-w-sm">
                       <p className="text-lg/relaxed text-white/80">
-                        Rakesh Ray is committed to listening to Parsa residents, addressing local challenges, and working together for practical development and a stronger community.
+                        {isNepali ? "राकेश राय पर्साका नागरिकहरूको आवाज सुन्न, स्थानीय समस्याहरूको समाधान गर्न र समुदायको दिगो विकासका लागि प्रतिबद्ध हुनुहुन्छ।" : "Rakesh Ray is committed to listening to Parsa residents, addressing local challenges, and working together for practical development and a stronger community."}
                       </p>
                     </div>
                     <ul className="flex flex-wrap gap-4">
@@ -84,12 +86,12 @@ export default function Footer({ className }: FooterProps) {
                 {/* Footer Navigation Columns */}
                 {FOOTER_LINKS.map((item, index) => (
                   <ScrollReveal mode="fade" direction="bottom" key={index} className={cn("sm:column-6 md:column xl:column-2", getDelayClass(index + 1))}>
-                    <div className="text-xl/8 font-semibold text-primary mb-6">{item.title}</div>
+                    <div className="text-xl/8 font-semibold text-primary mb-6">{isNepali ? "द्रुत मेनु" : item.title}</div>
                     <ul className="flex flex-col gap-4">
                       {item.links.map((lItem, lIndex) => (
                         <li key={lIndex}>
                           <Link className="text-base/5 text-white hover:text-primary transition-colors" href={lItem.href}>
-                            {lItem.label}
+                            {isNepali ? (lItem.label === "Home" ? "गृहपृष्ठ" : lItem.label === "Marathon" ? "म्याराथन" : lItem.label === "About us" ? "हाम्रो बारेमा" : lItem.label === "Contact us" ? "सम्पर्क गर्नुहोस्" : lItem.label) : lItem.label}
                           </Link>
                         </li>
                       ))}
@@ -99,7 +101,7 @@ export default function Footer({ className }: FooterProps) {
 
                 {/* Contact Column */}
                 <ScrollReveal mode="fade" direction="bottom" delay={400} className="md:column-5 lg:column-4 xl:column-4 2xl:column-3">
-                  <div className="text-xl/8 font-semibold text-primary mb-6">Contact</div>
+                  <div className="text-xl/8 font-semibold text-primary mb-6">{isNepali ? "सम्पर्क" : "Contact"}</div>
                   <ul className="flex flex-col gap-6">
                     {CONTACT_INFO.map((item, index) => {
                       const Icon = item.icon;
@@ -127,7 +129,7 @@ export default function Footer({ className }: FooterProps) {
           <ScrollReveal mode="fade" direction="bottom" delay={100} className="py-6 border-t border-white/10">
             <div className="container">
               <div className="text-center">
-                <p className="text-white">&copy; 2026 <strong>Rakesh Ray</strong> All Rights Reserved.</p>
+                <p className="text-white">&copy; 2026 <strong>Rakesh Ray</strong> {isNepali ? "सर्वाधिकार सुरक्षित।" : "All Rights Reserved."}</p>
               </div>
             </div>
           </ScrollReveal>

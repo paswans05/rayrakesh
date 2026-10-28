@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/context/language-context";
 import marathonAthletes from "@/images/marathon-athletes.jpg";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
@@ -14,6 +15,7 @@ interface MarathonHeroProps {
 }
 
 export default function MarathonHero({ className }: MarathonHeroProps) {
+  const { t, isNepali } = useLanguage();
   return (
     <header className={cn("relative flex flex-col pt-(--menubar-height) mx-(--page-gap) mt-(--page-gap) rounded-(--radius) overflow-hidden", className)}>
       {/* Background Banner with Depth Overlays */}
@@ -42,14 +44,14 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-bold tracking-wider uppercase bg-primary text-darker shadow-lg shadow-primary/20">
                     <span className="size-2 rounded-full bg-darker animate-pulse" />
-                    15 KM RACE
+                    {isNepali ? "१५ किमी दौड" : "15 KM RACE"}
                   </span>
                   <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white/10 text-white/90 backdrop-blur-md border border-white/15">
                     <MapPinFill className="size-3.5 text-primary" />
                     {MARATHON_DETAILS.location}
                   </span>
                   <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-danger/20 text-white border border-danger/40">
-                    Campaign by {MARATHON_DETAILS.campaignLeader}
+                    {isNepali ? "राकेश रायको नेतृत्वमा अभियान" : `Campaign by ${MARATHON_DETAILS.campaignLeader}`}
                   </span>
                 </div>
 
@@ -79,7 +81,7 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
                     data-open-register-modal="true"
                     className="font-bold shadow-xl shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
                   >
-                    Register Now
+                    {t("nav.register_now", "Register Now")}
                   </Button>
                   <Button
                     size="xl"
@@ -88,7 +90,7 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
                     render={<a href="#prizes" />}
                     className="bg-white/5 border-white/25 hover:bg-white/15 text-white backdrop-blur-sm"
                   >
-                    View Prizes
+                    {isNepali ? "पुरस्कार हेर्नुहोस्" : "View Prizes"}
                   </Button>
                 </div>
 
