@@ -262,7 +262,7 @@ export default function MarathonRegistrationModal() {
               <h3 id="modal-title" className="text-base sm:text-lg font-bold text-white uppercase tracking-wider">
                 Rakesh Marathon Registration
               </h3>
-              <p className="text-xs text-primary font-medium">15 KM Single-Distance • Kathmandu, Nepal</p>
+              <p className="text-xs text-primary font-medium">15 KM Single-Distance • Parsa, Nepal</p>
             </div>
           </div>
           <button
@@ -329,7 +329,7 @@ export default function MarathonRegistrationModal() {
                 {/* Card Bib */}
                 <div className="my-5 p-4 sm:p-5 rounded-2xl bg-[#1c2733] border border-primary/40 text-center relative overflow-hidden">
                   <div className="text-[11px] uppercase tracking-widest text-primary font-bold">
-                    15 KM SINGLE DISTANCE • KATHMANDU, NEPAL
+                    15 KM SINGLE DISTANCE • Parsa, Nepal
                   </div>
                   <div className="text-4xl sm:text-5xl font-mono font-black text-white mt-1 tracking-wider">
                     {receipt.registrationId}
@@ -563,7 +563,7 @@ export default function MarathonRegistrationModal() {
                       type="text"
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      placeholder="e.g. Kathmandu, Nepal"
+                      placeholder="e.g. Parsa, Nepal"
                       className={cn(
                         "w-full px-3.5 py-2.5 rounded-xl border bg-white text-darker text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all",
                         errors.address ? "border-danger" : "border-lighter"

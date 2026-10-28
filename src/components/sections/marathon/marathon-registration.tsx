@@ -239,7 +239,7 @@ export default function MarathonRegistration() {
   return (
     <Section id="register" gap="default" className="bg-white relative">
       <div className="container">
-        
+
         {/* Section Heading */}
         <SectionHead className="text-center max-w-3xl mx-auto">
           <ScrollReveal mode="fade" direction="bottom">
@@ -256,7 +256,7 @@ export default function MarathonRegistration() {
         </SectionHead>
 
         <SectionContent className="mt-12 max-w-4xl mx-auto">
-          
+
           {/* CONFIRMATION SCREEN WHEN SUBMITTED */}
           {receipt ? (
             <ScrollReveal mode="fade" direction="bottom">
@@ -312,7 +312,7 @@ export default function MarathonRegistration() {
                     {/* Center Prominent Bib & Distance Box */}
                     <div className="my-6 p-5 sm:p-6 rounded-2xl bg-[#1c2733] border border-primary/40 text-center relative overflow-hidden">
                       <div className="text-xs uppercase tracking-widest text-primary font-bold">
-                        15 KM SINGLE DISTANCE • KATHMANDU, NEPAL
+                        15 KM SINGLE DISTANCE • Parsa, Nepal
                       </div>
 
                       <div className="text-4xl sm:text-5xl font-mono font-black text-white mt-1.5 tracking-wider drop-shadow-md">
@@ -439,7 +439,7 @@ export default function MarathonRegistration() {
                 )}
 
                 <div className="space-y-6">
-                  
+
                   {/* Step 1: Personal Details */}
                   <div>
                     <h4 className="text-lg font-bold text-darker mb-4 flex items-center gap-2">
