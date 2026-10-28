@@ -163,6 +163,37 @@ export function deleteRegistrationByEmail(email: string): boolean {
   return result.changes > 0;
 }
 
+export function deleteRegistrationById(id: number | string): boolean {
+  const db = getDb();
+  const stmt = db.prepare(`DELETE FROM registrations WHERE id = ? OR registration_id = ?`);
+  const result = stmt.run(id, String(id));
+  return result.changes > 0;
+}
+
+export function getRegistrationStats() {
+  const db = getDb();
+  const totalRow = db.prepare(`SELECT COUNT(*) as count FROM registrations`).get() as { count: number } | undefined;
+  const tshirtRows = db.prepare(`
+    SELECT COALESCE(tshirt_size, 'M') as size, COUNT(*) as count 
+    FROM registrations 
+    GROUP BY tshirt_size 
+    ORDER BY count DESC
+  `).all() as Array<{ size: string; count: number }>;
+  const genderRows = db.prepare(`
+    SELECT COALESCE(gender, 'prefer-not-to-say') as gender, COUNT(*) as count 
+    FROM registrations 
+    GROUP BY gender
+  `).all() as Array<{ gender: string; count: number }>;
+  const avgAgeRow = db.prepare(`SELECT ROUND(AVG(age), 1) as avgAge FROM registrations`).get() as { avgAge: number | null } | undefined;
+
+  return {
+    total: totalRow?.count || 0,
+    tshirtSizes: tshirtRows,
+    genders: genderRows,
+    avgAge: avgAgeRow?.avgAge || 0,
+  };
+}
+
 export function getAllRegistrations(): RegistrationRecord[] {
   const db = getDb();
   const stmt = db.prepare(`SELECT * FROM registrations ORDER BY id DESC`);

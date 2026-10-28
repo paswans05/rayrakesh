@@ -1,4 +1,5 @@
 "use client";
+import { usePathname } from "next/navigation";
 
 import { useState, useId, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -25,6 +26,7 @@ interface RegistrationReceipt {
 }
 
 export default function MarathonRegistrationModal() {
+  const pathname = usePathname();
   const { isOpen, closeRegistrationModal } = useRegistrationModal();
   const formId = useId();
   const cardRef = useRef<HTMLDivElement>(null);

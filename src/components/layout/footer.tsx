@@ -1,4 +1,5 @@
 "use client";
+import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -40,6 +41,8 @@ const CONTACT_INFO = [
 ];
 
 export default function Footer({ className }: FooterProps) {
+  const pathname = usePathname();
+  if (pathname?.startsWith("/admin")) return null;
   return (
     <footer className={cn("relative rounded-(--radius) mx-(--page-gap) mb-(--page-gap)", className)}>
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none rounded-[inherit]">

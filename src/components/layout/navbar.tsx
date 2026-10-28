@@ -369,6 +369,7 @@ export default function Menubar({
   fullWidth: propFullWidth,
   hideTopBar: propHideTopBar,
 }: MenubarProps = {}) {
+  const pathname = usePathname();
   const navContext = useNavbar();
   const isFullWidth = propFullWidth ?? (navContext ? navContext.fullWidth : false);
 
@@ -462,6 +463,8 @@ export default function Menubar({
       },
     }
   )
+
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <>
