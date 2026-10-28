@@ -1,19 +1,17 @@
 import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
+import { verifyAdminCredentialsFromDb } from "./db";
 
 export const ADMIN_COOKIE_NAME = "admin_session";
 
-function getSecretKey(): string {
+export function getSecretKey(): string {
   return process.env.ADMIN_SESSION_SECRET || "rakesh-marathon-admin-session-secret-2026";
 }
 
-export function verifyAdminCredentials(username?: string, password?: string): boolean {
-  const expectedUser = (process.env.ADMIN_USERNAME || "admin").trim();
-  const expectedPass = (process.env.ADMIN_PASSWORD || "admin@rakesh15k").trim();
-
+export async function verifyAdminCredentials(username?: string, password?: string): Promise<boolean> {
   if (!username || !password) return false;
-  return username.trim() === expectedUser && password.trim() === expectedPass;
+  return verifyAdminCredentialsFromDb(username, password);
 }
 
 export function createAdminToken(username: string): string {
@@ -59,6 +57,19 @@ export function verifyAdminToken(token?: string | null): boolean {
   }
 }
 
+export function getAdminUsernameFromToken(token?: string | null): string | null {
+  if (!token) return null;
+  if (!verifyAdminToken(token)) return null;
+
+  try {
+    const decoded = Buffer.from(token, "base64").toString("utf-8");
+    const [username] = decoded.split(":");
+    return username || null;
+  } catch {
+    return null;
+  }
+}
+
 export async function isServerAdminAuthenticated(): Promise<boolean> {
   try {
     const cookieStore = await cookies();
@@ -75,5 +86,15 @@ export function isRequestAdminAuthenticated(req: NextRequest): boolean {
     return verifyAdminToken(token);
   } catch {
     return false;
+  }
+}
+
+export async function getCurrentAdminUsername(): Promise<string | null> {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value;
+    return getAdminUsernameFromToken(token);
+  } catch {
+    return null;
   }
 }

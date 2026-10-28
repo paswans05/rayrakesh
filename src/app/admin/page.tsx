@@ -37,6 +37,14 @@ interface DbStatus {
   error?: string;
 }
 
+interface AdminUserItem {
+  id: number;
+  username: string;
+  email?: string;
+  role: string;
+  created_at?: string;
+}
+
 export default function AdminPage() {
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -61,6 +69,42 @@ export default function AdminPage() {
   const [dbStatus, setDbStatus] = useState<DbStatus | null>(null);
   const [isCheckingDb, setIsCheckingDb] = useState(false);
 
+  // ── PASSWORD RESET MODAL (ON LOGIN) ──
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetUsername, setResetUsername] = useState("admin");
+  const [resetMethod, setResetMethod] = useState<"recoveryKey" | "currentPassword">("recoveryKey");
+  const [resetCurrentPass, setResetCurrentPass] = useState("");
+  const [resetRecoveryKey, setResetRecoveryKey] = useState("");
+  const [resetNewPass, setResetNewPass] = useState("");
+  const [resetConfirmPass, setResetConfirmPass] = useState("");
+  const [resetError, setResetError] = useState("");
+  const [resetSuccess, setResetSuccess] = useState("");
+  const [isResetting, setIsResetting] = useState(false);
+
+  // ── IN-DASHBOARD SETTINGS & ADMIN USERS MODAL ──
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [settingsTab, setSettingsTab] = useState<"password" | "users">("password");
+  const [adminUsers, setAdminUsers] = useState<AdminUserItem[]>([]);
+  const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+
+  // Change Password state (inside dashboard)
+  const [changeOldPass, setChangeOldPass] = useState("");
+  const [changeNewPass, setChangeNewPass] = useState("");
+  const [changeConfirmPass, setChangeConfirmPass] = useState("");
+  const [changePassError, setChangePassError] = useState("");
+  const [changePassSuccess, setChangePassSuccess] = useState("");
+  const [isChangingPass, setIsChangingPass] = useState(false);
+
+  // Add User state (inside dashboard)
+  const [newAdminUser, setNewAdminUser] = useState("");
+  const [newAdminPass, setNewAdminPass] = useState("");
+  const [newAdminEmail, setNewAdminEmail] = useState("");
+  const [newAdminRole, setNewAdminRole] = useState("admin");
+  const [createUserError, setCreateUserError] = useState("");
+  const [createUserSuccess, setCreateUserSuccess] = useState("");
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+
+  // ── DB CONNECTION HEALTH CHECK ──
   const checkDbConnection = useCallback(async () => {
     setIsCheckingDb(true);
     try {
@@ -112,6 +156,22 @@ export default function AdminPage() {
     fetchRegistrations();
   }, [fetchRegistrations]);
 
+  // Fetch admin users from Turso
+  const fetchAdminUsers = useCallback(async () => {
+    setIsLoadingUsers(true);
+    try {
+      const res = await fetch("/api/admin/users");
+      const data = await res.json();
+      if (data.success) {
+        setAdminUsers(data.users || []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch admin users:", err);
+    } finally {
+      setIsLoadingUsers(false);
+    }
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError("");
@@ -154,7 +214,182 @@ export default function AdminPage() {
     }
   };
 
-  const confirmDelete = async () => {
+  // Reset password (unauthenticated or recovery)
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResetError("");
+    setResetSuccess("");
+
+    if (!resetUsername.trim()) {
+      setResetError("Username is required.");
+      return;
+    }
+    if (resetNewPass.length < 6) {
+      setResetError("New password must be at least 6 characters.");
+      return;
+    }
+    if (resetNewPass !== resetConfirmPass) {
+      setResetError("New passwords do not match.");
+      return;
+    }
+
+    setIsResetting(true);
+    try {
+      const payload: Record<string, string> = {
+        username: resetUsername.trim(),
+        newPassword: resetNewPass,
+      };
+      if (resetMethod === "recoveryKey") {
+        if (!resetRecoveryKey.trim()) {
+          setResetError("Please enter the recovery key (from ADMIN_SESSION_SECRET).");
+          setIsResetting(false);
+          return;
+        }
+        payload.recoveryKey = resetRecoveryKey.trim();
+      } else {
+        if (!resetCurrentPass.trim()) {
+          setResetError("Please enter your current password.");
+          setIsResetting(false);
+          return;
+        }
+        payload.currentPassword = resetCurrentPass.trim();
+      }
+
+      const res = await fetch("/api/admin/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setResetError(data.error || "Failed to reset password.");
+        return;
+      }
+
+      setResetSuccess(data.message || "Password updated successfully. You can now log in!");
+      setTimeout(() => {
+        setShowResetModal(false);
+        setPassword(resetNewPass);
+        setUsername(resetUsername);
+      }, 2000);
+    } catch {
+      setResetError("Failed to communicate with reset password server.");
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  // In-dashboard change password
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setChangePassError("");
+    setChangePassSuccess("");
+
+    if (changeNewPass.length < 6) {
+      setChangePassError("New password must be at least 6 characters.");
+      return;
+    }
+    if (changeNewPass !== changeConfirmPass) {
+      setChangePassError("New passwords do not match.");
+      return;
+    }
+
+    setIsChangingPass(true);
+    try {
+      const res = await fetch("/api/admin/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          currentPassword: changeOldPass,
+          newPassword: changeNewPass,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setChangePassError(data.error || "Failed to update password.");
+        return;
+      }
+
+      setChangePassSuccess(data.message || "Password updated successfully in Turso database.");
+      setChangeOldPass("");
+      setChangeNewPass("");
+      setChangeConfirmPass("");
+    } catch {
+      setChangePassError("Failed to connect to server.");
+    } finally {
+      setIsChangingPass(false);
+    }
+  };
+
+  // In-dashboard create admin user
+  const handleCreateAdminUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreateUserError("");
+    setCreateUserSuccess("");
+
+    if (!newAdminUser.trim() || newAdminUser.trim().length < 3) {
+      setCreateUserError("Username must be at least 3 characters.");
+      return;
+    }
+    if (newAdminPass.length < 6) {
+      setCreateUserError("Password must be at least 6 characters.");
+      return;
+    }
+
+    setIsCreatingUser(true);
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: newAdminUser.trim(),
+          password: newAdminPass,
+          email: newAdminEmail.trim(),
+          role: newAdminRole,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setCreateUserError(data.error || "Failed to create user.");
+        return;
+      }
+
+      setCreateUserSuccess(data.message || "User created successfully!");
+      setAdminUsers(data.users || []);
+      setNewAdminUser("");
+      setNewAdminPass("");
+      setNewAdminEmail("");
+    } catch {
+      setCreateUserError("Failed to connect to server.");
+    } finally {
+      setIsCreatingUser(false);
+    }
+  };
+
+  // In-dashboard delete admin user
+  const handleDeleteAdminUser = async (id: number, uname: string) => {
+    if (!confirm(`Are you sure you want to delete admin user "${uname}"?`)) return;
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setAdminUsers(data.users || []);
+      } else {
+        alert(data.error || "Failed to delete user.");
+      }
+    } catch {
+      alert("Error deleting user.");
+    }
+  };
+
+  const confirmDeleteRunner = async () => {
     if (!deleteCandidate) return;
     setIsDeleting(true);
     try {
@@ -404,7 +639,7 @@ export default function AdminPage() {
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-5">
+            <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
                   Admin Username
@@ -443,6 +678,22 @@ export default function AdminPage() {
                 </div>
               </div>
 
+              {/* Forgot / Reset Password Link */}
+              <div className="flex items-center justify-end pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowResetModal(true);
+                    setResetError("");
+                    setResetSuccess("");
+                    setResetUsername(username || "admin");
+                  }}
+                  className="text-xs text-amber-400 hover:text-amber-300 hover:underline cursor-pointer font-medium"
+                >
+                  Forgot or Reset Password?
+                </button>
+              </div>
+
               <div className="pt-2">
                 <Button
                   type="submit"
@@ -468,6 +719,165 @@ export default function AdminPage() {
             </div>
           </div>
         </div>
+
+        {/* ── RESET PASSWORD MODAL (ON LOGIN) ── */}
+        {showResetModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+            <div className="w-full max-w-md bg-[#0e1626] border border-slate-700 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center gap-2.5">
+                  <div className="size-9 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+                    <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-base font-black text-white">Reset Admin Password</h3>
+                    <p className="text-xs text-slate-400">Update password in Turso database</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowResetModal(false)}
+                  className="text-slate-400 hover:text-white text-sm p-1 rounded-lg hover:bg-slate-800 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {resetError && (
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+                  {resetError}
+                </div>
+              )}
+              {resetSuccess && (
+                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs">
+                  {resetSuccess}
+                </div>
+              )}
+
+              <form onSubmit={handleResetPassword} className="space-y-3.5 text-xs">
+                <div>
+                  <label className="block font-bold uppercase text-slate-300 mb-1">Admin Username</label>
+                  <input
+                    type="text"
+                    value={resetUsername}
+                    onChange={(e) => setResetUsername(e.target.value)}
+                    required
+                    placeholder="e.g. admin"
+                    className="w-full px-3.5 py-2.5 bg-[#080d16] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+
+                {/* Verification Method toggle */}
+                <div>
+                  <label className="block font-bold uppercase text-slate-300 mb-1">Verification Method</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setResetMethod("recoveryKey")}
+                      className={`py-2 px-3 rounded-xl border text-xs font-bold transition-colors cursor-pointer ${
+                        resetMethod === "recoveryKey"
+                          ? "bg-amber-500 text-black border-amber-400"
+                          : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      Master Recovery Key
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setResetMethod("currentPassword")}
+                      className={`py-2 px-3 rounded-xl border text-xs font-bold transition-colors cursor-pointer ${
+                        resetMethod === "currentPassword"
+                          ? "bg-amber-500 text-black border-amber-400"
+                          : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      Current Password
+                    </button>
+                  </div>
+                </div>
+
+                {resetMethod === "recoveryKey" ? (
+                  <div>
+                    <label className="block font-bold uppercase text-slate-300 mb-1">
+                      Master Recovery Secret
+                    </label>
+                    <input
+                      type="password"
+                      value={resetRecoveryKey}
+                      onChange={(e) => setResetRecoveryKey(e.target.value)}
+                      required
+                      placeholder="Enter ADMIN_SESSION_SECRET from .env"
+                      className="w-full px-3.5 py-2.5 bg-[#080d16] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-amber-400"
+                    />
+                    <p className="text-[10px] text-slate-500 mt-1">
+                      Value from ADMIN_SESSION_SECRET in .env.local
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block font-bold uppercase text-slate-300 mb-1">Current Password</label>
+                    <input
+                      type="password"
+                      value={resetCurrentPass}
+                      onChange={(e) => setResetCurrentPass(e.target.value)}
+                      required
+                      placeholder="Enter your current password"
+                      className="w-full px-3.5 py-2.5 bg-[#080d16] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <label className="block font-bold uppercase text-slate-300 mb-1">New Password</label>
+                  <input
+                    type="password"
+                    value={resetNewPass}
+                    onChange={(e) => setResetNewPass(e.target.value)}
+                    required
+                    placeholder="At least 6 characters"
+                    className="w-full px-3.5 py-2.5 bg-[#080d16] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold uppercase text-slate-300 mb-1">Confirm New Password</label>
+                  <input
+                    type="password"
+                    value={resetConfirmPass}
+                    onChange={(e) => setResetConfirmPass(e.target.value)}
+                    required
+                    placeholder="Re-type new password"
+                    className="w-full px-3.5 py-2.5 bg-[#080d16] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+
+                <div className="flex items-center justify-end gap-2.5 pt-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="default"
+                    onClick={() => setShowResetModal(false)}
+                    className="text-xs border-slate-700 text-slate-300 hover:bg-slate-800"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="default"
+                    size="default"
+                    disabled={isResetting}
+                    className="text-xs bg-amber-500 hover:bg-amber-400 text-black font-bold"
+                  >
+                    {isResetting ? "Updating..." : "Reset Password"}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -509,6 +919,30 @@ export default function AdminPage() {
                 <line x1="10" y1="14" x2="21" y2="3" />
               </svg>
             </Link>
+
+            {/* Admin Users & Password Settings Button */}
+            <Button
+              type="button"
+              variant="outline"
+              size="default"
+              onClick={() => {
+                setShowSettingsModal(true);
+                fetchAdminUsers();
+                setChangePassError("");
+                setChangePassSuccess("");
+                setCreateUserError("");
+                setCreateUserSuccess("");
+              }}
+              className="text-xs border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-slate-200 cursor-pointer h-9 px-3.5"
+            >
+              <svg className="size-3.5 mr-1.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              Admin Users
+            </Button>
 
             <Button
               type="button"
@@ -975,7 +1409,260 @@ export default function AdminPage() {
 
       </main>
 
-      {/* ── DELETE CONFIRMATION MODAL ── */}
+      {/* ── SETTINGS & ADMIN USERS MODAL (INSIDE DASHBOARD) ── */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="w-full max-w-2xl bg-[#0e1626] border border-slate-700 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+                  <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <path d="M12 2a5 5 0 1 0 5 5 5 5 0 0 0-5-5z" />
+                    <path d="M12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-white">Admin Management & Security</h3>
+                  <p className="text-xs text-slate-400">Turso Database • admin_users table</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSettingsModal(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Tabs */}
+            <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
+              <button
+                type="button"
+                onClick={() => setSettingsTab("password")}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                  settingsTab === "password"
+                    ? "bg-amber-500 text-black shadow"
+                    : "text-slate-400 hover:text-white hover:bg-slate-800"
+                }`}
+              >
+                Change Admin Password
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSettingsTab("users");
+                  fetchAdminUsers();
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                  settingsTab === "users"
+                    ? "bg-amber-500 text-black shadow"
+                    : "text-slate-400 hover:text-white hover:bg-slate-800"
+                }`}
+              >
+                Admin User Accounts ({adminUsers.length})
+              </button>
+            </div>
+
+            {/* TAB 1: CHANGE PASSWORD */}
+            {settingsTab === "password" && (
+              <div className="space-y-4">
+                {changePassError && (
+                  <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+                    {changePassError}
+                  </div>
+                )}
+                {changePassSuccess && (
+                  <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs">
+                    {changePassSuccess}
+                  </div>
+                )}
+
+                <form onSubmit={handleChangePassword} className="space-y-3.5 text-xs max-w-md">
+                  <div>
+                    <label className="block font-bold uppercase text-slate-300 mb-1">Current Password</label>
+                    <input
+                      type="password"
+                      value={changeOldPass}
+                      onChange={(e) => setChangeOldPass(e.target.value)}
+                      placeholder="Enter current password"
+                      className="w-full px-3.5 py-2.5 bg-[#080d16] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold uppercase text-slate-300 mb-1">New Password</label>
+                    <input
+                      type="password"
+                      value={changeNewPass}
+                      onChange={(e) => setChangeNewPass(e.target.value)}
+                      required
+                      placeholder="At least 6 characters"
+                      className="w-full px-3.5 py-2.5 bg-[#080d16] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold uppercase text-slate-300 mb-1">Confirm New Password</label>
+                    <input
+                      type="password"
+                      value={changeConfirmPass}
+                      onChange={(e) => setChangeConfirmPass(e.target.value)}
+                      required
+                      placeholder="Re-enter new password"
+                      className="w-full px-3.5 py-2.5 bg-[#080d16] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
+
+                  <div className="pt-2">
+                    <Button
+                      type="submit"
+                      variant="default"
+                      size="default"
+                      disabled={isChangingPass}
+                      className="text-xs bg-amber-500 hover:bg-amber-400 text-black font-bold cursor-pointer"
+                    >
+                      {isChangingPass ? "Saving..." : "Update Password in Database"}
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {/* TAB 2: ADMIN USER ACCOUNTS */}
+            {settingsTab === "users" && (
+              <div className="space-y-6 text-xs">
+                {/* Users List */}
+                <div>
+                  <h4 className="font-bold text-white mb-2 uppercase tracking-wider text-[11px] text-slate-400">
+                    Existing Admin Accounts
+                  </h4>
+                  {isLoadingUsers ? (
+                    <div className="py-4 text-center text-slate-500">Loading admin users...</div>
+                  ) : (
+                    <div className="divide-y divide-slate-800 rounded-xl border border-slate-800 overflow-hidden bg-[#080d16]">
+                      {adminUsers.map((u) => (
+                        <div key={u.id} className="p-3 flex items-center justify-between">
+                          <div className="flex items-center gap-2.5">
+                            <div className="size-7 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 font-bold flex items-center justify-center text-xs">
+                              {u.username[0]?.toUpperCase()}
+                            </div>
+                            <div>
+                              <div className="font-bold text-white flex items-center gap-2">
+                                <span>{u.username}</span>
+                                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-300 uppercase">
+                                  {u.role}
+                                </span>
+                              </div>
+                              <div className="text-[11px] text-slate-400">{u.email || "No email"}</div>
+                            </div>
+                          </div>
+                          {u.username.toLowerCase() !== "admin" && (
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteAdminUser(u.id, u.username)}
+                              className="text-red-400 hover:text-red-300 px-2 py-1 rounded hover:bg-red-500/10 text-xs cursor-pointer"
+                            >
+                              Delete
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Add New Admin Form */}
+                <div className="pt-4 border-t border-slate-800">
+                  <h4 className="font-bold text-white mb-3 uppercase tracking-wider text-[11px] text-slate-400">
+                    Add New Admin User
+                  </h4>
+                  {createUserError && (
+                    <div className="mb-3 p-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+                      {createUserError}
+                    </div>
+                  )}
+                  {createUserSuccess && (
+                    <div className="mb-3 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs">
+                      {createUserSuccess}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleCreateAdminUser} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">
+                        Username
+                      </label>
+                      <input
+                        type="text"
+                        value={newAdminUser}
+                        onChange={(e) => setNewAdminUser(e.target.value)}
+                        required
+                        placeholder="e.g. organizer_john"
+                        className="w-full px-3 py-2 bg-[#080d16] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">
+                        Password
+                      </label>
+                      <input
+                        type="password"
+                        value={newAdminPass}
+                        onChange={(e) => setNewAdminPass(e.target.value)}
+                        required
+                        placeholder="At least 6 characters"
+                        className="w-full px-3 py-2 bg-[#080d16] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">
+                        Email (Optional)
+                      </label>
+                      <input
+                        type="email"
+                        value={newAdminEmail}
+                        onChange={(e) => setNewAdminEmail(e.target.value)}
+                        placeholder="admin@example.com"
+                        className="w-full px-3 py-2 bg-[#080d16] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase text-slate-400 mb-1">
+                        Role
+                      </label>
+                      <select
+                        value={newAdminRole}
+                        onChange={(e) => setNewAdminRole(e.target.value)}
+                        className="w-full px-3 py-2 bg-[#080d16] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
+                      >
+                        <option value="admin">Admin</option>
+                        <option value="organizer">Organizer</option>
+                        <option value="volunteer">Volunteer Lead</option>
+                      </select>
+                    </div>
+
+                    <div className="sm:col-span-2 pt-2">
+                      <Button
+                        type="submit"
+                        variant="default"
+                        size="default"
+                        disabled={isCreatingUser}
+                        className="text-xs bg-amber-500 hover:bg-amber-400 text-black font-bold cursor-pointer"
+                      >
+                        {isCreatingUser ? "Adding Admin..." : "Add Admin User to Database"}
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── DELETE RUNNER CONFIRMATION MODAL ── */}
       {deleteCandidate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
           <div className="w-full max-w-md bg-[#0e1626] border border-red-500/30 rounded-2xl p-6 shadow-2xl space-y-4">
@@ -1022,7 +1709,7 @@ export default function AdminPage() {
                 variant="default"
                 size="default"
                 disabled={isDeleting}
-                onClick={confirmDelete}
+                onClick={confirmDeleteRunner}
                 className="text-xs bg-red-600 hover:bg-red-500 text-white cursor-pointer font-bold"
               >
                 {isDeleting ? "Deleting..." : "Confirm & Delete"}

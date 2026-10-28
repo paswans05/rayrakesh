@@ -8,7 +8,8 @@ export async function POST(req: NextRequest) {
   try {
     const { username, password } = await req.json();
 
-    if (!verifyAdminCredentials(username, password)) {
+    const isValid = await verifyAdminCredentials(username, password);
+    if (!isValid) {
       return NextResponse.json(
         { success: false, error: "Invalid admin username or password." },
         { status: 401 }
