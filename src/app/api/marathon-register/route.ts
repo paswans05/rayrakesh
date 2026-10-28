@@ -46,11 +46,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── SQLite Registration (Upsert) ──
-    const existing = getRegistrationByEmail(cleanEmail);
+    // ── Turso libSQL Registration (Upsert) ──
+    const existing = await getRegistrationByEmail(cleanEmail);
     const regId = existing?.registration_id || registrationId || `RM15K-${Math.floor(1000 + Math.random() * 9000)}`;
 
-    const { isNew } = upsertRegistration({
+    const { isNew } = await upsertRegistration({
       registration_id: regId,
       full_name: fullName.trim(),
       email: cleanEmail,

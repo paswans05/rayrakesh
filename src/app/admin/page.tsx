@@ -379,7 +379,7 @@ export default function AdminPage() {
               </span>
               <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-mono font-semibold text-emerald-400">
                 <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Live SQLite
+                Turso libSQL
               </span>
             </div>
           </div>
@@ -475,7 +475,7 @@ export default function AdminPage() {
           <div className="flex items-center gap-3">
             <div className="px-3.5 py-2 rounded-xl bg-[#0c1422] border border-slate-800 text-xs font-mono text-slate-300 flex items-center gap-2">
               <span className="text-slate-500">Database:</span>
-              <span className="text-amber-400 font-bold">data/marathon.db</span>
+              <span className="text-amber-400 font-bold">Turso Cloud libSQL</span>
             </div>
           </div>
         </div>
@@ -920,7 +920,7 @@ export default function AdminPage() {
 
       {/* ── FOOTER BAR ── */}
       <footer className="border-t border-slate-800/80 py-4 px-6 text-center text-xs text-slate-500">
-        Rakesh Ray Marathon 15K Administration Portal • Secure SQLite Storage • Parsa, Nepal
+        Rakesh Ray Marathon 15K Administration Portal • Powered by Turso Cloud Database • Parsa, Nepal
       </footer>
     </div>
   );

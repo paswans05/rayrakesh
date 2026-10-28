@@ -15,8 +15,8 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const registrations = getAllRegistrations();
-    const stats = getRegistrationStats();
+    const registrations = await getAllRegistrations();
+    const stats = await getRegistrationStats();
 
     return NextResponse.json({
       success: true,
@@ -51,7 +51,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const deleted = deleteRegistrationById(id);
+    const deleted = await deleteRegistrationById(id);
     if (!deleted) {
       return NextResponse.json(
         { success: false, error: "Registration not found or already deleted." },
@@ -59,7 +59,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const stats = getRegistrationStats();
+    const stats = await getRegistrationStats();
     return NextResponse.json({
       success: true,
       message: "Registration deleted successfully.",

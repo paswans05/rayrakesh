@@ -1,18 +1,8 @@
-import path from "node:path";
-import fs from "node:fs";
-import Database from "better-sqlite3";
+import { createClient, type Client } from "@libsql/client";
 
-// Create database directory if it doesn't exist
-const dbDir = path.join(process.cwd(), "data");
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-}
-
-const dbPath = path.join(dbDir, "marathon.db");
-
-// Global singleton to prevent multiple open handles across Next.js Turbopack / Fast Refresh
+// Global singleton to reuse client connection across Next.js invocations / hot-reloads
 const globalForDb = globalThis as unknown as {
-  marathonDbInstance?: Database.Database;
+  tursoClient?: Client;
 };
 
 export interface RegistrationRecord {
@@ -30,18 +20,29 @@ export interface RegistrationRecord {
   created_at?: string;
 }
 
-function initDb(): Database.Database {
-  const db = new Database(dbPath, { timeout: 10000 });
+export function getTursoClient(): Client {
+  if (!globalForDb.tursoClient) {
+    const url = (process.env.TURSO_DATABASE_URL || "").trim();
+    if (!url) {
+      throw new Error("Missing TURSO_DATABASE_URL environment variable. Please configure Turso database.");
+    }
+    const authToken = (process.env.TURSO_AUTH_TOKEN || "").trim();
 
-  // Enable WAL mode for high performance and concurrency
-  try {
-    db.pragma("journal_mode = WAL");
-  } catch (err) {
-    console.warn("Could not enable WAL mode on SQLite, proceeding with default journal:", err);
+    globalForDb.tursoClient = createClient({
+      url,
+      authToken: authToken || undefined,
+    });
   }
+  return globalForDb.tursoClient;
+}
 
-  // Create registrations table if not exists
-  db.exec(`
+let tableInitialized = false;
+
+export async function ensureTable(): Promise<void> {
+  if (tableInitialized) return;
+  const client = getTursoClient();
+
+  await client.execute(`
     CREATE TABLE IF NOT EXISTS registrations (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       registration_id TEXT UNIQUE NOT NULL,
@@ -56,169 +57,208 @@ function initDb(): Database.Database {
       emergency_phone TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
-
-    CREATE INDEX IF NOT EXISTS idx_registrations_email ON registrations(email);
-    CREATE INDEX IF NOT EXISTS idx_registrations_reg_id ON registrations(registration_id);
   `);
 
-  // Migration: Ensure tshirt_size column exists for existing databases
   try {
-    db.exec(`ALTER TABLE registrations ADD COLUMN tshirt_size TEXT DEFAULT 'M'`);
+    await client.execute(`CREATE INDEX IF NOT EXISTS idx_registrations_email ON registrations(email);`);
+    await client.execute(`CREATE INDEX IF NOT EXISTS idx_registrations_reg_id ON registrations(registration_id);`);
   } catch {
-    // Column already exists
+    // Indexes already exist or unsupported
   }
 
-  return db;
+  tableInitialized = true;
 }
 
-export function getDb(): Database.Database {
-  if (!globalForDb.marathonDbInstance) {
-    globalForDb.marathonDbInstance = initDb();
-  }
-  return globalForDb.marathonDbInstance;
-}
+export async function saveRegistration(record: RegistrationRecord): Promise<{ success: boolean; id: string }> {
+  await ensureTable();
+  const client = getTursoClient();
 
-export function saveRegistration(record: RegistrationRecord): { success: boolean; id: string } {
-  const db = getDb();
-
-  const stmt = db.prepare(`
-    INSERT INTO registrations (
-      registration_id,
-      full_name,
-      email,
-      phone,
-      age,
-      gender,
-      tshirt_size,
-      address,
-      emergency_name,
-      emergency_phone
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-
-  stmt.run(
-    record.registration_id,
-    record.full_name,
-    record.email,
-    record.phone,
-    record.age,
-    record.gender || "prefer-not-to-say",
-    record.tshirt_size || "M",
-    record.address,
-    record.emergency_name || "",
-    record.emergency_phone || ""
-  );
+  await client.execute({
+    sql: `
+      INSERT INTO registrations (
+        registration_id,
+        full_name,
+        email,
+        phone,
+        age,
+        gender,
+        tshirt_size,
+        address,
+        emergency_name,
+        emergency_phone
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `,
+    args: [
+      record.registration_id,
+      record.full_name,
+      record.email,
+      record.phone,
+      record.age,
+      record.gender || "prefer-not-to-say",
+      record.tshirt_size || "M",
+      record.address,
+      record.emergency_name || "",
+      record.emergency_phone || "",
+    ],
+  });
 
   return { success: true, id: record.registration_id };
 }
 
-export function getRegistrationByEmail(email: string): RegistrationRecord | null {
+export async function getRegistrationByEmail(email: string): Promise<RegistrationRecord | null> {
   try {
-    const db = getDb();
-    const stmt = db.prepare(`SELECT * FROM registrations WHERE LOWER(email) = LOWER(?) LIMIT 1`);
-    const row = stmt.get(email);
-    return (row as RegistrationRecord) || null;
+    await ensureTable();
+    const client = getTursoClient();
+    const result = await client.execute({
+      sql: `SELECT * FROM registrations WHERE LOWER(email) = LOWER(?) LIMIT 1`,
+      args: [email.trim()],
+    });
+
+    if (result.rows.length === 0) return null;
+    const row = result.rows[0];
+    return {
+      id: Number(row.id),
+      registration_id: String(row.registration_id || ""),
+      full_name: String(row.full_name || ""),
+      email: String(row.email || ""),
+      phone: String(row.phone || ""),
+      age: Number(row.age || 0),
+      gender: String(row.gender || ""),
+      tshirt_size: String(row.tshirt_size || "M"),
+      address: String(row.address || ""),
+      emergency_name: row.emergency_name ? String(row.emergency_name) : undefined,
+      emergency_phone: row.emergency_phone ? String(row.emergency_phone) : undefined,
+      created_at: row.created_at ? String(row.created_at) : undefined,
+    };
   } catch (err) {
     console.error("Error in getRegistrationByEmail:", err);
     return null;
   }
 }
 
-export function getRegistrationById(registrationId: string): RegistrationRecord | null {
+export async function getRegistrationById(registrationId: string): Promise<RegistrationRecord | null> {
   try {
-    const db = getDb();
-    const stmt = db.prepare(`SELECT * FROM registrations WHERE registration_id = ? LIMIT 1`);
-    const row = stmt.get(registrationId);
-    return (row as RegistrationRecord) || null;
+    await ensureTable();
+    const client = getTursoClient();
+    const result = await client.execute({
+      sql: `SELECT * FROM registrations WHERE registration_id = ? LIMIT 1`,
+      args: [registrationId],
+    });
+
+    if (result.rows.length === 0) return null;
+    const row = result.rows[0];
+    return {
+      id: Number(row.id),
+      registration_id: String(row.registration_id || ""),
+      full_name: String(row.full_name || ""),
+      email: String(row.email || ""),
+      phone: String(row.phone || ""),
+      age: Number(row.age || 0),
+      gender: String(row.gender || ""),
+      tshirt_size: String(row.tshirt_size || "M"),
+      address: String(row.address || ""),
+      emergency_name: row.emergency_name ? String(row.emergency_name) : undefined,
+      emergency_phone: row.emergency_phone ? String(row.emergency_phone) : undefined,
+      created_at: row.created_at ? String(row.created_at) : undefined,
+    };
   } catch (err) {
     console.error("Error in getRegistrationById:", err);
     return null;
   }
 }
 
-export function upsertRegistration(record: RegistrationRecord): { success: boolean; id: string; isNew: boolean } {
-  const db = getDb();
-  const existing = getRegistrationByEmail(record.email);
+export async function upsertRegistration(record: RegistrationRecord): Promise<{ success: boolean; id: string; isNew: boolean }> {
+  await ensureTable();
+  const client = getTursoClient();
+  const existing = await getRegistrationByEmail(record.email);
 
   if (existing) {
-    const stmt = db.prepare(`
-      UPDATE registrations SET
-        full_name = ?,
-        phone = ?,
-        age = ?,
-        gender = ?,
-        tshirt_size = ?,
-        address = ?,
-        emergency_name = ?,
-        emergency_phone = ?
-      WHERE id = ?
-    `);
-
-    stmt.run(
-      record.full_name,
-      record.phone,
-      record.age,
-      record.gender || "prefer-not-to-say",
-      record.tshirt_size || existing.tshirt_size || "M",
-      record.address,
-      record.emergency_name || existing.emergency_name || "",
-      record.emergency_phone || existing.emergency_phone || "",
-      existing.id
-    );
+    await client.execute({
+      sql: `
+        UPDATE registrations SET
+          full_name = ?,
+          phone = ?,
+          age = ?,
+          gender = ?,
+          tshirt_size = ?,
+          address = ?,
+          emergency_name = ?,
+          emergency_phone = ?
+        WHERE id = ? OR registration_id = ?
+      `,
+      args: [
+        record.full_name,
+        record.phone,
+        record.age,
+        record.gender || "prefer-not-to-say",
+        record.tshirt_size || existing.tshirt_size || "M",
+        record.address,
+        record.emergency_name || existing.emergency_name || "",
+        record.emergency_phone || existing.emergency_phone || "",
+        existing.id ?? 0,
+        existing.registration_id,
+      ],
+    });
 
     return { success: true, id: existing.registration_id, isNew: false };
   }
 
-  saveRegistration(record);
+  await saveRegistration(record);
   return { success: true, id: record.registration_id, isNew: true };
 }
 
-export function deleteRegistrationByEmail(email: string): boolean {
+export async function deleteRegistrationById(id: number | string): Promise<boolean> {
   try {
-    const db = getDb();
-    const stmt = db.prepare(`DELETE FROM registrations WHERE LOWER(email) = LOWER(?)`);
-    const result = stmt.run(email);
-    return result.changes > 0;
-  } catch (err) {
-    console.error("Error in deleteRegistrationByEmail:", err);
-    return false;
-  }
-}
-
-export function deleteRegistrationById(id: number | string): boolean {
-  try {
-    const db = getDb();
-    const stmt = db.prepare(`DELETE FROM registrations WHERE id = ? OR registration_id = ?`);
-    const result = stmt.run(id, String(id));
-    return result.changes > 0;
+    await ensureTable();
+    const client = getTursoClient();
+    const result = await client.execute({
+      sql: `DELETE FROM registrations WHERE id = ? OR registration_id = ?`,
+      args: [id, String(id)],
+    });
+    return (result.rowsAffected || 0) > 0;
   } catch (err) {
     console.error("Error in deleteRegistrationById:", err);
     return false;
   }
 }
 
-export function getRegistrationStats() {
+export async function getRegistrationStats() {
   try {
-    const db = getDb();
-    const totalRow = db.prepare(`SELECT COUNT(*) as count FROM registrations`).get() as { count: number } | undefined;
-    const tshirtRows = db.prepare(`
-      SELECT COALESCE(tshirt_size, 'M') as size, COUNT(*) as count 
-      FROM registrations 
-      GROUP BY tshirt_size 
-      ORDER BY count DESC
-    `).all() as Array<{ size: string; count: number }>;
-    const genderRows = db.prepare(`
-      SELECT COALESCE(gender, 'prefer-not-to-say') as gender, COUNT(*) as count 
-      FROM registrations 
-      GROUP BY gender
-    `).all() as Array<{ gender: string; count: number }>;
-    const avgAgeRow = db.prepare(`SELECT ROUND(AVG(age), 1) as avgAge FROM registrations`).get() as { avgAge: number | null } | undefined;
+    await ensureTable();
+    const client = getTursoClient();
+
+    const [totalRes, tshirtRes, genderRes, avgAgeRes] = await Promise.all([
+      client.execute(`SELECT COUNT(*) as count FROM registrations`),
+      client.execute(`
+        SELECT COALESCE(tshirt_size, 'M') as size, COUNT(*) as count 
+        FROM registrations 
+        GROUP BY tshirt_size 
+        ORDER BY count DESC
+      `),
+      client.execute(`
+        SELECT COALESCE(gender, 'prefer-not-to-say') as gender, COUNT(*) as count 
+        FROM registrations 
+        GROUP BY gender
+      `),
+      client.execute(`SELECT ROUND(AVG(age), 1) as avgAge FROM registrations`),
+    ]);
+
+    const total = Number(totalRes.rows[0]?.count || 0);
+    const tshirtSizes = tshirtRes.rows.map((r) => ({
+      size: String(r.size || "M"),
+      count: Number(r.count || 0),
+    }));
+    const genders = genderRes.rows.map((r) => ({
+      gender: String(r.gender || "prefer-not-to-say"),
+      count: Number(r.count || 0),
+    }));
+    const avgAge = Number(avgAgeRes.rows[0]?.avgAge || 0);
 
     return {
-      total: totalRow?.count || 0,
-      tshirtSizes: tshirtRows || [],
-      genders: genderRows || [],
-      avgAge: avgAgeRow?.avgAge || 0,
+      total,
+      tshirtSizes,
+      genders,
+      avgAge,
     };
   } catch (err) {
     console.error("Error in getRegistrationStats:", err);
@@ -231,11 +271,25 @@ export function getRegistrationStats() {
   }
 }
 
-export function getAllRegistrations(): RegistrationRecord[] {
+export async function getAllRegistrations(): Promise<RegistrationRecord[]> {
   try {
-    const db = getDb();
-    const stmt = db.prepare(`SELECT * FROM registrations ORDER BY id DESC`);
-    return (stmt.all() as RegistrationRecord[]) || [];
+    await ensureTable();
+    const client = getTursoClient();
+    const res = await client.execute(`SELECT * FROM registrations ORDER BY id DESC`);
+    return res.rows.map((r) => ({
+      id: Number(r.id),
+      registration_id: String(r.registration_id || ""),
+      full_name: String(r.full_name || ""),
+      email: String(r.email || ""),
+      phone: String(r.phone || ""),
+      age: Number(r.age || 0),
+      gender: String(r.gender || ""),
+      tshirt_size: String(r.tshirt_size || "M"),
+      address: String(r.address || ""),
+      emergency_name: r.emergency_name ? String(r.emergency_name) : undefined,
+      emergency_phone: r.emergency_phone ? String(r.emergency_phone) : undefined,
+      created_at: r.created_at ? String(r.created_at) : undefined,
+    }));
   } catch (err) {
     console.error("Error in getAllRegistrations:", err);
     return [];
