@@ -1,6 +1,5 @@
 import sharp from "sharp";
-import fs from "node:fs";
-import path from "node:path";
+import { GEIST_FONT_BASE64 } from "@/lib/fonts/embedded-font";
 
 export interface RunnerPassData {
   registrationId: string;
@@ -21,81 +20,23 @@ function escapeXml(unsafe: string): string {
     .replace(/'/g, "&apos;");
 }
 
-let cachedFontStyles: string | null = null;
-
-function getEmbeddedFontStyles(): string {
-  if (cachedFontStyles) {
-    return cachedFontStyles;
+const fontStyles = `
+  @font-face {
+    font-family: 'PassFont';
+    src: url('data:font/truetype;charset=utf-8;base64,${GEIST_FONT_BASE64}') format('truetype');
+    font-weight: normal;
+    font-style: normal;
   }
-
-  try {
-    const fontsDir = path.join(process.cwd(), "src", "lib", "fonts");
-    const regularPath = path.join(fontsDir, "arial.ttf");
-    const boldPath = path.join(fontsDir, "arialbd.ttf");
-
-    let regBase64 = "";
-    let boldBase64 = "";
-
-    if (fs.existsSync(regularPath)) {
-      regBase64 = fs.readFileSync(regularPath).toString("base64");
-    } else if (fs.existsSync("C:\\Windows\\Fonts\\arial.ttf")) {
-      regBase64 = fs.readFileSync("C:\\Windows\\Fonts\\arial.ttf").toString("base64");
-    }
-
-    if (fs.existsSync(boldPath)) {
-      boldBase64 = fs.readFileSync(boldPath).toString("base64");
-    } else if (fs.existsSync("C:\\Windows\\Fonts\\arialbd.ttf")) {
-      boldBase64 = fs.readFileSync("C:\\Windows\\Fonts\\arialbd.ttf").toString("base64");
-    }
-
-    if (regBase64 && boldBase64) {
-      cachedFontStyles = `
-        @font-face {
-          font-family: 'PassFont';
-          src: url('data:font/truetype;charset=utf-8;base64,${regBase64}') format('truetype');
-          font-weight: normal;
-          font-style: normal;
-        }
-        @font-face {
-          font-family: 'PassFont';
-          src: url('data:font/truetype;charset=utf-8;base64,${boldBase64}') format('truetype');
-          font-weight: bold;
-          font-style: normal;
-        }
-        @font-face {
-          font-family: 'PassFont';
-          src: url('data:font/truetype;charset=utf-8;base64,${boldBase64}') format('truetype');
-          font-weight: 700;
-          font-style: normal;
-        }
-        @font-face {
-          font-family: 'PassFont';
-          src: url('data:font/truetype;charset=utf-8;base64,${boldBase64}') format('truetype');
-          font-weight: 900;
-          font-style: normal;
-        }
-        text {
-          font-family: 'PassFont', Arial, Helvetica, sans-serif;
-        }
-      `;
-    } else {
-      cachedFontStyles = `
-        text {
-          font-family: Arial, Helvetica, sans-serif;
-        }
-      `;
-    }
-  } catch (err) {
-    console.warn("[generateRunnerPassPng] Could not load embedded font, falling back:", err);
-    cachedFontStyles = `
-      text {
-        font-family: Arial, Helvetica, sans-serif;
-      }
-    `;
+  @font-face {
+    font-family: 'PassFont';
+    src: url('data:font/truetype;charset=utf-8;base64,${GEIST_FONT_BASE64}') format('truetype');
+    font-weight: bold;
+    font-style: normal;
   }
-
-  return cachedFontStyles;
-}
+  text {
+    font-family: 'PassFont', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+`;
 
 /**
  * Generates an official high-resolution PNG Runner Pass Card (900x520) using sharp.
@@ -118,8 +59,6 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
     barcodeBars.push(`<rect x="${currentX}" y="295" width="${w}" height="42" fill="#CAA05C" opacity="0.85" />`);
     currentX += w + 3;
   }
-
-  const fontStyles = getEmbeddedFontStyles();
 
   const svg = `
   <svg width="900" height="520" viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg">
@@ -151,7 +90,7 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
       <!-- Bib Box Gradient -->
       <linearGradient id="bibBg" x1="0%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%" stop-color="#141E28" />
-        <stop offset="0%" stop-color="#0B1117" />
+        <stop offset="100%" stop-color="#0B1117" />
       </linearGradient>
     </defs>
 
@@ -164,17 +103,17 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
     <line x1="18" y1="92" x2="882" y2="92" stroke="#CAA05C" stroke-width="2" />
 
     <!-- Event Title & Subhead -->
-    <text x="46" y="54" font-weight="900" font-size="26" fill="url(#goldGradient)" letter-spacing="3">RAKESH MARATHON</text>
-    <text x="46" y="78" font-weight="700" font-size="12" fill="#E5E7EB" letter-spacing="2">OFFICIAL PARTICIPANT BIB PASS • 15 KM RACE</text>
+    <text x="46" y="56" font-size="25" font-weight="bold" fill="url(#goldGradient)" letter-spacing="3">RAKESH MARATHON</text>
+    <text x="46" y="80" font-size="12" font-weight="bold" fill="#E5E7EB" letter-spacing="2">OFFICIAL PARTICIPANT BIB PASS • 15 KM RACE</text>
 
     <!-- Race Badge -->
     <rect x="710" y="32" width="145" height="40" rx="20" fill="url(#badgeRed)" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.3" />
-    <text x="782" y="58" font-weight="900" font-size="15" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">15 KM RACE</text>
+    <text x="782" y="58" font-size="15" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">15 KM RACE</text>
 
     <!-- Left Content Section -->
     <!-- Participant Name -->
     <text x="46" y="135" font-size="11" font-weight="bold" fill="#CAA05C" letter-spacing="2">REGISTERED RUNNER</text>
-    <text x="46" y="175" font-size="32" font-weight="900" fill="#FFFFFF">${fullName}</text>
+    <text x="46" y="175" font-size="32" font-weight="bold" fill="#FFFFFF">${fullName}</text>
 
     <!-- Details Grid -->
     <g transform="translate(46, 205)">
@@ -202,10 +141,10 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
 
     <!-- Right Content: BIB / Registration Box -->
     <rect x="525" y="125" width="330" height="150" rx="18" fill="url(#bibBg)" stroke="#CAA05C" stroke-width="2" />
-    <text x="690" y="156" font-size="12" font-weight="900" fill="#CAA05C" text-anchor="middle" letter-spacing="2">BIB / REGISTRATION NUMBER</text>
+    <text x="690" y="156" font-size="12" font-weight="bold" fill="#CAA05C" text-anchor="middle" letter-spacing="2">BIB / REGISTRATION NUMBER</text>
     
     <!-- Big Monospace BIB Number -->
-    <text x="690" y="210" font-size="34" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="4">${regId}</text>
+    <text x="690" y="210" font-size="34" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="4">${regId}</text>
     
     <!-- Status Pill -->
     <rect x="590" y="235" width="200" height="28" rx="14" fill="#CAA05C" fill-opacity="0.18" stroke="#CAA05C" stroke-width="1.2" />
@@ -225,7 +164,7 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
     <!-- Bottom Footer Bar -->
     <line x1="30" y1="450" x2="870" y2="450" stroke="#CAA05C" stroke-width="1" stroke-opacity="0.25" />
     <text x="46" y="485" font-size="13" font-weight="bold" fill="#CAA05C">“Run Together. Build a Better Tomorrow.”</text>
-    <text x="854" y="485" font-size="12" font-weight="600" fill="#9CA3AF" text-anchor="end">Rakesh Ray Community Initiative • Parsa, Nepal</text>
+    <text x="854" y="485" font-size="12" font-weight="bold" fill="#9CA3AF" text-anchor="end">Rakesh Ray Community Initiative • Parsa, Nepal</text>
   </svg>
   `;
 
