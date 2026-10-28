@@ -1,4 +1,6 @@
 import sharp from "sharp";
+import fs from "node:fs";
+import path from "node:path";
 
 export interface RunnerPassData {
   registrationId: string;
@@ -17,6 +19,82 @@ function escapeXml(unsafe: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
+}
+
+let cachedFontStyles: string | null = null;
+
+function getEmbeddedFontStyles(): string {
+  if (cachedFontStyles) {
+    return cachedFontStyles;
+  }
+
+  try {
+    const fontsDir = path.join(process.cwd(), "src", "lib", "fonts");
+    const regularPath = path.join(fontsDir, "arial.ttf");
+    const boldPath = path.join(fontsDir, "arialbd.ttf");
+
+    let regBase64 = "";
+    let boldBase64 = "";
+
+    if (fs.existsSync(regularPath)) {
+      regBase64 = fs.readFileSync(regularPath).toString("base64");
+    } else if (fs.existsSync("C:\\Windows\\Fonts\\arial.ttf")) {
+      regBase64 = fs.readFileSync("C:\\Windows\\Fonts\\arial.ttf").toString("base64");
+    }
+
+    if (fs.existsSync(boldPath)) {
+      boldBase64 = fs.readFileSync(boldPath).toString("base64");
+    } else if (fs.existsSync("C:\\Windows\\Fonts\\arialbd.ttf")) {
+      boldBase64 = fs.readFileSync("C:\\Windows\\Fonts\\arialbd.ttf").toString("base64");
+    }
+
+    if (regBase64 && boldBase64) {
+      cachedFontStyles = `
+        @font-face {
+          font-family: 'PassFont';
+          src: url('data:font/truetype;charset=utf-8;base64,${regBase64}') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'PassFont';
+          src: url('data:font/truetype;charset=utf-8;base64,${boldBase64}') format('truetype');
+          font-weight: bold;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'PassFont';
+          src: url('data:font/truetype;charset=utf-8;base64,${boldBase64}') format('truetype');
+          font-weight: 700;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'PassFont';
+          src: url('data:font/truetype;charset=utf-8;base64,${boldBase64}') format('truetype');
+          font-weight: 900;
+          font-style: normal;
+        }
+        text {
+          font-family: 'PassFont', Arial, Helvetica, sans-serif;
+        }
+      `;
+    } else {
+      cachedFontStyles = `
+        text {
+          font-family: Arial, Helvetica, sans-serif;
+        }
+      `;
+    }
+  } catch (err) {
+    console.warn("[generateRunnerPassPng] Could not load embedded font, falling back:", err);
+    cachedFontStyles = `
+      text {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+    `;
+  }
+
+  return cachedFontStyles;
 }
 
 /**
@@ -41,9 +119,15 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
     currentX += w + 3;
   }
 
+  const fontStyles = getEmbeddedFontStyles();
+
   const svg = `
   <svg width="900" height="520" viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg">
     <defs>
+      <style>
+        ${fontStyles}
+      </style>
+
       <!-- Background Linear Gradient -->
       <linearGradient id="cardBg" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stop-color="#0f1720" />
@@ -67,7 +151,7 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
       <!-- Bib Box Gradient -->
       <linearGradient id="bibBg" x1="0%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%" stop-color="#141E28" />
-        <stop offset="100%" stop-color="#0B1117" />
+        <stop offset="0%" stop-color="#0B1117" />
       </linearGradient>
     </defs>
 
@@ -80,37 +164,37 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
     <line x1="18" y1="92" x2="882" y2="92" stroke="#CAA05C" stroke-width="2" />
 
     <!-- Event Title & Subhead -->
-    <text x="46" y="54" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="26" fill="url(#goldGradient)" letter-spacing="3">RAKESH MARATHON</text>
-    <text x="46" y="78" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="12" fill="#E5E7EB" letter-spacing="2">OFFICIAL PARTICIPANT BIB PASS • 15 KM RACE</text>
+    <text x="46" y="54" font-weight="900" font-size="26" fill="url(#goldGradient)" letter-spacing="3">RAKESH MARATHON</text>
+    <text x="46" y="78" font-weight="700" font-size="12" fill="#E5E7EB" letter-spacing="2">OFFICIAL PARTICIPANT BIB PASS • 15 KM RACE</text>
 
     <!-- Race Badge -->
     <rect x="710" y="32" width="145" height="40" rx="20" fill="url(#badgeRed)" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.3" />
-    <text x="782" y="58" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="15" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">15 KM RACE</text>
+    <text x="782" y="58" font-weight="900" font-size="15" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">15 KM RACE</text>
 
     <!-- Left Content Section -->
     <!-- Participant Name -->
-    <text x="46" y="135" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#CAA05C" letter-spacing="2">REGISTERED RUNNER</text>
-    <text x="46" y="175" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="900" fill="#FFFFFF">${fullName}</text>
+    <text x="46" y="135" font-size="11" font-weight="bold" fill="#CAA05C" letter-spacing="2">REGISTERED RUNNER</text>
+    <text x="46" y="175" font-size="32" font-weight="900" fill="#FFFFFF">${fullName}</text>
 
     <!-- Details Grid -->
     <g transform="translate(46, 205)">
       <!-- Row 1: Category & T-Shirt Size -->
-      <text x="0" y="20" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#9CA3AF" letter-spacing="1.5">RACE CATEGORY</text>
-      <text x="0" y="44" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF">15 KM Single Distance</text>
+      <text x="0" y="20" font-size="11" font-weight="bold" fill="#9CA3AF" letter-spacing="1.5">RACE CATEGORY</text>
+      <text x="0" y="44" font-size="16" font-weight="bold" fill="#FFFFFF">15 KM Single Distance</text>
 
-      <text x="240" y="20" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#9CA3AF" letter-spacing="1.5">T-SHIRT SIZE</text>
-      <text x="240" y="44" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" fill="#DFCD95">${tshirtSize} (Official Kit)</text>
+      <text x="240" y="20" font-size="11" font-weight="bold" fill="#9CA3AF" letter-spacing="1.5">T-SHIRT SIZE</text>
+      <text x="240" y="44" font-size="16" font-weight="bold" fill="#DFCD95">${tshirtSize} (Official Kit)</text>
 
       <!-- Row 2: Age/Gender & City -->
-      <text x="0" y="96" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#9CA3AF" letter-spacing="1.5">AGE &amp; GENDER</text>
-      <text x="0" y="120" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF">${age} Yrs • ${gender}</text>
+      <text x="0" y="96" font-size="11" font-weight="bold" fill="#9CA3AF" letter-spacing="1.5">AGE &amp; GENDER</text>
+      <text x="0" y="120" font-size="16" font-weight="bold" fill="#FFFFFF">${age} Yrs • ${gender}</text>
 
-      <text x="240" y="96" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#9CA3AF" letter-spacing="1.5">CITY / LOCATION</text>
-      <text x="240" y="120" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF">${address}</text>
+      <text x="240" y="96" font-size="11" font-weight="bold" fill="#9CA3AF" letter-spacing="1.5">CITY / LOCATION</text>
+      <text x="240" y="120" font-size="16" font-weight="bold" fill="#FFFFFF">${address}</text>
 
       <!-- Row 3: Registered Date -->
-      <text x="0" y="168" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#9CA3AF" letter-spacing="1.5">REGISTRATION DATE</text>
-      <text x="0" y="190" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#CAA05C">${dateStr}</text>
+      <text x="0" y="168" font-size="11" font-weight="bold" fill="#9CA3AF" letter-spacing="1.5">REGISTRATION DATE</text>
+      <text x="0" y="190" font-size="14" font-weight="bold" fill="#CAA05C">${dateStr}</text>
     </g>
 
     <!-- Vertical Perforated Separator -->
@@ -118,28 +202,30 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
 
     <!-- Right Content: BIB / Registration Box -->
     <rect x="525" y="125" width="330" height="150" rx="18" fill="url(#bibBg)" stroke="#CAA05C" stroke-width="2" />
-    <text x="690" y="156" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="900" fill="#CAA05C" text-anchor="middle" letter-spacing="2">BIB / REGISTRATION NUMBER</text>
+    <text x="690" y="156" font-size="12" font-weight="900" fill="#CAA05C" text-anchor="middle" letter-spacing="2">BIB / REGISTRATION NUMBER</text>
     
     <!-- Big Monospace BIB Number -->
-    <text x="690" y="210" font-family="'Courier New', Courier, monospace" font-size="34" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="4">${regId}</text>
+    <text x="690" y="210" font-size="34" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="4">${regId}</text>
     
     <!-- Status Pill -->
     <rect x="590" y="235" width="200" height="28" rx="14" fill="#CAA05C" fill-opacity="0.18" stroke="#CAA05C" stroke-width="1.2" />
-    <text x="690" y="254" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#DFCD95" text-anchor="middle" letter-spacing="1">STATUS: CONFIRMED</text>
+    <text x="690" y="254" font-size="12" font-weight="bold" fill="#DFCD95" text-anchor="middle" letter-spacing="1">STATUS: CONFIRMED</text>
 
     <!-- Barcode Visual Area -->
     ${barcodeBars.join("\n    ")}
-    <text x="670" y="354" font-family="'Courier New', Courier, monospace" font-size="11" fill="#9CA3AF" text-anchor="middle" letter-spacing="3">* ${regId} *</text>
+    <text x="670" y="354" font-size="11" fill="#9CA3AF" text-anchor="middle" letter-spacing="3">* ${regId} *</text>
 
     <!-- Collection Notice Box -->
     <rect x="525" y="375" width="330" height="48" rx="10" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="1" />
-    <text x="540" y="396" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#D1D5DB">✓ Present this digital pass or BIB ID</text>
-    <text x="540" y="413" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#D1D5DB">  during race-kit and bib collection.</text>
+    <circle cx="542" cy="393" r="3" fill="#CAA05C" />
+    <text x="552" y="397" font-size="11" fill="#D1D5DB">Present this digital pass or BIB ID</text>
+    <circle cx="542" cy="410" r="3" fill="#CAA05C" />
+    <text x="552" y="414" font-size="11" fill="#D1D5DB">during race-kit and bib collection.</text>
 
     <!-- Bottom Footer Bar -->
     <line x1="30" y1="450" x2="870" y2="450" stroke="#CAA05C" stroke-width="1" stroke-opacity="0.25" />
-    <text x="46" y="485" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#CAA05C">“Run Together. Build a Better Tomorrow.”</text>
-    <text x="854" y="485" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" fill="#9CA3AF" text-anchor="end">Rakesh Ray Community Initiative • Parsa, Nepal</text>
+    <text x="46" y="485" font-size="13" font-weight="bold" fill="#CAA05C">“Run Together. Build a Better Tomorrow.”</text>
+    <text x="854" y="485" font-size="12" font-weight="600" fill="#9CA3AF" text-anchor="end">Rakesh Ray Community Initiative • Parsa, Nepal</text>
   </svg>
   `;
 
@@ -147,4 +233,3 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
     .png({ quality: 95, compressionLevel: 8 })
     .toBuffer();
 }
-
