@@ -25,7 +25,7 @@ export function RegistrationModalProvider({ children }: { children: React.ReactN
   useEffect(() => {
     const handleDocumentClick = (e: MouseEvent) => {
       const target = (e.target as HTMLElement).closest<HTMLElement>(
-        '[data-open-register-modal], a[href="#register"], a[href$="#register"]'
+        '[data-open-register-modal], a[href="#register"], a[href$="#register"], a[href*="register=true"]'
       );
       if (target) {
         e.preventDefault();
@@ -39,11 +39,37 @@ export function RegistrationModalProvider({ children }: { children: React.ReactN
     };
   }, [openRegistrationModal]);
 
-  // Open modal if page loads with #register hash
+  // Open modal if page loads or changes with #register or ?register=true
   useEffect(() => {
-    if (typeof window !== "undefined" && window.location.hash === "#register") {
-      openRegistrationModal();
-    }
+    const checkUrlTrigger = () => {
+      if (typeof window === "undefined") return;
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+
+      const shouldOpen =
+        hash === "#register" ||
+        hash === "#registration" ||
+        hash.includes("register") ||
+        search.includes("register=true") ||
+        search.includes("register=1") ||
+        search.includes("modal=register") ||
+        new URLSearchParams(window.location.search).has("register");
+
+      if (shouldOpen) {
+        openRegistrationModal();
+      }
+    };
+
+    // Check on mount
+    checkUrlTrigger();
+
+    // Listen for hash changes & browser back/forward navigation
+    window.addEventListener("hashchange", checkUrlTrigger);
+    window.addEventListener("popstate", checkUrlTrigger);
+    return () => {
+      window.removeEventListener("hashchange", checkUrlTrigger);
+      window.removeEventListener("popstate", checkUrlTrigger);
+    };
   }, [openRegistrationModal]);
 
   return (
@@ -66,4 +92,3 @@ export function useRegistrationModal() {
   }
   return context;
 }
-
