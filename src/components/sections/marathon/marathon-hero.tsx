@@ -76,14 +76,15 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
                   <Button
                     size="xl"
                     variant="default"
-                    render={<a href={MARATHON_REGISTRATION_URL} target="_blank" rel="noopener noreferrer" />}
-                    className="font-bold shadow-xl shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    data-open-register-modal="true"
+                    className="font-bold shadow-xl shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
                   >
                     Register Now
                   </Button>
                   <Button
                     size="xl"
                     variant="outline"
+                    nativeButton={false}
                     render={<a href="#prizes" />}
                     className="bg-white/5 border-white/25 hover:bg-white/15 text-white backdrop-blur-sm"
                   >

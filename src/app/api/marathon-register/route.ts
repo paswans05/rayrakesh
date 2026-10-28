@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mailer";
+import { saveRegistration, getRegistrationByEmail } from "@/lib/db";
+
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,7 +27,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
       return NextResponse.json(
         { error: "Invalid email address." },
         { status: 400 }
@@ -39,7 +44,35 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // ── SQLite Duplicate Check ──
+    const existing = getRegistrationByEmail(cleanEmail);
+    if (existing) {
+      return NextResponse.json(
+        {
+          error: `This email is already registered with Registration ID: ${existing.registration_id}.`,
+          alreadyRegistered: true,
+          registrationId: existing.registration_id,
+          registration: existing,
+        },
+        { status: 409 }
+      );
+    }
+
     const regId = registrationId || `RM15K-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    // ── Save to SQLite Database ──
+    saveRegistration({
+      registration_id: regId,
+      full_name: fullName.trim(),
+      email: cleanEmail,
+      phone: phone.trim(),
+      age: ageNum,
+      gender: gender || "prefer-not-to-say",
+      address: address.trim(),
+      emergency_name: emergencyName.trim(),
+      emergency_phone: emergencyPhone.trim(),
+    });
+
     const timestamp = new Date().toLocaleString("en-US", {
       timeZone: "Asia/Kathmandu",
       year: "numeric",
@@ -63,7 +96,7 @@ export async function POST(req: NextRequest) {
           </div>
           <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
             <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600; width: 150px;">Full Name</td><td style="padding: 8px 0; color: #202a34;">${escapeHtml(fullName)}</td></tr>
-            <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">Email</td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(email)}" style="color: #CAA05C;">${escapeHtml(email)}</a></td></tr>
+            <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">Email</td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(cleanEmail)}" style="color: #CAA05C;">${escapeHtml(cleanEmail)}</a></td></tr>
             <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">Phone</td><td style="padding: 8px 0; color: #202a34;">${escapeHtml(phone)}</td></tr>
             <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">Age</td><td style="padding: 8px 0; color: #202a34;">${escapeHtml(age)} years</td></tr>
             <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">Gender</td><td style="padding: 8px 0; color: #202a34;">${escapeHtml(gender || "Not specified")}</td></tr>
@@ -75,7 +108,7 @@ export async function POST(req: NextRequest) {
           </div>
         </div>
         <div style="padding: 16px 32px; background: #202a34; border-radius: 0 0 12px 12px; text-align: center;">
-          <p style="color: #A6B0BA; font-size: 12px; margin: 0;">15 KM Single-Distance • Kathmandu, Nepal</p>
+          <p style="color: #A6B0BA; font-size: 12px; margin: 0;">Stored in SQLite Database • 15 KM Single-Distance • Kathmandu, Nepal</p>
         </div>
       </div>
     `;
@@ -92,7 +125,7 @@ export async function POST(req: NextRequest) {
             Dear <strong>${escapeHtml(fullName)}</strong>,
           </p>
           <p style="font-size: 15px; color: #4B535D; line-height: 1.6; margin: 0 0 20px;">
-            Thank you for registering for the <strong>Rakesh Marathon (15 KM)</strong>! Your registration has been received and confirmed. Keep this email for your records.
+            Thank you for registering for the <strong>Rakesh Marathon (15 KM)</strong>! Your registration is officially saved in our event database. Keep your Registration ID safe for bib collection.
           </p>
           <div style="background: #202a34; color: #fff; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
             <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
@@ -116,9 +149,9 @@ export async function POST(req: NextRequest) {
           </div>
           <div style="background: #fffbeb; border: 1px solid #CAA05C; padding: 14px 18px; border-radius: 8px; font-size: 13px; color: #202a34; line-height: 1.5;">
             <strong>What's next?</strong><br/>
-            • The official race date and route will be announced soon.<br/>
-            • Bib collection details will be emailed before race day.<br/>
-            • Please bring a valid photo ID when collecting your race bib.
+            • Download or print your Runner Pass Card from the website.<br/>
+            • Official race date and venue directions will be emailed as soon as final city permits are confirmed.<br/>
+            • Please bring a photo ID and your Registration ID when collecting your race bib.
           </div>
         </div>
         <div style="padding: 16px 32px; background: #202a34; border-radius: 0 0 12px 12px; text-align: center;">
@@ -128,27 +161,28 @@ export async function POST(req: NextRequest) {
       </div>
     `;
 
-    // Send both emails concurrently
-    await Promise.all([
+    // Send emails asynchronously without blocking response if SMTP is unconfigured
+    Promise.all([
       sendMail({
         subject: `Marathon Registration: ${fullName} [${regId}]`,
         html: adminHtml,
-        replyTo: email,
+        replyTo: cleanEmail,
       }),
       sendMail({
         subject: `Your Rakesh Marathon Registration is Confirmed [${regId}]`,
         html: participantHtml,
         replyTo: process.env.MAIL_TO,
       }).catch((err) => {
-        // Don't fail the whole request if confirmation email fails
-        console.warn("[marathon-register] Participant email failed:", err);
+        console.warn("[marathon-register] Participant email warning:", err);
       }),
-    ]);
+    ]).catch((err) => {
+      console.warn("[marathon-register] Email notification warning:", err);
+    });
 
     return NextResponse.json({
       success: true,
       registrationId: regId,
-      message: "Registration confirmed. Check your email for confirmation.",
+      message: "Registration successfully saved in database and confirmed.",
     });
   } catch (error) {
     console.error("[/api/marathon-register] Error:", error);
@@ -166,4 +200,3 @@ function escapeHtml(text: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
-

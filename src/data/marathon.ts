@@ -29,8 +29,7 @@ export interface MarathonFAQ {
   answer: string;
 }
 
-export const MARATHON_REGISTRATION_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdeLXNSeAYzclsVT8_4sxq3RsUI5PQJ5h86swz-_eiSq2gvkg/viewform?usp=dialog";
+export const MARATHON_REGISTRATION_URL = "#register";
 
 export const MARATHON_DETAILS = {
   eventName: "Rakesh Marathon",
@@ -40,7 +39,7 @@ export const MARATHON_DETAILS = {
   category: "Community Marathon",
   location: "Parsa, Nepal",
   currency: "NPR",
-  totalPrizePool: "NPR 50,000",
+  totalPrizePool: "NPR 29,000",
   campaignLeader: "Rakesh Ray",
   
   // Official parameters - marked as To Be Announced where pending
@@ -63,12 +62,12 @@ export const MARATHON_PRIZES: MarathonPrize[] = [
     rank: 1,
     label: "Champion",
     badge: "1st Place",
-    amountNPR: "NPR 25,000",
-    amountNumber: 25000,
+    amountNPR: "NPR 15,000",
+    amountNumber: 15000,
     tier: "gold",
     description: "First place in the 15 KM Rakesh Marathon.",
     perks: [
-      "Cash prize: NPR 25,000",
+      "Cash prize: NPR 15,000",
       "Medal for a top-ten finisher",
       "Certificate for every participant",
     ],
@@ -77,12 +76,12 @@ export const MARATHON_PRIZES: MarathonPrize[] = [
     rank: 2,
     label: "Runner-Up",
     badge: "2nd Place",
-    amountNPR: "NPR 15,000",
-    amountNumber: 15000,
+    amountNPR: "NPR 9,000",
+    amountNumber: 9000,
     tier: "silver",
     description: "Second place in the 15 KM Rakesh Marathon.",
     perks: [
-      "Cash prize: NPR 15,000",
+      "Cash prize: NPR 9,000",
       "Medal for a top-ten finisher",
       "Certificate for every participant",
     ],
@@ -91,12 +90,12 @@ export const MARATHON_PRIZES: MarathonPrize[] = [
     rank: 3,
     label: "Third Place",
     badge: "3rd Place",
-    amountNPR: "NPR 10,000",
-    amountNumber: 10000,
+    amountNPR: "NPR 5,000",
+    amountNumber: 5000,
     tier: "bronze",
     description: "Third place in the 15 KM Rakesh Marathon.",
     perks: [
-      "Cash prize: NPR 10,000",
+      "Cash prize: NPR 5,000",
       "Medal for a top-ten finisher",
       "Certificate for every participant",
     ],

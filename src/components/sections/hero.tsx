@@ -56,7 +56,7 @@ export default function Hero({ className, wrapperClassName }: HeroProps) {
                       </div>
 
                       <div className="flex flex-wrap items-center gap-4 xl:gap-7.5 pt-8 lg:pt-12 xl:pt-17 transition-all duration-700 ease-out transform translate-y-12 opacity-0 group-data-active/slide:translate-y-0 group-data-active/slide:opacity-100 group-data-active/slide:delay-500">
-                        <Button nativeButton={false} render={<Link href="https://docs.google.com/forms/d/e/1FAIpQLSdeLXNSeAYzclsVT8_4sxq3RsUI5PQJ5h86swz-_eiSq2gvkg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer"/>} variant="default" pill size="xl" icon={<ArrowRight />}>
+                        <Button type="button" data-open-register-modal="true" variant="default" pill size="xl" icon={<ArrowRight />} className="cursor-pointer">
                           <span>Register for the Marathon</span>
                         </Button>
 
@@ -90,7 +90,7 @@ export default function Hero({ className, wrapperClassName }: HeroProps) {
                       </p>
 
                       <div className="flex flex-wrap items-center justify-center gap-4 xl:gap-7.5 pt-8 lg:pt-12.5 transition-all duration-700 ease-out transform translate-y-12 opacity-0 group-data-active/slide:translate-y-0 group-data-active/slide:opacity-100 group-data-active/slide:delay-500">
-                        <Button nativeButton={false} render={<Link href="https://docs.google.com/forms/d/e/1FAIpQLSdeLXNSeAYzclsVT8_4sxq3RsUI5PQJ5h86swz-_eiSq2gvkg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer"/>} variant="default" pill size="xl" icon={<ArrowRight />}>
+                        <Button type="button" data-open-register-modal="true" variant="default" pill size="xl" icon={<ArrowRight />} className="cursor-pointer">
                           <span>Join the Marathon</span>
                         </Button>
 
@@ -125,7 +125,7 @@ export default function Hero({ className, wrapperClassName }: HeroProps) {
                       </p>
 
                       <div className="flex flex-wrap items-center gap-4 xl:gap-7.5 pt-8 transition-all duration-700 ease-out transform translate-y-12 opacity-0 group-data-active/slide:translate-y-0 group-data-active/slide:opacity-100 group-data-active/slide:delay-500">
-                        <Button nativeButton={false} render={<Link href="https://docs.google.com/forms/d/e/1FAIpQLSdeLXNSeAYzclsVT8_4sxq3RsUI5PQJ5h86swz-_eiSq2gvkg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer"/>} variant="default" pill size="xl" icon={<ArrowRight />}>
+                        <Button type="button" data-open-register-modal="true" variant="default" pill size="xl" icon={<ArrowRight />} className="cursor-pointer">
                           <span>Register Now</span>
                         </Button>
                       </div>

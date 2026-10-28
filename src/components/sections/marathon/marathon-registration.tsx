@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useId } from "react";
+import { useState, useId, useRef } from "react";
+import { toPng } from "html-to-image";
 import { Section, SectionHead, SectionContent } from "@/components/layout/section";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { Button } from "@/components/ui/button";
-import { CheckCircleFill, AlertCircleFill, Activity, Shield, MapPinFill, CallAlt, Mail } from "@/components/icons";
+import { CheckCircleFill, AlertCircleFill, Download, Shield } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
 interface FormData {
@@ -61,8 +62,32 @@ export default function MarathonRegistration() {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDownloadingCard, setIsDownloadingCard] = useState(false);
   const [receipt, setReceipt] = useState<RegistrationReceipt | null>(null);
   const [duplicateWarning, setDuplicateWarning] = useState<string | null>(null);
+  const [cardStatusNotice, setCardStatusNotice] = useState<string | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadCard = async () => {
+    if (!cardRef.current) return;
+    setIsDownloadingCard(true);
+    try {
+      const dataUrl = await toPng(cardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: "#121C27",
+      });
+      const link = document.createElement("a");
+      link.download = `rakesh-marathon-pass-${receipt?.registrationId || "15KM"}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Failed to generate card image", err);
+      window.print();
+    } finally {
+      setIsDownloadingCard(false);
+    }
+  };
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
@@ -155,6 +180,22 @@ export default function MarathonRegistration() {
       const data = await res.json();
 
       if (!res.ok) {
+        if (data.alreadyRegistered && data.registration) {
+          const existingReceipt: RegistrationReceipt = {
+            registrationId: data.registration.registration_id,
+            fullName: data.registration.full_name,
+            email: data.registration.email,
+            phone: data.registration.phone,
+            age: String(data.registration.age),
+            address: data.registration.address,
+            emergencyName: data.registration.emergency_name,
+            emergencyPhone: data.registration.emergency_phone,
+            registeredAt: data.registration.created_at || "Previously Registered",
+          };
+          setReceipt(existingReceipt);
+          setCardStatusNotice("Found existing registration in SQLite database! Your official runner pass is displayed below.");
+          return;
+        }
         setDuplicateWarning(data.error || "Failed to process registration. Please try again.");
         return;
       }
@@ -179,12 +220,13 @@ export default function MarathonRegistration() {
         }),
       };
 
-      // Store in session to protect against duplicates
+      // Store in session
       if (typeof window !== "undefined") {
         localStorage.setItem(existingKey, JSON.stringify(newReceipt));
       }
 
       setReceipt(newReceipt);
+      setCardStatusNotice(null);
     } catch {
       setDuplicateWarning("Failed to process registration. Please check your connection and try again.");
     } finally {
@@ -194,13 +236,14 @@ export default function MarathonRegistration() {
 
   const handleReset = () => {
     setReceipt(null);
+    setCardStatusNotice(null);
     setFormData({
       fullName: "",
       email: "",
       phone: "+977 ",
       age: "",
       gender: "prefer-not-to-say",
-      address: "Parsa, Nepal",
+      address: "Kathmandu, Nepal",
       emergencyName: "",
       emergencyPhone: "+977 ",
       understandsDistance: false,
@@ -234,80 +277,165 @@ export default function MarathonRegistration() {
           {/* CONFIRMATION SCREEN WHEN SUBMITTED */}
           {receipt ? (
             <ScrollReveal mode="fade" direction="bottom">
-              <div className="p-8 sm:p-12 rounded-3xl bg-darker text-white border-2 border-primary shadow-2xl relative overflow-hidden">
-                <div className="text-center max-w-xl mx-auto">
+              <div className="p-6 sm:p-10 rounded-3xl bg-darker text-white border-2 border-primary shadow-2xl relative overflow-hidden">
+                <div className="text-center max-w-xl mx-auto mb-8">
                   <div className="size-16 rounded-full bg-primary/20 text-primary flex items-center justify-center mx-auto mb-4 border border-primary/40">
                     <CheckCircleFill className="size-10" />
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-widest text-primary">Registration Confirmed</span>
-                  <h3 className="text-3xl font-black text-white mt-1">You Are Officially Registered!</h3>
+                  <span className="text-xs font-bold uppercase tracking-widest text-primary">Registration Saved in SQLite Database</span>
+                  <h3 className="text-2xl sm:text-3xl font-black text-white mt-1">Official Marathon Runner Pass</h3>
                   <p className="text-sm text-white/75 mt-2">
-                    Welcome to the 15 KM Rakesh Marathon in Parsa. Keep your registration ID handy for bib collection.
+                    Your registration has been securely recorded. You can save or download your official digital card below.
                   </p>
+                  {cardStatusNotice && (
+                    <div className="mt-3 px-4 py-2 rounded-xl bg-primary/15 border border-primary/30 text-primary-light text-xs font-medium">
+                      {cardStatusNotice}
+                    </div>
+                  )}
                 </div>
 
-                {/* Registration Slip Summary Card */}
-                <div className="mt-8 p-6 rounded-2xl bg-white/5 border border-white/15 max-w-2xl mx-auto">
-                  <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                    <div>
-                      <div className="text-xs text-white/60 uppercase tracking-wider">Registration ID</div>
-                      <div className="text-2xl font-mono font-black text-primary">{receipt.registrationId}</div>
+                {/* ── OFFICIAL DIGITAL RUNNER PASS CARD (CAPTURED ON DOWNLOAD) ── */}
+                <div className="flex flex-col items-center">
+                  <div
+                    ref={cardRef}
+                    className="w-full max-w-xl rounded-3xl overflow-hidden border-2 border-primary bg-[#121C27] text-white shadow-2xl p-6 sm:p-8 relative"
+                    style={{
+                      backgroundColor: "#121C27",
+                      backgroundImage: "radial-gradient(circle at top right, rgba(202, 160, 92, 0.22), transparent 50%), radial-gradient(circle at bottom left, rgba(189, 31, 23, 0.18), transparent 45%)",
+                    }}
+                  >
+                    {/* Top Header Strip */}
+                    <div className="flex items-center justify-between pb-4 border-b border-white/15">
+                      <div className="flex items-center gap-3">
+                        <div className="size-11 rounded-xl bg-primary text-darker flex items-center justify-center font-black text-lg shadow-md shrink-0">
+                          RM
+                        </div>
+                        <div>
+                          <h4 className="text-base sm:text-lg font-black tracking-wider uppercase text-white leading-tight">
+                            RAKESH MARATHON 2026
+                          </h4>
+                          <p className="text-[11px] font-semibold tracking-widest uppercase text-primary">
+                            Run Together. Build a Better Tomorrow.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-primary text-darker shadow-sm">
+                          OFFICIAL PASS
+                        </span>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-xs text-white/60 uppercase tracking-wider">Distance Category</div>
-                      <div className="text-base font-bold text-white">15 KM Solo</div>
+
+                    {/* Center Prominent Bib & Distance Box */}
+                    <div className="my-6 p-5 sm:p-6 rounded-2xl bg-[#1c2733] border border-primary/40 text-center relative overflow-hidden">
+                      <div className="text-xs uppercase tracking-widest text-primary font-bold">
+                        15 KM SINGLE DISTANCE • KATHMANDU, NEPAL
+                      </div>
+
+                      <div className="text-4xl sm:text-5xl font-mono font-black text-white mt-1.5 tracking-wider drop-shadow-md">
+                        {receipt.registrationId}
+                      </div>
+
+                      <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-center gap-2 text-xs text-white/70">
+                        <span className="size-2 rounded-full bg-primary animate-pulse" />
+                        <span>CONFIRMED &amp; SAVED IN EVENT DATABASE</span>
+                      </div>
+                    </div>
+
+                    {/* Runner Information Details */}
+                    <div className="space-y-4">
+                      <div>
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-white/50 block">Participant Name</span>
+                        <h3 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
+                          {receipt.fullName}
+                        </h3>
+                      </div>
+
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-1 text-xs">
+                        <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                          <span className="text-white/50 uppercase block text-[10px] font-medium">Age</span>
+                          <strong className="text-white text-sm">{receipt.age} Years</strong>
+                        </div>
+                        <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                          <span className="text-white/50 uppercase block text-[10px] font-medium">Category</span>
+                          <strong className="text-white text-sm">15 KM Solo</strong>
+                        </div>
+                        <div className="p-3 rounded-xl bg-white/5 border border-white/10 col-span-2 sm:col-span-1">
+                          <span className="text-white/50 uppercase block text-[10px] font-medium">Location</span>
+                          <strong className="text-white text-sm truncate block">{receipt.address}</strong>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                          <span className="text-white/50 uppercase block text-[10px] font-medium">Contact Phone</span>
+                          <span className="text-white font-mono">{receipt.phone}</span>
+                        </div>
+                        <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                          <span className="text-white/50 uppercase block text-[10px] font-medium">Emergency Contact</span>
+                          <span className="text-white truncate block">{receipt.emergencyName} ({receipt.emergencyPhone})</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom Barcode / Check-in Strip */}
+                    <div className="mt-6 pt-4 border-t border-white/15 flex items-center justify-between gap-4">
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-[2px] h-7 opacity-85">
+                          {[4, 2, 6, 1, 3, 5, 2, 4, 7, 2, 5, 3, 1, 6, 3, 4, 2, 5, 1, 4, 6, 2, 3, 5, 2, 4, 1, 5, 3, 6, 2, 4, 5, 1, 3, 6, 2, 4, 1, 5, 2, 3, 4].map((h, i) => (
+                            <div key={i} className="bg-white rounded-xs" style={{ width: i % 3 === 0 ? "3px" : "2px", height: `${h * 3.5}px` }} />
+                          ))}
+                        </div>
+                        <span className="text-[10px] font-mono text-white/50 mt-1">CHECK-IN BIB: {receipt.registrationId}</span>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-[10px] uppercase tracking-wider text-white/50 block">Registered On</span>
+                        <span className="text-xs font-mono text-white/80">{receipt.registeredAt}</span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 text-sm">
-                    <div>
-                      <span className="text-white/60 text-xs uppercase block">Participant Name</span>
-                      <strong className="text-white">{receipt.fullName}</strong>
-                    </div>
-                    <div>
-                      <span className="text-white/60 text-xs uppercase block">Email Address</span>
-                      <strong className="text-white">{receipt.email}</strong>
-                    </div>
-                    <div>
-                      <span className="text-white/60 text-xs uppercase block">Contact Phone</span>
-                      <strong className="text-white">{receipt.phone}</strong>
-                    </div>
-                    <div>
-                      <span className="text-white/60 text-xs uppercase block">Age / Location</span>
-                      <strong className="text-white">{receipt.age} yrs • {receipt.address}</strong>
-                    </div>
-                    <div>
-                      <span className="text-white/60 text-xs uppercase block">Emergency Contact</span>
-                      <strong className="text-white">{receipt.emergencyName} ({receipt.emergencyPhone})</strong>
-                    </div>
-                    <div>
-                      <span className="text-white/60 text-xs uppercase block">Timestamp</span>
-                      <strong className="text-white">{receipt.registeredAt}</strong>
-                    </div>
+                  {/* Email Confirmation Notice */}
+                  <div className="mt-6 p-4 rounded-xl bg-primary/10 border border-primary/20 text-xs text-white/90 max-w-xl w-full flex items-center gap-3">
+                    <CheckCircleFill className="size-5 text-primary shrink-0" />
+                    <span>A confirmation email with your Registration ID has been dispatched to <strong>{receipt.email}</strong>.</span>
                   </div>
-                </div>
 
-                {/* Email Confirmation Notice */}
-                <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20 text-xs text-white/90 max-w-2xl mx-auto flex items-center gap-3">
-                  <CheckCircleFill className="size-5 text-primary shrink-0" />
-                  <span>A confirmation email with your Registration ID has been dispatched to <strong>{receipt.email}</strong>. Please check your inbox and spam folder.</span>
-                </div>
+                  {/* Card Download & Save Actions */}
+                  <div className="mt-8 flex flex-wrap items-center justify-center gap-4 w-full">
+                    <Button
+                      type="button"
+                      variant="default"
+                      size="xl"
+                      onClick={handleDownloadCard}
+                      disabled={isDownloadingCard}
+                      className="font-bold shadow-xl shadow-primary/25 cursor-pointer"
+                    >
+                      <Download className="size-5 mr-2 shrink-0" />
+                      <span>{isDownloadingCard ? "Generating Card Image..." : "Save / Download Card (PNG)"}</span>
+                    </Button>
 
-                {/* Action Buttons */}
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => window.print()}
-                    className="border-white/20 text-white hover:bg-white/10"
-                  >
-                    Print Registration Slip
-                  </Button>
-                  <Button
-                    variant="default"
-                    onClick={handleReset}
-                  >
-                    Register Another Runner
-                  </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="xl"
+                      onClick={() => window.print()}
+                      className="border-white/20 text-white hover:bg-white/10 cursor-pointer"
+                    >
+                      <span>Print ID Card</span>
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="xl"
+                      onClick={handleReset}
+                      className="border-white/20 text-white hover:bg-white/10 cursor-pointer"
+                    >
+                      <span>Register Another Runner</span>
+                    </Button>
+                  </div>
                 </div>
               </div>
             </ScrollReveal>
