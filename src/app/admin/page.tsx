@@ -28,6 +28,15 @@ interface RegistrationStats {
   avgAge: number;
 }
 
+interface DbStatus {
+  connected: boolean;
+  status: string;
+  database: string;
+  host?: string;
+  latencyMs?: number;
+  error?: string;
+}
+
 export default function AdminPage() {
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -47,6 +56,32 @@ export default function AdminPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [deleteCandidate, setDeleteCandidate] = useState<RegistrationItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Database connection state (displayed on login page & header)
+  const [dbStatus, setDbStatus] = useState<DbStatus | null>(null);
+  const [isCheckingDb, setIsCheckingDb] = useState(false);
+
+  const checkDbConnection = useCallback(async () => {
+    setIsCheckingDb(true);
+    try {
+      const res = await fetch("/api/admin/db-status");
+      const data = await res.json();
+      setDbStatus(data);
+    } catch {
+      setDbStatus({
+        connected: false,
+        status: "Offline",
+        database: "Turso Cloud libSQL",
+        error: "Unable to reach database health check endpoint.",
+      });
+    } finally {
+      setIsCheckingDb(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkDbConnection();
+  }, [checkDbConnection]);
 
   // Check existing session on mount
   const fetchRegistrations = useCallback(async () => {
@@ -285,6 +320,79 @@ export default function AdminPage() {
 
           {/* Login Card */}
           <div className="bg-[#0e1626]/80 border border-slate-800 rounded-3xl p-7 sm:p-9 backdrop-blur-xl shadow-2xl shadow-black/80">
+            {/* Database Connection Status Banner */}
+            <div
+              className={`mb-6 p-3.5 rounded-2xl border transition-all ${
+                isCheckingDb
+                  ? "bg-slate-900/90 border-slate-700/60"
+                  : dbStatus?.connected
+                  ? "bg-emerald-500/10 border-emerald-500/30"
+                  : "bg-red-500/10 border-red-500/30"
+              }`}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  {isCheckingDb ? (
+                    <div className="size-3 border-2 border-amber-400 border-t-transparent rounded-full animate-spin shrink-0" />
+                  ) : dbStatus?.connected ? (
+                    <div className="relative flex items-center justify-center shrink-0">
+                      <span className="size-2.5 rounded-full bg-emerald-400 animate-ping absolute opacity-75" />
+                      <span className="size-2.5 rounded-full bg-emerald-400 relative" />
+                    </div>
+                  ) : (
+                    <div className="size-2.5 rounded-full bg-red-400 shrink-0" />
+                  )}
+
+                  <div>
+                    <div className="text-xs font-bold text-white flex items-center gap-2">
+                      <span>{dbStatus?.database || "Turso Cloud libSQL"}</span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ${
+                          isCheckingDb
+                            ? "bg-amber-500/20 text-amber-300"
+                            : dbStatus?.connected
+                            ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+                            : "bg-red-500/20 text-red-300 border border-red-500/40"
+                        }`}
+                      >
+                        {isCheckingDb ? "Checking..." : dbStatus?.status || "Unknown"}
+                      </span>
+                    </div>
+                    <div className="text-[11px] font-mono text-slate-400 mt-0.5">
+                      {dbStatus?.host ? (
+                        <span>
+                          {dbStatus.host}
+                          {dbStatus.latencyMs !== undefined && ` • ${dbStatus.latencyMs}ms ping`}
+                        </span>
+                      ) : dbStatus?.error ? (
+                        <span className="text-red-400">{dbStatus.error}</span>
+                      ) : (
+                        <span>Testing database connectivity...</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={checkDbConnection}
+                  disabled={isCheckingDb}
+                  title="Re-check database connection"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer shrink-0 disabled:opacity-50"
+                >
+                  <svg
+                    className={`size-3.5 ${isCheckingDb ? "animate-spin text-amber-400" : ""}`}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
             {loginError && (
               <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-start gap-3">
                 <svg className="size-5 shrink-0 mt-0.5 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -353,7 +461,10 @@ export default function AdminPage() {
               <Link href="/marathon" className="text-amber-400 hover:underline inline-flex items-center gap-1">
                 <span>← Public Marathon Page</span>
               </Link>
-              <span className="font-mono text-[11px] text-slate-500">SQLite v3</span>
+              <div className="flex items-center gap-1.5 font-mono text-[11px] text-slate-400">
+                <span className={`size-1.5 rounded-full ${dbStatus?.connected ? "bg-emerald-400" : "bg-red-400"}`} />
+                <span>Turso Cloud</span>
+              </div>
             </div>
           </div>
         </div>
@@ -476,6 +587,9 @@ export default function AdminPage() {
             <div className="px-3.5 py-2 rounded-xl bg-[#0c1422] border border-slate-800 text-xs font-mono text-slate-300 flex items-center gap-2">
               <span className="text-slate-500">Database:</span>
               <span className="text-amber-400 font-bold">Turso Cloud libSQL</span>
+              {dbStatus?.latencyMs !== undefined && (
+                <span className="text-[10px] text-emerald-400 font-bold">({dbStatus.latencyMs}ms ping)</span>
+              )}
             </div>
           </div>
         </div>
