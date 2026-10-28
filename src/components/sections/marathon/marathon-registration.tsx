@@ -14,9 +14,8 @@ interface FormData {
   phone: string;
   age: string;
   gender: string;
+  tshirtSize: string;
   address: string;
-  emergencyName: string;
-  emergencyPhone: string;
   understandsDistance: boolean;
   acceptsTerms: boolean;
 }
@@ -27,8 +26,6 @@ interface FormErrors {
   phone?: string;
   age?: string;
   address?: string;
-  emergencyName?: string;
-  emergencyPhone?: string;
   understandsDistance?: string;
   acceptsTerms?: string;
 }
@@ -39,9 +36,8 @@ interface RegistrationReceipt {
   email: string;
   phone: string;
   age: string;
+  tshirtSize?: string;
   address: string;
-  emergencyName: string;
-  emergencyPhone: string;
   registeredAt: string;
 }
 
@@ -53,9 +49,8 @@ export default function MarathonRegistration() {
     phone: "+977 ",
     age: "",
     gender: "prefer-not-to-say",
+    tshirtSize: "M",
     address: "Parsa, Nepal",
-    emergencyName: "",
-    emergencyPhone: "+977 ",
     understandsDistance: false,
     acceptsTerms: false,
   });
@@ -119,14 +114,6 @@ export default function MarathonRegistration() {
       newErrors.address = "Address or city is required.";
     }
 
-    if (!formData.emergencyName.trim()) {
-      newErrors.emergencyName = "Emergency contact name is required.";
-    }
-
-    if (!formData.emergencyPhone.trim() || formData.emergencyPhone.trim() === "+977") {
-      newErrors.emergencyPhone = "Emergency contact phone is required.";
-    }
-
     if (!formData.understandsDistance) {
       newErrors.understandsDistance = "You must confirm you understand the 15 KM distance.";
     }
@@ -170,9 +157,8 @@ export default function MarathonRegistration() {
           phone: formData.phone.trim(),
           age: formData.age,
           gender: formData.gender,
+          tshirtSize: formData.tshirtSize,
           address: formData.address.trim(),
-          emergencyName: formData.emergencyName.trim(),
-          emergencyPhone: formData.emergencyPhone.trim(),
           registrationId: generatedId,
         }),
       });
@@ -187,9 +173,8 @@ export default function MarathonRegistration() {
             email: data.registration.email,
             phone: data.registration.phone,
             age: String(data.registration.age),
+            tshirtSize: data.registration.tshirt_size || "M",
             address: data.registration.address,
-            emergencyName: data.registration.emergency_name,
-            emergencyPhone: data.registration.emergency_phone,
             registeredAt: data.registration.created_at || "Previously Registered",
           };
           setReceipt(existingReceipt);
@@ -208,9 +193,8 @@ export default function MarathonRegistration() {
         email: formData.email.trim(),
         phone: formData.phone.trim(),
         age: formData.age,
+        tshirtSize: formData.tshirtSize,
         address: formData.address.trim(),
-        emergencyName: formData.emergencyName.trim(),
-        emergencyPhone: formData.emergencyPhone.trim(),
         registeredAt: new Date().toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
@@ -243,9 +227,8 @@ export default function MarathonRegistration() {
       phone: "+977 ",
       age: "",
       gender: "prefer-not-to-say",
-      address: "Kathmandu, Nepal",
-      emergencyName: "",
-      emergencyPhone: "+977 ",
+      tshirtSize: "M",
+      address: "Parsa, Nepal",
       understandsDistance: false,
       acceptsTerms: false,
     });
@@ -357,23 +340,23 @@ export default function MarathonRegistration() {
                           <strong className="text-white text-sm">{receipt.age} Years</strong>
                         </div>
                         <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                          <span className="text-white/50 uppercase block text-[10px] font-medium">Category</span>
-                          <strong className="text-white text-sm">15 KM Solo</strong>
+                          <span className="text-white/50 uppercase block text-[10px] font-medium">T-Shirt Size</span>
+                          <strong className="text-primary text-sm font-bold">{receipt.tshirtSize || "M"}</strong>
                         </div>
                         <div className="p-3 rounded-xl bg-white/5 border border-white/10 col-span-2 sm:col-span-1">
-                          <span className="text-white/50 uppercase block text-[10px] font-medium">Location</span>
-                          <strong className="text-white text-sm truncate block">{receipt.address}</strong>
+                          <span className="text-white/50 uppercase block text-[10px] font-medium">Category</span>
+                          <strong className="text-white text-sm">15 KM Solo</strong>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                         <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                          <span className="text-white/50 uppercase block text-[10px] font-medium">Contact Phone</span>
-                          <span className="text-white font-mono">{receipt.phone}</span>
+                          <span className="text-white/50 uppercase block text-[10px] font-medium">Email</span>
+                          <span className="text-white truncate block">{receipt.email}</span>
                         </div>
                         <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                          <span className="text-white/50 uppercase block text-[10px] font-medium">Emergency Contact</span>
-                          <span className="text-white truncate block">{receipt.emergencyName} ({receipt.emergencyPhone})</span>
+                          <span className="text-white/50 uppercase block text-[10px] font-medium">Contact Phone</span>
+                          <span className="text-white font-mono">{receipt.phone}</span>
                         </div>
                       </div>
                     </div>
@@ -561,6 +544,26 @@ export default function MarathonRegistration() {
                         </select>
                       </div>
 
+                      {/* T-Shirt Size */}
+                      <div>
+                        <label htmlFor={`${formId}-tshirt`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1.5">
+                          Official T-Shirt Size *
+                        </label>
+                        <select
+                          id={`${formId}-tshirt`}
+                          value={formData.tshirtSize}
+                          onChange={(e) => setFormData({ ...formData, tshirtSize: e.target.value })}
+                          className="w-full px-4 py-3 rounded-xl border border-lighter bg-white text-darker text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
+                        >
+                          <option value="S">Small (S — 36&quot;)</option>
+                          <option value="M">Medium (M — 38&quot;)</option>
+                          <option value="L">Large (L — 40&quot;)</option>
+                          <option value="XL">Extra Large (XL — 42&quot;)</option>
+                          <option value="XXL">Double Extra Large (XXL — 44&quot;)</option>
+                        </select>
+                        <p className="text-[11px] text-body mt-1">Included in your runner kit at bib collection.</p>
+                      </div>
+
                       {/* Address or City */}
                       <div>
                         <label htmlFor={`${formId}-address`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1.5">
@@ -582,58 +585,10 @@ export default function MarathonRegistration() {
                     </div>
                   </div>
 
-                  {/* Step 2: Emergency Contact */}
-                  <div className="pt-4 border-t border-lighter">
-                    <h4 className="text-lg font-bold text-darker mb-4 flex items-center gap-2">
-                      <span className="size-6 rounded-full bg-primary text-darker text-xs font-black flex items-center justify-center">2</span>
-                      Emergency Contact Information
-                    </h4>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {/* Emergency Contact Name */}
-                      <div>
-                        <label htmlFor={`${formId}-em-name`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1.5">
-                          Emergency Contact Name *
-                        </label>
-                        <input
-                          id={`${formId}-em-name`}
-                          type="text"
-                          value={formData.emergencyName}
-                          onChange={(e) => setFormData({ ...formData, emergencyName: e.target.value })}
-                          placeholder="e.g. Suman Shrestha (Parent/Spouse)"
-                          className={cn(
-                            "w-full px-4 py-3 rounded-xl border bg-white text-darker text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all",
-                            errors.emergencyName ? "border-danger" : "border-lighter"
-                          )}
-                        />
-                        {errors.emergencyName && <p className="text-xs text-danger mt-1">{errors.emergencyName}</p>}
-                      </div>
-
-                      {/* Emergency Contact Phone */}
-                      <div>
-                        <label htmlFor={`${formId}-em-phone`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1.5">
-                          Emergency Contact Phone *
-                        </label>
-                        <input
-                          id={`${formId}-em-phone`}
-                          type="tel"
-                          value={formData.emergencyPhone}
-                          onChange={(e) => setFormData({ ...formData, emergencyPhone: e.target.value })}
-                          placeholder="+977 98XXXXXXXX"
-                          className={cn(
-                            "w-full px-4 py-3 rounded-xl border bg-white text-darker text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all font-mono",
-                            errors.emergencyPhone ? "border-danger" : "border-lighter"
-                          )}
-                        />
-                        {errors.emergencyPhone && <p className="text-xs text-danger mt-1">{errors.emergencyPhone}</p>}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Step 3: Declarations & Distance Acknowledgment */}
+                  {/* Step 2: Declarations & Distance Acknowledgment */}
                   <div className="pt-4 border-t border-lighter space-y-3">
                     <h4 className="text-lg font-bold text-darker mb-3 flex items-center gap-2">
-                      <span className="size-6 rounded-full bg-primary text-darker text-xs font-black flex items-center justify-center">3</span>
+                      <span className="size-6 rounded-full bg-primary text-darker text-xs font-black flex items-center justify-center">2</span>
                       Distance Acknowledgment & Consent
                     </h4>
 

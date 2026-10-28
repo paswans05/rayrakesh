@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mailer";
-import { saveRegistration, getRegistrationByEmail } from "@/lib/db";
+import { upsertRegistration, getRegistrationByEmail } from "@/lib/db";
+import { generateRunnerPassPng } from "@/lib/generate-runner-pass";
 
 export const runtime = "nodejs";
 
@@ -13,6 +14,7 @@ export async function POST(req: NextRequest) {
       phone,
       age,
       gender,
+      tshirtSize,
       address,
       emergencyName,
       emergencyPhone,
@@ -20,7 +22,7 @@ export async function POST(req: NextRequest) {
     } = body;
 
     // ── Server-side validation ──
-    if (!fullName || !email || !phone || !age || !address || !emergencyName || !emergencyPhone) {
+    if (!fullName || !email || !phone || !age || !address) {
       return NextResponse.json(
         { error: "All required fields must be filled." },
         { status: 400 }
@@ -44,33 +46,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── SQLite Duplicate Check ──
+    // ── SQLite Registration (Upsert) ──
     const existing = getRegistrationByEmail(cleanEmail);
-    if (existing) {
-      return NextResponse.json(
-        {
-          error: `This email is already registered with Registration ID: ${existing.registration_id}.`,
-          alreadyRegistered: true,
-          registrationId: existing.registration_id,
-          registration: existing,
-        },
-        { status: 409 }
-      );
-    }
+    const regId = existing?.registration_id || registrationId || `RM15K-${Math.floor(1000 + Math.random() * 9000)}`;
 
-    const regId = registrationId || `RM15K-${Math.floor(1000 + Math.random() * 9000)}`;
-
-    // ── Save to SQLite Database ──
-    saveRegistration({
+    const { isNew } = upsertRegistration({
       registration_id: regId,
       full_name: fullName.trim(),
       email: cleanEmail,
       phone: phone.trim(),
       age: ageNum,
       gender: gender || "prefer-not-to-say",
+      tshirt_size: tshirtSize || "M",
       address: address.trim(),
-      emergency_name: emergencyName.trim(),
-      emergency_phone: emergencyPhone.trim(),
+      emergency_name: emergencyName ? emergencyName.trim() : "",
+      emergency_phone: emergencyPhone ? emergencyPhone.trim() : "",
     });
 
     const timestamp = new Date().toLocaleString("en-US", {
@@ -82,7 +72,34 @@ export async function POST(req: NextRequest) {
       minute: "2-digit",
     });
 
-    // ── Notification email to Rakesh (site owner) ──
+    // ── Generate Digital Runner Pass PNG Card Attachment ──
+    let passBuffer: Buffer | null = null;
+    try {
+      passBuffer = await generateRunnerPassPng({
+        registrationId: regId,
+        fullName: fullName.trim(),
+        age: ageNum,
+        gender: gender || "Not specified",
+        tshirtSize: tshirtSize || "M",
+        address: address.trim(),
+        date: timestamp,
+      });
+    } catch (genErr) {
+      console.error("[marathon-register] Failed to generate runner pass card:", genErr);
+    }
+
+    const passAttachments = passBuffer
+      ? [
+          {
+            filename: `Rakesh-Marathon-Pass-${regId}.png`,
+            content: passBuffer,
+            contentType: "image/png",
+            cid: "runner-pass-card",
+          },
+        ]
+      : undefined;
+
+    // ── Notification email to Rakesh Ray (site organizer) ──
     const adminHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background: #202a34; padding: 24px 32px; border-radius: 12px 12px 0 0;">
@@ -98,22 +115,28 @@ export async function POST(req: NextRequest) {
             <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600; width: 150px;">Full Name</td><td style="padding: 8px 0; color: #202a34;">${escapeHtml(fullName)}</td></tr>
             <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">Email</td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(cleanEmail)}" style="color: #CAA05C;">${escapeHtml(cleanEmail)}</a></td></tr>
             <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">Phone</td><td style="padding: 8px 0; color: #202a34;">${escapeHtml(phone)}</td></tr>
-            <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">Age</td><td style="padding: 8px 0; color: #202a34;">${escapeHtml(age)} years</td></tr>
+            <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">Age</td><td style="padding: 8px 0; color: #202a34;">${escapeHtml(String(age))} years</td></tr>
             <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">Gender</td><td style="padding: 8px 0; color: #202a34;">${escapeHtml(gender || "Not specified")}</td></tr>
+            <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">T-Shirt Size</td><td style="padding: 8px 0; color: #CAA05C; font-weight: bold;">${escapeHtml(tshirtSize || "M")}</td></tr>
             <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">City / Address</td><td style="padding: 8px 0; color: #202a34;">${escapeHtml(address)}</td></tr>
           </table>
-          <div style="margin-top: 16px; padding: 16px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;">
-            <p style="font-size: 13px; color: #4B535D; margin: 0 0 8px; font-weight: 600;">Emergency Contact</p>
-            <p style="font-size: 15px; color: #202a34; margin: 0;">${escapeHtml(emergencyName)} — ${escapeHtml(emergencyPhone)}</p>
-          </div>
+          ${
+            passBuffer
+              ? `
+          <div style="margin-top: 20px; text-align: center;">
+            <p style="font-size: 12px; color: #4B535D; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Participant Pass Card Attached</p>
+            <img src="cid:runner-pass-card" alt="Participant Pass" style="width: 100%; max-width: 480px; height: auto; border-radius: 8px; border: 1px solid #CAA05C;" />
+          </div>`
+              : ""
+          }
         </div>
         <div style="padding: 16px 32px; background: #202a34; border-radius: 0 0 12px 12px; text-align: center;">
-          <p style="color: #A6B0BA; font-size: 12px; margin: 0;">Stored in SQLite Database • 15 KM Single-Distance • Kathmandu, Nepal</p>
+          <p style="color: #A6B0BA; font-size: 12px; margin: 0;">Stored in SQLite Database • 15 KM Single-Distance • Parsa, Nepal</p>
         </div>
       </div>
     `;
 
-    // ── Confirmation email to participant ──
+    // ── Confirmation email to registered participant ──
     const participantHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background: #202a34; padding: 28px 32px; border-radius: 12px 12px 0 0; text-align: center;">
@@ -125,53 +148,89 @@ export async function POST(req: NextRequest) {
             Dear <strong>${escapeHtml(fullName)}</strong>,
           </p>
           <p style="font-size: 15px; color: #4B535D; line-height: 1.6; margin: 0 0 20px;">
-            Thank you for registering for the <strong>Rakesh Marathon (15 KM)</strong>! Your registration is officially saved in our event database. Keep your Registration ID safe for bib collection.
+            Congratulations! You are officially registered for the <strong>Rakesh Marathon (15 KM)</strong>. Your entry has been securely recorded in our event database.
           </p>
-          <div style="background: #202a34; color: #fff; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+
+          <!-- Registration Summary Box -->
+          <div style="background: #202a34; color: #fff; padding: 20px; border-radius: 10px; margin-bottom: 22px;">
             <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
               <tr>
-                <td style="padding: 6px 0; color: #A6B0BA;">Registration ID</td>
-                <td style="padding: 6px 0; color: #CAA05C; font-weight: bold; text-align: right; font-family: monospace; font-size: 16px;">${escapeHtml(regId)}</td>
+                <td style="padding: 6px 0; color: #A6B0BA;">BIB / Registration ID</td>
+                <td style="padding: 6px 0; color: #CAA05C; font-weight: bold; text-align: right; font-family: monospace; font-size: 17px;">${escapeHtml(regId)}</td>
               </tr>
               <tr>
                 <td style="padding: 6px 0; color: #A6B0BA;">Distance</td>
-                <td style="padding: 6px 0; color: #fff; text-align: right;">15 KM (Single Category)</td>
+                <td style="padding: 6px 0; color: #fff; text-align: right; font-weight: 600;">15 KM (Single Distance)</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #A6B0BA;">Participant Name</td>
+                <td style="padding: 6px 0; color: #fff; text-align: right;">${escapeHtml(fullName)}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #A6B0BA;">T-Shirt Size</td>
+                <td style="padding: 6px 0; color: #CAA05C; font-weight: bold; text-align: right;">${escapeHtml(tshirtSize || "M")} (Official Kit)</td>
               </tr>
               <tr>
                 <td style="padding: 6px 0; color: #A6B0BA;">Location</td>
-                <td style="padding: 6px 0; color: #fff; text-align: right;">Kathmandu, Nepal</td>
+                <td style="padding: 6px 0; color: #fff; text-align: right;">Parsa, Nepal</td>
               </tr>
               <tr>
-                <td style="padding: 6px 0; color: #A6B0BA;">Registered On</td>
-                <td style="padding: 6px 0; color: #fff; text-align: right;">${escapeHtml(timestamp)}</td>
+                <td style="padding: 6px 0; color: #A6B0BA;">Status</td>
+                <td style="padding: 6px 0; color: #10B981; font-weight: bold; text-align: right;">Confirmed ✓</td>
               </tr>
             </table>
           </div>
-          <div style="background: #fffbeb; border: 1px solid #CAA05C; padding: 14px 18px; border-radius: 8px; font-size: 13px; color: #202a34; line-height: 1.5;">
-            <strong>What's next?</strong><br/>
-            • Download or print your Runner Pass Card from the website.<br/>
-            • Official race date and venue directions will be emailed as soon as final city permits are confirmed.<br/>
-            • Please bring a photo ID and your Registration ID when collecting your race bib.
+
+          <!-- Digital Runner Pass Card Preview -->
+          ${
+            passBuffer
+              ? `
+          <div style="margin: 24px 0; text-align: center;">
+            <div style="background: #CAA05C; color: #121C27; display: inline-block; padding: 6px 18px; border-radius: 20px; font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;">
+              🎟 Your Digital Runner Pass
+            </div>
+            <p style="font-size: 13px; color: #4B535D; margin: 0 0 12px; line-height: 1.5;">
+              Your official high-resolution runner pass is <strong>attached to this email</strong> (<code>Rakesh-Marathon-Pass-${escapeHtml(regId)}.png</code>). Please save it to your phone or print it.
+            </p>
+            <div style="background: #0f1720; padding: 10px; border-radius: 12px; border: 1.5px solid #CAA05C; display: inline-block; max-width: 100%;">
+              <img src="cid:runner-pass-card" alt="Official Runner Pass" style="width: 100%; max-width: 500px; height: auto; border-radius: 8px; display: block;" />
+            </div>
+          </div>
+          `
+              : ""
+          }
+
+          <div style="background: #fffbeb; border: 1px solid #CAA05C; padding: 16px 20px; border-radius: 8px; font-size: 13px; color: #202a34; line-height: 1.6; margin-top: 20px;">
+            <strong>Important Next Steps:</strong><br/>
+            • <strong>Download your attached pass:</strong> Keep the PNG on your mobile device for quick check-in.<br/>
+            • <strong>Bib Collection:</strong> Present your photo ID and BIB ID (<strong>${escapeHtml(regId)}</strong>) at the reporting counter on race morning.<br/>
+            • <strong>Event Updates:</strong> Official route map checkpoints, flag-off schedule, and preparation guidelines will be emailed to you prior to race day.
           </div>
         </div>
-        <div style="padding: 16px 32px; background: #202a34; border-radius: 0 0 12px 12px; text-align: center;">
-          <p style="color: #CAA05C; font-size: 13px; margin: 0; font-weight: 600;">Run Together. Build a Better Tomorrow.</p>
-          <p style="color: #A6B0BA; font-size: 11px; margin: 6px 0 0;">Rakesh Ray — Community Initiative</p>
+        <div style="padding: 18px 32px; background: #202a34; border-radius: 0 0 12px 12px; text-align: center;">
+          <p style="color: #CAA05C; font-size: 13px; margin: 0; font-weight: 600;">“Run Together. Build a Better Tomorrow.”</p>
+          <p style="color: #A6B0BA; font-size: 11px; margin: 6px 0 0;">Rakesh Ray Community Initiative • Parsa, Nepal</p>
         </div>
       </div>
     `;
 
-    // Send emails asynchronously without blocking response if SMTP is unconfigured
+    // ── Send emails with card attachment asynchronously ──
     Promise.all([
+      // 1. Organizer notification with card attachment
       sendMail({
+        to: process.env.MAIL_TO,
         subject: `Marathon Registration: ${fullName} [${regId}]`,
         html: adminHtml,
         replyTo: cleanEmail,
+        attachments: passAttachments,
       }),
+      // 2. Participant confirmation with card attachment & inline CID
       sendMail({
-        subject: `Your Rakesh Marathon Registration is Confirmed [${regId}]`,
+        to: cleanEmail,
+        subject: `🏅 Your Official Rakesh Marathon 15 KM Pass [${regId}]`,
         html: participantHtml,
         replyTo: process.env.MAIL_TO,
+        attachments: passAttachments,
       }).catch((err) => {
         console.warn("[marathon-register] Participant email warning:", err);
       }),
@@ -182,7 +241,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       registrationId: regId,
-      message: "Registration successfully saved in database and confirmed.",
+      isNew,
+      message: isNew
+        ? "Registration successfully saved in database. Confirmation email with your runner card has been sent."
+        : "Registration updated! Your official runner pass card has been sent to your email.",
     });
   } catch (error) {
     console.error("[/api/marathon-register] Error:", error);

@@ -20,9 +20,10 @@ export interface RegistrationRecord {
   phone: string;
   age: number;
   gender: string;
+  tshirt_size?: string;
   address: string;
-  emergency_name: string;
-  emergency_phone: string;
+  emergency_name?: string;
+  emergency_phone?: string;
   created_at?: string;
 }
 
@@ -42,6 +43,7 @@ function initDb(): Database.Database {
       phone TEXT NOT NULL,
       age INTEGER NOT NULL,
       gender TEXT,
+      tshirt_size TEXT DEFAULT 'M',
       address TEXT NOT NULL,
       emergency_name TEXT NOT NULL,
       emergency_phone TEXT NOT NULL,
@@ -51,6 +53,13 @@ function initDb(): Database.Database {
     CREATE INDEX IF NOT EXISTS idx_registrations_email ON registrations(email);
     CREATE INDEX IF NOT EXISTS idx_registrations_reg_id ON registrations(registration_id);
   `);
+
+  // Migration: Ensure tshirt_size column exists for existing databases
+  try {
+    db.exec(`ALTER TABLE registrations ADD COLUMN tshirt_size TEXT DEFAULT 'M'`);
+  } catch {
+    // Column already exists
+  }
 
   return db;
 }
@@ -73,10 +82,11 @@ export function saveRegistration(record: RegistrationRecord): { success: boolean
       phone,
       age,
       gender,
+      tshirt_size,
       address,
       emergency_name,
       emergency_phone
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   stmt.run(
@@ -86,6 +96,7 @@ export function saveRegistration(record: RegistrationRecord): { success: boolean
     record.phone,
     record.age,
     record.gender || "prefer-not-to-say",
+    record.tshirt_size || "M",
     record.address,
     record.emergency_name,
     record.emergency_phone
@@ -106,6 +117,50 @@ export function getRegistrationById(registrationId: string): RegistrationRecord 
   const stmt = db.prepare(`SELECT * FROM registrations WHERE registration_id = ? LIMIT 1`);
   const row = stmt.get(registrationId);
   return (row as RegistrationRecord) || null;
+}
+
+export function upsertRegistration(record: RegistrationRecord): { success: boolean; id: string; isNew: boolean } {
+  const db = getDb();
+  const existing = getRegistrationByEmail(record.email);
+
+  if (existing) {
+    const stmt = db.prepare(`
+      UPDATE registrations SET
+        full_name = ?,
+        phone = ?,
+        age = ?,
+        gender = ?,
+        tshirt_size = ?,
+        address = ?,
+        emergency_name = ?,
+        emergency_phone = ?
+      WHERE id = ?
+    `);
+
+    stmt.run(
+      record.full_name,
+      record.phone,
+      record.age,
+      record.gender || "prefer-not-to-say",
+      record.tshirt_size || existing.tshirt_size || "M",
+      record.address,
+      record.emergency_name,
+      record.emergency_phone,
+      existing.id
+    );
+
+    return { success: true, id: existing.registration_id, isNew: false };
+  }
+
+  saveRegistration(record);
+  return { success: true, id: record.registration_id, isNew: true };
+}
+
+export function deleteRegistrationByEmail(email: string): boolean {
+  const db = getDb();
+  const stmt = db.prepare(`DELETE FROM registrations WHERE LOWER(email) = LOWER(?)`);
+  const result = stmt.run(email);
+  return result.changes > 0;
 }
 
 export function getAllRegistrations(): RegistrationRecord[] {

@@ -10,15 +10,26 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+export interface MailAttachment {
+  filename: string;
+  content?: Buffer | string;
+  path?: string;
+  contentType?: string;
+  cid?: string;
+  encoding?: string;
+}
+
 export interface SendMailOptions {
+  to?: string;
   subject: string;
   html: string;
   replyTo?: string;
+  attachments?: MailAttachment[];
 }
 
-export async function sendMail({ subject, html, replyTo }: SendMailOptions) {
+export async function sendMail({ to, subject, html, replyTo, attachments }: SendMailOptions) {
   const from = process.env.MAIL_FROM || process.env.SMTP_USER;
-  const to = process.env.MAIL_TO || process.env.SMTP_USER;
+  const recipient = to || process.env.MAIL_TO || process.env.SMTP_USER;
 
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
     console.warn("[mailer] SMTP credentials not configured – skipping email.");
@@ -27,12 +38,12 @@ export async function sendMail({ subject, html, replyTo }: SendMailOptions) {
 
   const info = await transporter.sendMail({
     from,
-    to,
+    to: recipient,
     replyTo: replyTo || undefined,
     subject,
     html,
+    attachments,
   });
 
   return info;
 }
-

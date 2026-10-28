@@ -19,9 +19,8 @@ interface RegistrationReceipt {
   email: string;
   phone: string;
   age: string;
+  tshirtSize?: string;
   address: string;
-  emergencyName: string;
-  emergencyPhone: string;
   registeredAt: string;
 }
 
@@ -37,9 +36,8 @@ export default function MarathonRegistrationModal() {
     phone: "+977 ",
     age: "",
     gender: "prefer-not-to-say",
-    address: "Kathmandu, Nepal",
-    emergencyName: "",
-    emergencyPhone: "+977 ",
+    tshirtSize: "M",
+    address: "Parsa, Nepal",
     understandsDistance: false,
     acceptsTerms: false,
   });
@@ -105,14 +103,6 @@ export default function MarathonRegistrationModal() {
       newErrors.address = "Address or city is required.";
     }
 
-    if (!formData.emergencyName.trim()) {
-      newErrors.emergencyName = "Emergency contact name is required.";
-    }
-
-    if (!formData.emergencyPhone.trim() || formData.emergencyPhone.trim() === "+977") {
-      newErrors.emergencyPhone = "Emergency contact phone is required.";
-    }
-
     if (!formData.understandsDistance) {
       newErrors.understandsDistance = "You must confirm you understand the 15 KM distance.";
     }
@@ -147,9 +137,8 @@ export default function MarathonRegistrationModal() {
           phone: formData.phone.trim(),
           age: formData.age,
           gender: formData.gender,
+          tshirtSize: formData.tshirtSize,
           address: formData.address.trim(),
-          emergencyName: formData.emergencyName.trim(),
-          emergencyPhone: formData.emergencyPhone.trim(),
           registrationId: generatedId,
         }),
       });
@@ -164,9 +153,8 @@ export default function MarathonRegistrationModal() {
             email: data.registration.email,
             phone: data.registration.phone,
             age: String(data.registration.age),
+            tshirtSize: data.registration.tshirt_size || "M",
             address: data.registration.address,
-            emergencyName: data.registration.emergency_name,
-            emergencyPhone: data.registration.emergency_phone,
             registeredAt: data.registration.created_at || "Previously Registered",
           };
           setReceipt(existingReceipt);
@@ -185,9 +173,8 @@ export default function MarathonRegistrationModal() {
         email: formData.email.trim(),
         phone: formData.phone.trim(),
         age: formData.age,
+        tshirtSize: formData.tshirtSize,
         address: formData.address.trim(),
-        emergencyName: formData.emergencyName.trim(),
-        emergencyPhone: formData.emergencyPhone.trim(),
         registeredAt: new Date().toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
@@ -236,9 +223,8 @@ export default function MarathonRegistrationModal() {
       phone: "+977 ",
       age: "",
       gender: "prefer-not-to-say",
-      address: "Kathmandu, Nepal",
-      emergencyName: "",
-      emergencyPhone: "+977 ",
+      tshirtSize: "M",
+      address: "Parsa, Nepal",
       understandsDistance: false,
       acceptsTerms: false,
     });
@@ -367,23 +353,23 @@ export default function MarathonRegistrationModal() {
                       <strong className="text-white">{receipt.age} Years</strong>
                     </div>
                     <div className="p-2.5 rounded-xl bg-white/5 border border-white/10">
-                      <span className="text-white/50 uppercase block text-[10px]">Category</span>
-                      <strong className="text-white">15 KM Solo</strong>
+                      <span className="text-white/50 uppercase block text-[10px]">T-Shirt Size</span>
+                      <strong className="text-primary font-bold">{receipt.tshirtSize || "M"}</strong>
                     </div>
                     <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 col-span-2 sm:col-span-1">
-                      <span className="text-white/50 uppercase block text-[10px]">Location</span>
-                      <strong className="text-white truncate block">{receipt.address}</strong>
+                      <span className="text-white/50 uppercase block text-[10px]">Category</span>
+                      <strong className="text-white">15 KM Solo</strong>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                     <div className="p-2.5 rounded-xl bg-white/5 border border-white/10">
-                      <span className="text-white/50 uppercase block text-[10px]">Contact Phone</span>
-                      <span className="text-white font-mono">{receipt.phone}</span>
+                      <span className="text-white/50 uppercase block text-[10px]">Email</span>
+                      <span className="text-white truncate block">{receipt.email}</span>
                     </div>
                     <div className="p-2.5 rounded-xl bg-white/5 border border-white/10">
-                      <span className="text-white/50 uppercase block text-[10px]">Emergency Contact</span>
-                      <span className="text-white truncate block">{receipt.emergencyName} ({receipt.emergencyPhone})</span>
+                      <span className="text-white/50 uppercase block text-[10px]">Contact Phone</span>
+                      <span className="text-white font-mono">{receipt.phone}</span>
                     </div>
                   </div>
                 </div>
@@ -550,6 +536,23 @@ export default function MarathonRegistrationModal() {
                   </div>
 
                   <div>
+                    <label htmlFor={`${formId}-modal-tshirt`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1">
+                      Official T-Shirt Size *
+                    </label>
+                    <select
+                      id={`${formId}-modal-tshirt`}
+                      value={formData.tshirtSize}
+                      onChange={(e) => setFormData({ ...formData, tshirtSize: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-lighter bg-white text-darker text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
+                    >
+                      <option value="S">Small (S — 36&quot;)</option>
+                      <option value="M">Medium (M — 38&quot;)</option>
+                      <option value="L">Large (L — 40&quot;)</option>
+                    </select>
+                    <p className="text-[11px] text-body mt-1">Provided in your runner kit at the reporting counter.</p>
+                  </div>
+
+                  <div>
                     <label htmlFor={`${formId}-modal-address`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1">
                       City / Residential Address *
                     </label>
@@ -569,53 +572,7 @@ export default function MarathonRegistrationModal() {
                 </div>
               </div>
 
-              {/* Step 2: Emergency Contact */}
-              <div className="pt-3 border-t border-lighter">
-                <h4 className="text-base font-bold text-darker mb-3 flex items-center gap-2">
-                  <span className="size-5 rounded-full bg-primary text-darker text-xs font-black flex items-center justify-center">2</span>
-                  Emergency Contact
-                </h4>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  <div>
-                    <label htmlFor={`${formId}-modal-emname`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1">
-                      Emergency Contact Name *
-                    </label>
-                    <input
-                      id={`${formId}-modal-emname`}
-                      type="text"
-                      value={formData.emergencyName}
-                      onChange={(e) => setFormData({ ...formData, emergencyName: e.target.value })}
-                      placeholder="e.g. Suman Shrestha (Parent/Spouse)"
-                      className={cn(
-                        "w-full px-3.5 py-2.5 rounded-xl border bg-white text-darker text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all",
-                        errors.emergencyName ? "border-danger" : "border-lighter"
-                      )}
-                    />
-                    {errors.emergencyName && <p className="text-xs text-danger mt-1">{errors.emergencyName}</p>}
-                  </div>
-
-                  <div>
-                    <label htmlFor={`${formId}-modal-emphone`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1">
-                      Emergency Contact Phone *
-                    </label>
-                    <input
-                      id={`${formId}-modal-emphone`}
-                      type="tel"
-                      value={formData.emergencyPhone}
-                      onChange={(e) => setFormData({ ...formData, emergencyPhone: e.target.value })}
-                      placeholder="+977 98XXXXXXXX"
-                      className={cn(
-                        "w-full px-3.5 py-2.5 rounded-xl border bg-white text-darker text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all font-mono",
-                        errors.emergencyPhone ? "border-danger" : "border-lighter"
-                      )}
-                    />
-                    {errors.emergencyPhone && <p className="text-xs text-danger mt-1">{errors.emergencyPhone}</p>}
-                  </div>
-                </div>
-              </div>
-
-              {/* Step 3: Checkboxes */}
+              {/* Step 2: Checkboxes & Terms */}
               <div className="pt-3 border-t border-lighter space-y-2.5">
                 <div className="flex items-start gap-2.5 p-3 rounded-xl bg-lightest border border-lighter">
                   <input
