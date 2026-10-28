@@ -1,12 +1,15 @@
 "use client";
 
+import { useState, useId } from "react";
 import Image from "next/image";
 import { Section, SectionContent } from "@/components/layout/section";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CONTACT_INFO_CONFIG } from "@/data/contact";
+import { CheckCircleFill, AlertCircleFill } from "@/components/icons";
 import buildingLineE from "@/images/decoration/building-line-a.png";
 import contactCover from "@/images/contact-cover.jpg";
+import { cn } from "@/lib/utils";
 
 type ContactProps = {
   gap?: "default" | "top" | "bottom" | "none";
@@ -14,6 +17,53 @@ type ContactProps = {
 };
 
 export default function Contact({ gap = "default", className }: ContactProps) {
+  const formId = useId();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [result, setResult] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    service: "",
+    message: "",
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResult(null);
+
+    if (!formData.name || !formData.email || !formData.message) {
+      setResult({ type: "error", message: "Please fill in your name, email, and message." });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setResult({ type: "error", message: data.error || "Something went wrong." });
+      } else {
+        setResult({ type: "success", message: data.message || "Your message has been sent!" });
+        setFormData({ name: "", email: "", phone: "", service: "", message: "" });
+      }
+    } catch {
+      setResult({ type: "error", message: "Network error. Please try again." });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const inputClass =
+    "border border-light bg-white text-darker placeholder-body px-4 py-3 w-full outline-offset-0 outline-transparent focus:outline-primary focus:border-transparent transition-all text-sm";
+
   return (
     <div className={className}>
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -33,7 +83,7 @@ export default function Contact({ gap = "default", className }: ContactProps) {
                     Get in touch with us
                   </h2>
                   <p className="text-base/relaxed text-body">
-                    Let’s build something meaningful together by combining creativity, strategy, and innovation to create impactful digital solutions that drive growth, strengthen brands, and deliver lasting value for your business.
+                    Let's build something meaningful together by combining creativity, strategy, and innovation to create impactful digital solutions that drive growth, strengthen brands, and deliver lasting value for your business.
                   </p>
                 </div>
 
@@ -100,57 +150,113 @@ export default function Contact({ gap = "default", className }: ContactProps) {
                   </p>
                 </div>
 
-                <form className="row gy-6" onSubmit={(e) => e.preventDefault()}>
+                {/* Result Banner */}
+                {result && (
+                  <div className={cn(
+                    "mb-6 p-4 rounded-lg flex items-start gap-3 text-sm",
+                    result.type === "success"
+                      ? "bg-green-50 border border-green-200 text-green-800"
+                      : "bg-red-50 border border-red-200 text-red-800"
+                  )}>
+                    {result.type === "success"
+                      ? <CheckCircleFill className="size-5 text-green-600 shrink-0 mt-0.5" />
+                      : <AlertCircleFill className="size-5 text-red-600 shrink-0 mt-0.5" />
+                    }
+                    <span>{result.message}</span>
+                  </div>
+                )}
+
+                <form className="row gy-6" onSubmit={handleSubmit}>
                   {/* Name & Email */}
                   <div className="column-12 sm:column-6">
-                    <label className="block mb-2 text-sm font-semibold text-darker" htmlFor="contact-name">
-                      Your Name
+                    <label className="block mb-2 text-sm font-semibold text-darker" htmlFor={`${formId}-name`}>
+                      Your Name *
                     </label>
-                    <input className="border border-light bg-white text-darker placeholder-body px-4 py-3 w-full outline-offset-0 outline-transparent focus:outline-primary focus:border-transparent transition-all text-sm" type="text" id="contact-name" placeholder="Enter your name" required />
+                    <input
+                      className={inputClass}
+                      type="text"
+                      id={`${formId}-name`}
+                      placeholder="Enter your name"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
                   </div>
 
                   <div className="column-12 sm:column-6">
-                    <label className="block mb-2 text-sm font-semibold text-darker" htmlFor="contact-email">
-                      Your Email
+                    <label className="block mb-2 text-sm font-semibold text-darker" htmlFor={`${formId}-email`}>
+                      Your Email *
                     </label>
-                    <input className="border border-light bg-white text-darker placeholder-body px-4 py-3 w-full outline-offset-0 outline-transparent focus:outline-primary focus:border-transparent transition-all text-sm" type="email" id="contact-email" placeholder="Enter your email" required />
+                    <input
+                      className={inputClass}
+                      type="email"
+                      id={`${formId}-email`}
+                      placeholder="Enter your email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    />
                   </div>
 
                   {/* Phone & Service Type */}
                   <div className="column-12 sm:column-6">
-                    <label className="block mb-2 text-sm font-semibold text-darker" htmlFor="contact-phone">
+                    <label className="block mb-2 text-sm font-semibold text-darker" htmlFor={`${formId}-phone`}>
                       Your Phone
                     </label>
-                    <input className="border border-light bg-white text-darker placeholder-body px-4 py-3 w-full outline-offset-0 outline-transparent focus:outline-primary focus:border-transparent transition-all text-sm" type="tel" id="contact-phone" placeholder="+12 345 6758 29" required />
+                    <input
+                      className={inputClass}
+                      type="tel"
+                      id={`${formId}-phone`}
+                      placeholder="+977 98XXXXXXXX"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    />
                   </div>
 
                   <div className="column-12 sm:column-6">
-                    <label className="block mb-2 text-sm font-semibold text-darker" htmlFor="contact-service">
+                    <label className="block mb-2 text-sm font-semibold text-darker" htmlFor={`${formId}-service`}>
                       Service Type
                     </label>
-                    <select id="contact-service" className="border border-light bg-white text-darker px-4 py-3 w-full outline-offset-0 outline-transparent focus:outline-primary focus:border-transparent transition-all text-sm appearance-none cursor-pointer" defaultValue="" required>
-                      <option value="" disabled>
-                        Select Service
-                      </option>
-                      <option value="architectural">Architectural Design</option>
-                      <option value="interior">Interior Design</option>
-                      <option value="renovation">Residential Renovation</option>
-                      <option value="execution">Design & Execution</option>
+                    <select
+                      id={`${formId}-service`}
+                      className={cn(inputClass, "appearance-none cursor-pointer")}
+                      value={formData.service}
+                      onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                    >
+                      <option value="">Select Service</option>
+                      <option value="Construction">Construction</option>
+                      <option value="Interior Design">Interior Design</option>
+                      <option value="Residential Renovation">Residential Renovation</option>
+                      <option value="General Inquiry">General Inquiry</option>
                     </select>
                   </div>
 
                   {/* Message */}
                   <div className="column-12">
-                    <label className="block mb-2 text-sm font-semibold text-darker" htmlFor="contact-message">
-                      Message
+                    <label className="block mb-2 text-sm font-semibold text-darker" htmlFor={`${formId}-message`}>
+                      Message *
                     </label>
-                    <textarea id="contact-message" rows={5} className="border border-light bg-white text-darker placeholder-secondary px-4 py-3 w-full outline-offset-0 outline-transparent focus:outline-primary focus:border-transparent transition-all resize-none text-sm" placeholder="Enter your message" required />
+                    <textarea
+                      id={`${formId}-message`}
+                      rows={5}
+                      className={cn(inputClass, "resize-none")}
+                      placeholder="Enter your message"
+                      required
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    />
                   </div>
 
                   {/* Submit Button */}
                   <div className="column-12 pt-2">
-                    <Button variant="default" size="xl" className="rounded-none" disabled>
-                      <span>Send Message</span>
+                    <Button
+                      type="submit"
+                      variant="default"
+                      size="xl"
+                      className="rounded-none"
+                      disabled={isSubmitting}
+                    >
+                      <span>{isSubmitting ? "Sending..." : "Send Message"}</span>
                     </Button>
                   </div>
                 </form>

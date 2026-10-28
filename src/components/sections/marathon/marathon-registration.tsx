@@ -134,12 +134,35 @@ export default function MarathonRegistration() {
     setIsSubmitting(true);
 
     try {
-      // Simulate backend submission delay
-      await new Promise((resolve) => setTimeout(resolve, 900));
+      const generatedId = `RM15K-${Math.floor(1000 + Math.random() * 9000)}`;
 
-      const newRegistrationId = `RM15K-${Math.floor(1000 + Math.random() * 9000)}`;
+      const res = await fetch("/api/marathon-register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: formData.fullName.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          age: formData.age,
+          gender: formData.gender,
+          address: formData.address.trim(),
+          emergencyName: formData.emergencyName.trim(),
+          emergencyPhone: formData.emergencyPhone.trim(),
+          registrationId: generatedId,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setDuplicateWarning(data.error || "Failed to process registration. Please try again.");
+        return;
+      }
+
+      const assignedId = data.registrationId || generatedId;
+
       const newReceipt: RegistrationReceipt = {
-        registrationId: newRegistrationId,
+        registrationId: assignedId,
         fullName: formData.fullName.trim(),
         email: formData.email.trim(),
         phone: formData.phone.trim(),
@@ -264,9 +287,10 @@ export default function MarathonRegistration() {
                   </div>
                 </div>
 
-                {/* Developer Backend Notice */}
-                <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20 text-xs text-white/80 max-w-2xl mx-auto">
-                  <strong className="text-primary">Backend Integration Note:</strong> This submission was validated and recorded in client session storage. To connect a live backend database, integrate your API endpoint in <code className="text-primary-light">src/components/sections/marathon/marathon-registration.tsx</code>. Registration data is safely structured and ready for POST payload dispatch.
+                {/* Email Confirmation Notice */}
+                <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20 text-xs text-white/90 max-w-2xl mx-auto flex items-center gap-3">
+                  <CheckCircleFill className="size-5 text-primary shrink-0" />
+                  <span>A confirmation email with your Registration ID has been dispatched to <strong>{receipt.email}</strong>. Please check your inbox and spam folder.</span>
                 </div>
 
                 {/* Action Buttons */}
