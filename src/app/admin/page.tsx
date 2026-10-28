@@ -1390,13 +1390,31 @@ export default function AdminPage() {
 
                         {/* ACTIONS */}
                         <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                          <button
-                            type="button"
-                            onClick={() => setDeleteCandidate(runner)}
-                            className="text-xs text-red-400/80 hover:text-red-400 hover:bg-red-500/10 px-2.5 py-1.5 rounded-lg border border-red-500/20 hover:border-red-500/40 transition-colors cursor-pointer"
-                          >
-                            Delete
-                          </button>
+                          <div className="flex items-center justify-end gap-2">
+                            <a
+                              href={`/api/marathon-pass/${runner.registration_id}`}
+                              download={`Rakesh-Marathon-Pass-${runner.registration_id}.png`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 text-xs text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 px-2.5 py-1.5 rounded-lg border border-amber-500/30 transition-colors cursor-pointer"
+                              title="Download Official Runner Pass Card (PNG)"
+                            >
+                              <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                              </svg>
+                              <span>Pass PNG</span>
+                            </a>
+
+                            <button
+                              type="button"
+                              onClick={() => setDeleteCandidate(runner)}
+                              className="text-xs text-red-400/80 hover:text-red-400 hover:bg-red-500/10 px-2.5 py-1.5 rounded-lg border border-red-500/20 hover:border-red-500/40 transition-colors cursor-pointer"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );

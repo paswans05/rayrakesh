@@ -24,6 +24,7 @@ interface RegistrationReceipt {
   tshirtSize?: string;
   address: string;
   registeredAt: string;
+  downloadUrl?: string;
 }
 
 export default function MarathonRegistrationModal() {
@@ -160,6 +161,7 @@ export default function MarathonRegistrationModal() {
             tshirtSize: data.registration.tshirt_size || "M",
             address: data.registration.address,
             registeredAt: data.registration.created_at || "Previously Registered",
+            downloadUrl: `/passes/Rakesh-Marathon-Pass-${data.registration.registration_id}.png`,
           };
           setReceipt(existingReceipt);
           setCardStatusNotice("Found existing record in SQLite database! Your runner card is displayed below.");
@@ -186,6 +188,7 @@ export default function MarathonRegistrationModal() {
           hour: "2-digit",
           minute: "2-digit",
         }),
+        downloadUrl: data.downloadUrl || `/passes/Rakesh-Marathon-Pass-${assignedId}.png`,
       };
 
       setReceipt(newReceipt);
@@ -198,9 +201,22 @@ export default function MarathonRegistrationModal() {
   };
 
   const handleDownloadCard = async () => {
-    if (!cardRef.current) return;
     setIsDownloadingCard(true);
     try {
+      const regId = receipt?.registrationId;
+      if (regId) {
+        // Direct download of the server-generated official high-resolution PNG pass
+        const targetUrl = receipt.downloadUrl || `/passes/Rakesh-Marathon-Pass-${regId}.png`;
+        const link = document.createElement("a");
+        link.href = targetUrl;
+        link.download = `Rakesh-Marathon-Pass-${regId}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        return;
+      }
+
+      if (!cardRef.current) return;
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
         pixelRatio: 2,
@@ -429,6 +445,20 @@ export default function MarathonRegistrationModal() {
                   <span>Register Another</span>
                 </Button>
               </div>
+
+              {receipt.downloadUrl && (
+                <div className="mt-3 text-center">
+                  <a
+                    href={receipt.downloadUrl}
+                    download={`Rakesh-Marathon-Pass-${receipt.registrationId}.png`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs text-primary hover:text-primary-dark transition-colors font-mono underline"
+                  >
+                    <span>Direct File Download: {receipt.downloadUrl}</span>
+                  </a>
+                </div>
+              )}
             </div>
           ) : (
             /* ── REGISTRATION INPUT FORM ── */

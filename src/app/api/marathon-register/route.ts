@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import fs from "node:fs";
+import path from "node:path";
 import { sendMail } from "@/lib/mailer";
 import { upsertRegistration, getRegistrationByEmail } from "@/lib/db";
 import { generateRunnerPassPng } from "@/lib/generate-runner-pass";
@@ -73,6 +75,10 @@ export async function POST(req: NextRequest) {
     });
 
     // ── Generate Digital Runner Pass PNG Card Attachment ──
+    const passFileName = `Rakesh-Marathon-Pass-${regId}.png`;
+    const passDownloadPath = `/passes/${passFileName}`;
+    const directApiDownloadPath = `/api/marathon-pass/${regId}`;
+
     let passBuffer: Buffer | null = null;
     try {
       passBuffer = await generateRunnerPassPng({
@@ -84,14 +90,36 @@ export async function POST(req: NextRequest) {
         address: address.trim(),
         date: timestamp,
       });
+
+      // Save locally to public/passes so it is immediately downloadable via URL
+      if (passBuffer) {
+        const passesDir = path.join(process.cwd(), "public", "passes");
+        await fs.promises.mkdir(passesDir, { recursive: true });
+        const passFilePath = path.join(passesDir, passFileName);
+        await fs.promises.writeFile(passFilePath, passBuffer);
+        console.log(`[/api/marathon-register] Pass card saved to public file: ${passFilePath}`);
+      }
     } catch (genErr) {
       console.error("[marathon-register] Failed to generate runner pass card:", genErr);
     }
 
+    // Determine site URL for absolute email links
+    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
+    const proto = req.headers.get("x-forwarded-proto") || (host.startsWith("localhost") ? "http" : "https");
+    const siteUrl = (
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      (host ? `${proto}://${host}` : "") ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
+      "http://localhost:3000"
+    ).replace(/\/$/, "");
+
+    const fullPassDownloadUrl = `${siteUrl}${passDownloadPath}`;
+    const fullApiDownloadUrl = `${siteUrl}${directApiDownloadPath}`;
+
     const passAttachments = passBuffer
       ? [
           {
-            filename: `Rakesh-Marathon-Pass-${regId}.png`,
+            filename: passFileName,
             content: passBuffer,
             contentType: "image/png",
             cid: "runner-pass-card",
@@ -120,11 +148,23 @@ export async function POST(req: NextRequest) {
             <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">T-Shirt Size</td><td style="padding: 8px 0; color: #CAA05C; font-weight: bold;">${escapeHtml(tshirtSize || "M")}</td></tr>
             <tr><td style="padding: 8px 0; color: #4B535D; font-weight: 600;">City / Address</td><td style="padding: 8px 0; color: #202a34;">${escapeHtml(address)}</td></tr>
           </table>
+
+          <!-- Direct Download Link for Organizer -->
+          <div style="text-align: center; margin: 22px 0 16px;">
+            <a href="${fullPassDownloadUrl}" download="${passFileName}"
+               style="background: #CAA05C; color: #0f1720; padding: 12px 24px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 14px; display: inline-block;">
+              ⬇ Download Runner Pass (${escapeHtml(regId)})
+            </a>
+            <p style="color: #6B7280; font-size: 11px; margin: 6px 0 0;">
+              URL: <a href="${fullPassDownloadUrl}" style="color: #CAA05C; word-break: break-all;">${fullPassDownloadUrl}</a>
+            </p>
+          </div>
+
           ${
             passBuffer
               ? `
-          <div style="margin-top: 20px; text-align: center;">
-            <p style="font-size: 12px; color: #4B535D; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Participant Pass Card Attached</p>
+          <div style="margin-top: 14px; text-align: center;">
+            <p style="font-size: 12px; color: #4B535D; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Participant Pass Card Preview</p>
             <img src="cid:runner-pass-card" alt="Participant Pass" style="width: 100%; max-width: 480px; height: auto; border-radius: 8px; border: 1px solid #CAA05C;" />
           </div>`
               : ""
@@ -181,6 +221,18 @@ export async function POST(req: NextRequest) {
             </table>
           </div>
 
+          <!-- Direct Download CTA Button -->
+          <div style="text-align: center; margin: 24px 0 20px; background: #fdf8ed; border: 1.5px dashed #CAA05C; padding: 18px; border-radius: 10px;">
+            <p style="font-size: 13px; font-weight: bold; color: #202a34; margin: 0 0 10px;">Your Official Runner Pass is Ready for Download:</p>
+            <a href="${fullPassDownloadUrl}" download="${passFileName}"
+               style="background: #CAA05C; color: #0f1720; padding: 14px 28px; border-radius: 8px; font-weight: 800; font-size: 15px; text-decoration: none; display: inline-block; box-shadow: 0 4px 12px rgba(202,160,92,0.35);">
+              ⬇ Download Official Pass Card (PNG)
+            </a>
+            <p style="color: #6B7280; font-size: 11px; margin: 10px 0 0;">
+              Direct Link: <a href="${fullPassDownloadUrl}" style="color: #CAA05C; word-break: break-all;">${fullPassDownloadUrl}</a>
+            </p>
+          </div>
+
           <!-- Digital Runner Pass Card Preview -->
           ${
             passBuffer
@@ -190,7 +242,7 @@ export async function POST(req: NextRequest) {
               🎟 Your Digital Runner Pass
             </div>
             <p style="font-size: 13px; color: #4B535D; margin: 0 0 12px; line-height: 1.5;">
-              Your official high-resolution runner pass is <strong>attached to this email</strong> (<code>Rakesh-Marathon-Pass-${escapeHtml(regId)}.png</code>). Please save it to your phone or print it.
+              Your official high-resolution runner pass is attached (<code>${passFileName}</code>) and saved for online download above.
             </p>
             <div style="background: #0f1720; padding: 10px; border-radius: 12px; border: 1.5px solid #CAA05C; display: inline-block; max-width: 100%;">
               <img src="cid:runner-pass-card" alt="Official Runner Pass" style="width: 100%; max-width: 500px; height: auto; border-radius: 8px; display: block;" />
@@ -253,6 +305,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       registrationId: regId,
+      downloadUrl: passDownloadPath,
+      fullDownloadUrl: fullPassDownloadUrl,
+      apiDownloadUrl: directApiDownloadPath,
+      fileName: passFileName,
       isNew,
       emailDelivered: {
         admin: adminResult.status === "fulfilled",
