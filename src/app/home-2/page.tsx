@@ -10,8 +10,8 @@ import Reviews from "@/components/sections/reviews";
 import Blog from "@/components/sections/blog";
 
 export const metadata: Metadata = {
-  title: "Rakesh Ray - Home 2",
-  description: "Rakesh Ray is a NextJS Interior Design Landing Page Template with a modern design and a premium visual experience.",
+  title: "Rakesh Ray | Public Service & Vision",
+  description: "Official portal of Rakesh Ray — Politician, social worker, and community builder in Birgunj, Parsa, Madhesh Province, Nepal.",
 };
 
 export default function HomeTwo() {

@@ -4,8 +4,8 @@ import PageHeader from "@/components/sections/page-header";
 import BlogAll from "@/components/sections/blog-all";
 
 export const metadata: Metadata = {
-  title: "Our Blog",
-  description: "Rakesh Ray is a NextJS Interior Design Landing Page Template with a modern design and a premium visual experience.",
+  title: "News & Community Articles | Rakesh Ray",
+  description: "Read the latest updates, social welfare articles, marathon highlights, and community development stories from Rakesh Ray in Birgunj, Parsa.",
 };
 
 export default function BlogPage() {

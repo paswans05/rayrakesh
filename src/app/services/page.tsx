@@ -5,8 +5,8 @@ import CTA from "@/components/sections/cta";
 import Reviews from "@/components/sections/reviews";
 
 export const metadata = {
-  title: "Our Services | Rakesh Ray ",
-  description: "Rakesh Ray is a NextJS Interior Design Landing Page Template with a modern design and a premium visual experience.",
+  title: "Community Services & Public Welfare | Rakesh Ray",
+  description: "Discover public welfare services, sports development, youth empowerment, and social programs led by Rakesh Ray in Birgunj, Parsa.",
 };
 
 export default function ServicesPage() {

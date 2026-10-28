@@ -4,8 +4,8 @@ import PageHeader from "@/components/sections/page-header";
 import ProjectsAll from "@/components/sections/projects-all";
 
 export const metadata: Metadata = {
-  title: "Our Projects - Rakesh Ray",
-  description: "Rakesh Ray is a NextJS Interior Design Landing Page Template with a modern design and a premium visual experience.",
+  title: "Social Initiatives & Projects | Rakesh Ray",
+  description: "Explore community infrastructure, public welfare programs, and youth development initiatives led by Rakesh Ray in Parsa, Madhesh Province, Nepal.",
 };
 
 export default function ProjectsPage() {

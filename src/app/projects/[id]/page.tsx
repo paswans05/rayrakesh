@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const project = PROJECTS_DATA.find((item) => item.id === id) || PROJECTS_DATA[0];
   return {
     title: `${project.title} - Rakesh Ray`,
-    description: "Rakesh Ray is a NextJS Interior Design Landing Page Template with a modern design and a premium visual experience.",
+    description: `Details of "${project.title}" - Community initiative and social development project guided by Rakesh Ray in Parsa, Nepal.`,
   };
 }
 

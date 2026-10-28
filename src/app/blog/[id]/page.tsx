@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = BLOG_DATA.find((item) => item.id === id) || BLOG_DATA[0];
   return {
     title: `${post.title} - Rakesh Ray`,
-    description: "Rakesh Ray is a NextJS Interior Design Landing Page Template with a modern design and a premium visual experience.",
+    description: post.excerpt || `Read about "${post.title}" - Insights, youth inspiration, and community perspectives from Rakesh Ray, Birgunj, Parsa.`,
   };
 }
 

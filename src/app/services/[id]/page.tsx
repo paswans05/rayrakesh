@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `${service.title} - Rakesh Ray Services`,
-    description: "Rakesh Ray is a NextJS Interior Design Landing Page Template with a modern design and a premium visual experience.",
+    description: `Learn more about "${service.title}" - Public service and community empowerment initiative by Rakesh Ray in Parsa, Nepal.`,
   };
 }
 

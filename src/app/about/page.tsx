@@ -6,8 +6,8 @@ import TeamCarousel from "@/components/sections/team-carousel";
 import Reviews from "@/components/sections/reviews";
 
 export const metadata = {
-  title: "About Us | Rakesh Ray",
-  description: "Rakesh Ray is a NextJS Interior Design Landing Page Template with a modern design and a premium visual experience.",
+  title: "About Rakesh Ray | Journey, Vision & Social Work",
+  description: "Learn about Rakesh Ray's background, commitment to public service, community welfare initiatives, and vision for the youth of Birgunj, Parsa, and Madhesh Province, Nepal.",
 };
 
 export default function AboutPage() {

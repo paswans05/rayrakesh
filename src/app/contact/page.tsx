@@ -4,8 +4,8 @@ import PageHeader from "@/components/sections/page-header";
 import Contact from "@/components/sections/conact";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Rakesh Ray",
-  description: "Rakesh Ray is a politician and a social worker from Birgunj, Parsa.",
+  title: "Contact Rakesh Ray | Office & Community Outreach",
+  description: "Get in touch with Rakesh Ray's office in Jingadawa, Birgunj, Parsa, Madhesh Province, Nepal. Reach out for public service matters, community welfare, and marathon inquiries.",
 };
 
 export default function ContactPage() {

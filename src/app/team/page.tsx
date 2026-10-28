@@ -5,8 +5,8 @@ import TeamFeatured from "@/components/sections/team-featured";
 import TeamShowcase from "@/components/sections/team-showcase";
 
 export const metadata: Metadata = {
-  title: "Team Members - Rakesh Ray",
-  description: "Rakesh Ray is a NextJS Interior Design Landing Page Template with a modern design and a premium visual experience.",
+  title: "Our Team & Volunteers | Rakesh Ray",
+  description: "Meet the organizers, community volunteers, and campaign team working alongside Rakesh Ray for social progress in Parsa, Nepal.",
 };
 
 export default function TeamPage() {

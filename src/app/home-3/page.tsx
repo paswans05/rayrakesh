@@ -11,8 +11,8 @@ import Blog from "@/components/sections/blog";
 import { NavbarConfig } from "@/context/navbar-context";
 
 export const metadata: Metadata = {
-  title: "Rakesh Ray - Home 3",
-  description: "Rakesh Ray is a NextJS Interior Design Landing Page Template with a modern design and a premium visual experience.",
+  title: "Rakesh Ray | Community Leadership & Marathon",
+  description: "Official portal of Rakesh Ray — Politician, social worker, and organizer of the 15 KM Rakesh Marathon in Parsa, Nepal.",
 };
 
 export default function HomeThree() {

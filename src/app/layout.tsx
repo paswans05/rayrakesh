@@ -10,10 +10,42 @@ import "@/css/globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Rakesh Ray - NextJS Interior Design Landing Page Template",
-    template: "%s | Rakesh Ray - NextJS Interior Design Landing Page Template",
+    default: "Rakesh Ray | Politician & Social Worker — Birgunj, Parsa, Nepal",
+    template: "%s | Rakesh Ray",
   },
-  description: "Rakesh Ray is a NextJS Interior Design Landing Page Template with a modern design and a premium visual experience.",
+  description:
+    "Official website of Rakesh Ray, dedicated politician and social worker from Birgunj, Parsa, Madhesh Province, Nepal. Leading community development, youth empowerment, and the 15 KM Rakesh Marathon.",
+  keywords: [
+    "Rakesh Ray",
+    "Rakesh Ray Birgunj",
+    "Rakesh Ray Parsa",
+    "Rakesh Ray Nepal",
+    "Politician Birgunj Parsa",
+    "Social Worker Nepal",
+    "Madhesh Province Leader",
+    "Rakesh Marathon",
+    "15 KM Marathon Nepal",
+    "Parsa Marathon",
+    "Youth Empowerment Nepal",
+    "Jingadawa Parsa",
+  ],
+  authors: [{ name: "Rakesh Ray" }],
+  creator: "Rakesh Ray",
+  publisher: "Rakesh Ray",
+  openGraph: {
+    title: "Rakesh Ray | Politician & Social Worker — Birgunj, Parsa",
+    description:
+      "Official website of Rakesh Ray, dedicated politician and social worker from Birgunj, Parsa, Madhesh Province, Nepal. Leading community initiatives, youth empowerment, and the 15 KM Rakesh Marathon.",
+    siteName: "Rakesh Ray",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rakesh Ray | Politician & Social Worker — Birgunj, Parsa",
+    description:
+      "Official website of Rakesh Ray — Leader, visionary, and organizer of the 15 KM Rakesh Marathon in Parsa, Madhesh Province, Nepal.",
+  },
 };
 
 export default function RootLayout({
