@@ -114,15 +114,28 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
 
         {/* Prize Money Strip directly in Hero */}
         <div className="container mt-12 md:mt-16 lg:mt-20">
-          <div className="p-6 md:p-8 rounded-2xl bg-darker/80 border border-white/15 backdrop-blur-xl shadow-2xl">
+          <div className="p-6 md:p-8 rounded-2xl bg-darker/85 border border-white/15 backdrop-blur-xl shadow-2xl">
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b border-white/10">
               <div>
-                <span className="text-xs uppercase tracking-widest text-primary font-bold">Official Prize Pool</span>
-                <h3 className="text-xl sm:text-2xl font-bold text-white">Total Prize Money: {MARATHON_DETAILS.totalPrizePool}</h3>
+                <span className="text-xs uppercase tracking-widest text-primary font-bold">
+                  {isNepali ? "आधिकारिक पुरस्कार राशि" : "Official Prize Pool"}
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold text-white">
+                  {isNepali ? `कुल पुरस्कार राशि: ${t("marathon.prize_pool", "रु. ५०,०००")}` : `Total Prize Money: ${MARATHON_DETAILS.totalPrizePool}`}
+                </h3>
               </div>
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-white/70">
-                <span className="px-2.5 py-1 rounded bg-white/10 text-white font-mono">15 KM Exclusively</span>
-                <span>• Top 10: Medals • All Participants: Certificates</span>
+              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-white/80">
+                <span className="px-2.5 py-1 rounded-md bg-white/10 text-white font-mono font-semibold">
+                  {isNepali ? "१५ किमी दौड" : "15 KM Exclusively"}
+                </span>
+                <span>•</span>
+                <span className="text-amber-300 font-medium">
+                  {isNepali ? "शीर्ष १०: पदक 🏅" : "Top 10: Medals 🏅"}
+                </span>
+                <span>•</span>
+                <span className="text-primary font-medium">
+                  {isNepali ? "सबैलाई: प्रमाणपत्र 📜" : "All Runners: Certificates 📜"}
+                </span>
               </div>
             </div>
 
@@ -148,23 +161,53 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
                         "text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full",
                         isGold ? "bg-primary text-darker" : isSilver ? "bg-white/20 text-white" : "bg-[#d97706]/30 text-[#fcd34d]"
                       )}>
-                        {prize.badge}
+                        {isNepali
+                          ? (prize.rank === 1 ? "१st पुरस्कार" : prize.rank === 2 ? "२nd पुरस्कार" : "३rd पुरस्कार")
+                          : prize.badge}
                       </span>
                       <MedalFill className={cn(
                         "size-5",
                         isGold ? "text-[#ffd700]" : isSilver ? "text-[#e2e8f0]" : "text-[#cd7f32]"
                       )} />
                     </div>
-                    <div className="text-xs text-white/60 font-medium uppercase tracking-wider">{prize.label}</div>
+                    <div className="text-xs text-white/60 font-medium uppercase tracking-wider">
+                      {isNepali
+                        ? (prize.rank === 1 ? "विजेता (Champion)" : prize.rank === 2 ? "दोस्रो स्थान (Runner-Up)" : "तेस्रो स्थान (3rd Place)")
+                        : prize.label}
+                    </div>
                     <div className={cn(
                       "text-2xl sm:text-3xl font-black mt-1 tracking-tight",
                       isGold ? "text-[#fef08a]" : isSilver ? "text-white" : "text-[#fed7aa]"
                     )}>
-                      {prize.amountNPR}
+                      {isNepali
+                        ? (prize.rank === 1 ? "रु. २५,०००" : prize.rank === 2 ? "रु. १५,०००" : "रु. १०,०००")
+                        : prize.amountNPR}
                     </div>
                   </div>
                 );
               })}
+            </div>
+
+            {/* Quick Summary Strip: Top 10 Medals, Participant Certificate, Safety Fleet */}
+            <div className="mt-5 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs text-white/75">
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-amber-400" />
+                <span>
+                  <strong>{isNepali ? "शीर्ष १० धावक:" : "Top 10 Finishers:"}</strong> {isNepali ? "आधिकारिक पदक 🏅 तथा सम्मान" : "Official Finisher Medal 🏅"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-primary" />
+                <span>
+                  <strong>{isNepali ? "सबै सहभागी (Every Participant):" : "Every Participant:"}</strong> {isNepali ? "आधिकारिक सहभागिता प्रमाणपत्र 📜" : "Official Certificate of Participation 📜"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-red-400" />
+                <span>
+                  <strong>{isNepali ? "स्वास्थ्य सुरक्षा:" : "Safety Fleet:"}</strong> {isNepali ? "१ एम्बुलेन्स, प्राथमिक उपचार किट, आपतकालीन बाइक" : "1 Ambulance, First Aid Kits, Support Bike"}
+                </span>
+              </div>
             </div>
           </div>
         </div>

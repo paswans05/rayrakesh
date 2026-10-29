@@ -14,7 +14,7 @@ export default function MarathonCommunity() {
       <div className="absolute -top-24 -left-24 w-96 h-96 bg-danger/10 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="container relative z-10">
-        
+
         {/* Section Heading */}
         <SectionHead className="text-center max-w-3xl mx-auto">
           <ScrollReveal mode="fade" direction="bottom">
@@ -31,10 +31,10 @@ export default function MarathonCommunity() {
         </SectionHead>
 
         <SectionContent className="mt-12">
-          
+
           {/* Main Campaign Feature: Robust flex-based 2-column layout */}
           <div className="flex flex-col lg:flex-row gap-8 items-stretch max-w-6xl mx-auto">
-            
+
             {/* Left: Campaign Vision Statement */}
             <div className="w-full lg:w-7/12 flex flex-col">
               <ScrollReveal mode="fade" direction="bottom" className="h-full flex flex-col flex-1">
@@ -73,7 +73,7 @@ export default function MarathonCommunity() {
                       Designed as an inclusive athletic gathering where amateur runners, aspiring youth, and veteran marathoners come together under a unified 15 KM challenge.
                     </p>
                   </div>
-                  
+
                   <div className="mt-6 pt-4">
                     <Button
                       size="lg"
@@ -96,7 +96,7 @@ export default function MarathonCommunity() {
                       <div className="text-xs text-white/60 mt-1 uppercase tracking-wider font-semibold">Single Distance</div>
                     </div>
                     <div className="p-4 rounded-xl bg-white/5 border border-white/5">
-                      <div className="text-2xl sm:text-3xl font-black text-white">NPR 29K</div>
+                      <div className="text-2xl sm:text-3xl font-black text-white">{MARATHON_DETAILS.totalPrizePool}</div>
                       <div className="text-xs text-white/60 mt-1 uppercase tracking-wider font-semibold">Prize Pool</div>
                     </div>
                   </div>

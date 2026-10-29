@@ -39,7 +39,7 @@ export const MARATHON_DETAILS = {
   category: "Community Marathon",
   location: "Parsa, Nepal",
   currency: "NPR",
-  totalPrizePool: "NPR 29,000",
+  totalPrizePool: "NPR 50,000",
   campaignLeader: "Rakesh Ray",
   
   // Official parameters - marked as To Be Announced where pending
@@ -54,7 +54,7 @@ export const MARATHON_DETAILS = {
   },
 
   prizesHeading: "RUN FOR GLORY. RACE FOR THE PRIZE.",
-  prizesSubheading: "Cash prizes for the top three, medals for the top ten, and a certificate for every participant.",
+  prizesSubheading: "1st: NPR 25,000/- • 2nd: NPR 15,000/- • 3rd: NPR 10,000/- • Medals for Top 10 🏅 • Certificate for Every Participant.",
 };
 
 export const MARATHON_PRIZES: MarathonPrize[] = [
@@ -62,43 +62,98 @@ export const MARATHON_PRIZES: MarathonPrize[] = [
     rank: 1,
     label: "Champion",
     badge: "1st Place",
-    amountNPR: "NPR 15,000",
-    amountNumber: 15000,
+    amountNPR: "NPR 25,000",
+    amountNumber: 25000,
     tier: "gold",
-    description: "First place in the 15 KM Rakesh Marathon.",
+    description: "Champion of the 15 KM Rakesh Marathon.",
     perks: [
-      "Cash prize: NPR 15,000",
-      "Medal for a top-ten finisher",
-      "Certificate for every participant",
+      "Cash Prize: NPR 25,000/-",
+      "Champion Gold Trophy & Gold Medal",
+      "Top 10 Finisher Medal 🏅",
+      "Official Certificate for Every Participant",
+      "Official Winner Kit & T-Shirt",
     ],
   },
   {
     rank: 2,
     label: "Runner-Up",
     badge: "2nd Place",
-    amountNPR: "NPR 9,000",
-    amountNumber: 9000,
+    amountNPR: "NPR 15,000",
+    amountNumber: 15000,
     tier: "silver",
     description: "Second place in the 15 KM Rakesh Marathon.",
     perks: [
-      "Cash prize: NPR 9,000",
-      "Medal for a top-ten finisher",
-      "Certificate for every participant",
+      "Cash Prize: NPR 15,000/- (15k)",
+      "Runner-Up Silver Trophy & Silver Medal",
+      "Top 10 Finisher Medal 🏅",
+      "Official Certificate for Every Participant",
+      "Official Runner Kit & T-Shirt",
     ],
   },
   {
     rank: 3,
     label: "Third Place",
     badge: "3rd Place",
-    amountNPR: "NPR 5,000",
-    amountNumber: 5000,
+    amountNPR: "NPR 10,000",
+    amountNumber: 10000,
     tier: "bronze",
     description: "Third place in the 15 KM Rakesh Marathon.",
     perks: [
-      "Cash prize: NPR 5,000",
-      "Medal for a top-ten finisher",
-      "Certificate for every participant",
+      "Cash Prize: NPR 10,000/- (10k)",
+      "Third Place Bronze Trophy & Bronze Medal",
+      "Top 10 Finisher Medal 🏅",
+      "Official Certificate for Every Participant",
+      "Official Runner Kit & T-Shirt",
     ],
+  },
+];
+
+export const MARATHON_SPECIAL_AWARDS = {
+  topTen: {
+    title: "Top 10 Finishers",
+    badge: "Rank 1 to 10",
+    reward: "Official Finisher Medal 🏅",
+    description: "Every runner finishing in the Top 10 receives a prestigious medal and official podium recognition.",
+    perks: [
+      "Official Top 10 Finisher Medal 🏅",
+      "Certificate of High Achievement",
+      "Recognition on the Official Leaderboard",
+    ],
+  },
+  allParticipants: {
+    title: "Every Participant",
+    badge: "All Runners",
+    reward: "Certificate of Participation",
+    description: "Every single registered runner who participates receives an official Certificate of Participation / Finisher Certificate.",
+    perks: [
+      "Official Certificate for Every Participant",
+      "Rakesh Marathon Event T-Shirt Kit",
+      "Digital Runner Pass Card & Refreshments",
+    ],
+  },
+};
+
+export const MARATHON_SAFETY_FLEET = [
+  {
+    id: "ambulance",
+    title: "1 Dedicated Emergency Ambulance",
+    subtitle: "Required mobile medical unit on active standby",
+    description: "A fully equipped emergency ambulance with oxygen and vital life support stationed along the route to respond immediately to any medical emergency.",
+    badge: "Required for Emergency",
+  },
+  {
+    id: "first-aid",
+    title: "First Aid Kits & Paramedic Hubs",
+    subtitle: "Available at start, finish & midway checkpoints",
+    description: "Complete first aid kits, emergency physio sprays, electrolyte hydration, and trained medical volunteers ready at every station.",
+    badge: "Medical Assistance",
+  },
+  {
+    id: "bike-escort",
+    title: "Emergency Support Bike Behind Runners",
+    subtitle: "Trailing escort for instant on-course rescue",
+    description: "A designated emergency motorcycle/bike rides right behind the runners throughout the 15 KM course to provide immediate help to anyone in distress.",
+    badge: "Mobile Rescue Support",
   },
 ];
 
@@ -107,35 +162,35 @@ export const ROUTE_CHECKPOINTS: RouteCheckpoint[] = [
     distance: "0.0 KM",
     title: "Starting Line & Staging Hub",
     landmark: "Parsa Staging Area (Official Location TBA)",
-    description: "Warm-up zones, timing chip sync, bag drop facilities, and official race flag-off.",
+    description: "Warm-up zones, timing check, bag drop facilities, ambulance standby, and official race flag-off.",
     type: "start",
   },
   {
     distance: "3.5 KM",
     title: "First Hydration Point & Timing Mat",
     landmark: "Parsa Route (Landmark TBA)",
-    description: "Mineral water, energy electrolytes, sponge stations, and live timing tracking split.",
+    description: "Mineral water, energy electrolytes, sponge stations, and support bike escort passing.",
     type: "water",
   },
   {
     distance: "7.5 KM",
-    title: "Midway Checkpoint & Medical Hub",
+    title: "Midway Checkpoint & Medical Aid Hub",
     landmark: "Parsa Mid-Course (Landmark TBA)",
-    description: "Full paramedic assistance, physio spray stations, timing check mat, and hydration replenishment.",
+    description: "First aid kit station, paramedic assistance, physio spray, ambulance link, and hydration replenishment.",
     type: "medical",
   },
   {
     distance: "11.5 KM",
-    title: "Crucial Climb & Fueling Station",
+    title: "Crucial Stage & Fueling Station",
     landmark: "Parsa Route (Landmark TBA)",
-    description: "Energy gels, hydration replenishment, cheering volunteers, and pacing support.",
+    description: "Energy replenishment, water, cheering volunteers, and pacing monitoring.",
     type: "water",
   },
   {
     distance: "15.0 KM",
     title: "Official Finish Line & Winners' Podium",
     landmark: "Parsa Finish Area (Official Location TBA)",
-    description: "Participant certificates, top-ten medals, and official podium ceremony.",
+    description: "Prize distribution (1st: 25k, 2nd: 15k, 3rd: 10k), Top 10 medals 🏅, and certificates for every participant.",
     type: "finish",
   },
 ];
@@ -154,43 +209,43 @@ export const PREPARATION_GUIDELINES: PreparationTip[] = [
     iconName: "Capsule",
   },
   {
-    category: "Footwear & Gear",
-    title: "Proper Running Shoes",
-    description: "Run in tested, comfortable shoes with at least 50 KM of prior wear. Avoid trying brand-new shoes or cotton socks on race morning to prevent blisters.",
-    iconName: "CheckCircle",
+    category: "Medical & Safety Support",
+    title: "On-Route Safety Assured",
+    description: "A dedicated ambulance, first-aid kits, and an emergency support bike following behind all runners are active throughout the race for your complete safety.",
+    iconName: "Shield",
   },
   {
-    category: "Race-Day Safety",
-    title: "Listen to Your Body",
-    description: "Follow marshal instructions, look out for fellow runners, and stop at any of our paramedic aid stations if you experience dizziness or sharp pain.",
-    iconName: "Shield",
+    category: "Footwear & Gear",
+    title: "Proper Running Shoes & Kit",
+    description: "Wear comfortable, tested running shoes. Collect your official event T-shirt and BIB pass at the reporting counter on race morning.",
+    iconName: "CheckCircle",
   },
 ];
 
 export const MARATHON_FAQS: MarathonFAQ[] = [
   {
-    question: "Is there any shorter distance category like 3 KM, 5 KM, or 10 KM?",
-    answer: "No. The Rakesh Marathon is exclusively a 15 KM race. We are dedicated to providing a unified, high-quality, single-distance challenge for all participating athletes and fitness enthusiasts.",
+    question: "What is the prize distribution for the 15 KM race?",
+    answer: "The total prize pool is NPR 50,000 awarded as: 1st Place (NPR 25,000/-), 2nd Place (NPR 15,000/-), and 3rd Place (NPR 10,000/-). Additionally, the Top 10 finishers receive an official Medal 🏅, and Every Participant receives an official Certificate of Participation.",
   },
   {
-    question: "What is the total prize pool and how are prizes distributed?",
-    answer: "The NPR 50,000 prize pool is distributed as: 1st Place (NPR 25,000), 2nd Place (NPR 15,000), and 3rd Place (NPR 10,000). The top 10 finishers receive medals, and every participant receives a certificate.",
+    question: "Does every participant get a certificate?",
+    answer: "Yes! Every single registered runner who takes part in the 15 KM Rakesh Marathon receives an official Certificate of Participation (Finisher Certificate) acknowledging their achievement.",
+  },
+  {
+    question: "Who receives medals in the marathon?",
+    answer: "All Top 10 finishers (Rank 1 through 10) receive prestigious official Rakesh Marathon Medals 🏅 during the podium ceremony.",
+  },
+  {
+    question: "What emergency and medical safety measures are in place?",
+    answer: "Runner safety is our highest priority. The event is supported by: 1) A dedicated Ambulance required on active standby for any emergency, 2) Complete First Aid Kits and paramedic aid hubs, and 3) An emergency support motorcycle/bike riding directly behind the runners for immediate on-the-spot assistance.",
   },
   {
     question: "Is there any registration fee?",
-    answer: "Registration is open online free of charge as part of Rakesh Ray's community wellness and youth sports initiative. There are no hidden fees.",
+    answer: "No, registration is 100% free of charge as part of Rakesh Ray's community wellness and youth empowerment initiative. There are no entry fees.",
   },
   {
-    question: "When will the official race date and route map be confirmed?",
-    answer: "The official race date, route, and venue in Parsa will be announced when confirmed.",
-  },
-  {
-    question: "Where and when will race bibs and timing chips be distributed?",
-    answer: "Bib collection and registration verification details for Parsa will be announced closer to race day.",
-  },
-  {
-    question: "What medical assistance is available along the 15 KM route?",
-    answer: "The planned emergency support includes one ambulance, first-aid kits, and a support bike following the runners to assist in an emergency.",
+    question: "Is there any shorter distance category like 3 KM or 5 KM?",
+    answer: "No. The Rakesh Marathon is exclusively a 15 KM race. It provides a unified, single-distance athletic challenge for the whole community.",
   },
 ];
 
