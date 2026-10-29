@@ -330,6 +330,9 @@ function NavContent({ onNavigate, className }: { onNavigate: () => void; classNa
     switch (label.toLowerCase()) {
       case "home":
         return t("nav.home", "Home");
+      case "rangoli festival":
+      case "rangoli":
+        return t("nav.rangoli", "Rangoli Festival");
       case "marathon":
         return t("nav.marathon", "Marathon");
       case "about":

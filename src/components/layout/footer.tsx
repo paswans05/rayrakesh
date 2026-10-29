@@ -21,12 +21,11 @@ const FOOTER_LINKS = [
     links: [
       { label: "Home", href: "/" },
       { label: "Marathon", href: "/marathon" },
+      { label: "Rangoli Festival", href: "/rangoli" },
       { label: "About us", href: "/about" },
-
       { label: "Contact us", href: "/contact" },
     ]
   },
-
 ];
 
 const SOCIAL_LINKS = [
@@ -91,7 +90,7 @@ export default function Footer({ className }: FooterProps) {
                       {item.links.map((lItem, lIndex) => (
                         <li key={lIndex}>
                           <Link className="text-base/5 text-white hover:text-primary transition-colors" href={lItem.href}>
-                            {isNepali ? (lItem.label === "Home" ? "गृहपृष्ठ" : lItem.label === "Marathon" ? "म्याराथन" : lItem.label === "About us" ? "हाम्रो बारेमा" : lItem.label === "Contact us" ? "सम्पर्क गर्नुहोस्" : lItem.label) : lItem.label}
+                            {isNepali ? (lItem.label === "Home" ? "गृहपृष्ठ" : lItem.label === "Marathon" ? "म्याराथन" : lItem.label === "Rangoli Festival" ? "रङ्गोली महोत्सव" : lItem.label === "About us" ? "हाम्रो बारेमा" : lItem.label === "Contact us" ? "सम्पर्क गर्नुहोस्" : lItem.label) : lItem.label}
                           </Link>
                         </li>
                       ))}

@@ -1,5 +1,6 @@
 import { createClient, type Client } from "@libsql/client";
 import crypto from "node:crypto";
+import { INITIAL_RANGOLI_SHOWCASE } from "@/data/rangoli";
 
 // Global singleton to reuse client connection across Next.js invocations / hot-reloads
 const globalForDb = globalThis as unknown as {
@@ -30,6 +31,28 @@ export interface AdminUserRecord {
   role?: string;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface RangoliEntryRecord {
+  id?: number;
+  entry_id: string;
+  full_name: string;
+  email?: string;
+  phone: string;
+  address: string;
+  title: string;
+  description?: string;
+  image_url: string;
+  votes_count: number;
+  status: "pending" | "approved" | "rejected";
+  created_at?: string;
+}
+
+export interface RangoliVoteRecord {
+  id?: number;
+  entry_id: string;
+  voter_identifier: string;
+  created_at?: string;
 }
 
 export function getTursoClient(): Client {
@@ -128,6 +151,78 @@ export async function ensureTable(): Promise<void> {
     }
   } catch (err) {
     console.warn("Could not check/seed default admin user:", err);
+  }
+
+  // 3. Rangoli Entries table
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS rangoli_entries (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      entry_id TEXT UNIQUE NOT NULL,
+      full_name TEXT NOT NULL,
+      email TEXT,
+      phone TEXT NOT NULL,
+      address TEXT NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT,
+      image_url TEXT NOT NULL,
+      votes_count INTEGER DEFAULT 0,
+      status TEXT DEFAULT 'approved',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+
+  try {
+    await client.execute(`CREATE INDEX IF NOT EXISTS idx_rangoli_votes_count ON rangoli_entries(votes_count DESC);`);
+    await client.execute(`CREATE INDEX IF NOT EXISTS idx_rangoli_entry_id ON rangoli_entries(entry_id);`);
+  } catch {
+    // Indexes already exist
+  }
+
+  // 4. Rangoli Votes table
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS rangoli_votes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      entry_id TEXT NOT NULL,
+      voter_identifier TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(entry_id, voter_identifier)
+    );
+  `);
+
+  try {
+    await client.execute(`CREATE INDEX IF NOT EXISTS idx_rangoli_voter ON rangoli_votes(voter_identifier);`);
+  } catch {
+    // Index exists
+  }
+
+  // Auto-seed showcase Rangoli entries if table is empty
+  try {
+    const rangoliCountRes = await client.execute(`SELECT COUNT(*) as count FROM rangoli_entries;`);
+    const rangoliCount = Number(rangoliCountRes.rows[0]?.count || 0);
+    if (rangoliCount === 0 && INITIAL_RANGOLI_SHOWCASE.length > 0) {
+      for (const item of INITIAL_RANGOLI_SHOWCASE) {
+        await client.execute({
+          sql: `
+            INSERT INTO rangoli_entries 
+            (entry_id, full_name, email, phone, address, title, description, image_url, votes_count, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved')
+          `,
+          args: [
+            item.entry_id,
+            item.full_name,
+            "participant@diwali.np",
+            "+977 9800000000",
+            item.address,
+            item.title,
+            item.description,
+            item.image_url,
+            item.votes_count,
+          ],
+        });
+      }
+    }
+  } catch (err) {
+    console.warn("Could not seed initial rangoli showcase entries:", err);
   }
 
   tableInitialized = true;
@@ -550,6 +645,183 @@ export async function getAllRegistrations(): Promise<RegistrationRecord[]> {
     }));
   } catch (err) {
     console.error("Error in getAllRegistrations:", err);
+    return [];
+  }
+}
+
+// ── RANGOLI FESTIVAL OPERATIONS ──
+
+export async function getRangoliEntries(sortBy: "votes" | "latest" = "votes"): Promise<RangoliEntryRecord[]> {
+  try {
+    await ensureTable();
+    const client = getTursoClient();
+    const orderByClause = sortBy === "latest" ? "ORDER BY id DESC" : "ORDER BY votes_count DESC, id DESC";
+    const res = await client.execute(`SELECT * FROM rangoli_entries WHERE status = 'approved' ${orderByClause}`);
+    
+    if (res.rows.length === 0) {
+      // Fallback to showcase entries if table has no rows
+      return INITIAL_RANGOLI_SHOWCASE.map((item, index) => ({
+        id: index + 1,
+        entry_id: item.entry_id,
+        full_name: item.full_name,
+        address: item.address,
+        phone: "+977 9800000000",
+        title: item.title,
+        description: item.description,
+        image_url: item.image_url,
+        votes_count: item.votes_count,
+        status: "approved",
+        created_at: new Date().toISOString(),
+      }));
+    }
+
+    return res.rows.map((r) => ({
+      id: Number(r.id),
+      entry_id: String(r.entry_id),
+      full_name: String(r.full_name),
+      email: r.email ? String(r.email) : undefined,
+      phone: String(r.phone),
+      address: String(r.address),
+      title: String(r.title),
+      description: r.description ? String(r.description) : undefined,
+      image_url: String(r.image_url),
+      votes_count: Number(r.votes_count || 0),
+      status: (r.status as "pending" | "approved" | "rejected") || "approved",
+      created_at: r.created_at ? String(r.created_at) : undefined,
+    }));
+  } catch (err) {
+    console.error("Error in getRangoliEntries, using fallback:", err);
+    return INITIAL_RANGOLI_SHOWCASE.map((item, index) => ({
+      id: index + 1,
+      entry_id: item.entry_id,
+      full_name: item.full_name,
+      address: item.address,
+      phone: "+977 9800000000",
+      title: item.title,
+      description: item.description,
+      image_url: item.image_url,
+      votes_count: item.votes_count,
+      status: "approved",
+      created_at: new Date().toISOString(),
+    }));
+  }
+}
+
+export async function createRangoliEntry(entry: {
+  full_name: string;
+  email?: string;
+  phone: string;
+  address: string;
+  title: string;
+  description?: string;
+  image_url: string;
+}): Promise<RangoliEntryRecord> {
+  await ensureTable();
+  const client = getTursoClient();
+  const entry_id = `RF2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
+  await client.execute({
+    sql: `
+      INSERT INTO rangoli_entries 
+      (entry_id, full_name, email, phone, address, title, description, image_url, votes_count, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, 'approved')
+    `,
+    args: [
+      entry_id,
+      entry.full_name.trim(),
+      entry.email?.trim() || null,
+      entry.phone.trim(),
+      entry.address.trim(),
+      entry.title.trim(),
+      entry.description?.trim() || null,
+      entry.image_url,
+    ],
+  });
+
+  return {
+    entry_id,
+    full_name: entry.full_name,
+    email: entry.email,
+    phone: entry.phone,
+    address: entry.address,
+    title: entry.title,
+    description: entry.description,
+    image_url: entry.image_url,
+    votes_count: 1,
+    status: "approved",
+    created_at: new Date().toISOString(),
+  };
+}
+
+export async function voteRangoliEntry(
+  entryId: string,
+  voterIdentifier: string
+): Promise<{ success: boolean; newVotesCount: number; message: string }> {
+  await ensureTable();
+  const client = getTursoClient();
+
+  // 1. Check if already voted
+  const checkVote = await client.execute({
+    sql: `SELECT id FROM rangoli_votes WHERE entry_id = ? AND voter_identifier = ? LIMIT 1`,
+    args: [entryId, voterIdentifier],
+  });
+
+  if (checkVote.rows.length > 0) {
+    return {
+      success: false,
+      newVotesCount: 0,
+      message: "You have already voted for this Rangoli!",
+    };
+  }
+
+  // 2. Record vote
+  try {
+    await client.execute({
+      sql: `INSERT INTO rangoli_votes (entry_id, voter_identifier) VALUES (?, ?)`,
+      args: [entryId, voterIdentifier],
+    });
+
+    // 3. Increment votes count on entry
+    await client.execute({
+      sql: `UPDATE rangoli_entries SET votes_count = votes_count + 1 WHERE entry_id = ?`,
+      args: [entryId],
+    });
+
+    // 4. Retrieve updated count
+    const res = await client.execute({
+      sql: `SELECT votes_count FROM rangoli_entries WHERE entry_id = ? LIMIT 1`,
+      args: [entryId],
+    });
+
+    const newVotesCount = Number(res.rows[0]?.votes_count || 1);
+    return {
+      success: true,
+      newVotesCount,
+      message: "Thank you! Your vote has been recorded successfully.",
+    };
+  } catch (err: any) {
+    if (err?.message?.includes("UNIQUE") || err?.code === "SQLITE_CONSTRAINT") {
+      return {
+        success: false,
+        newVotesCount: 0,
+        message: "You have already voted for this Rangoli!",
+      };
+    }
+    throw err;
+  }
+}
+
+export async function getVotedEntryIds(voterIdentifier: string): Promise<string[]> {
+  try {
+    await ensureTable();
+    const client = getTursoClient();
+    const res = await client.execute({
+      sql: `SELECT entry_id FROM rangoli_votes WHERE voter_identifier = ?`,
+      args: [voterIdentifier],
+    });
+    return res.rows.map((r) => String(r.entry_id));
+  } catch (err) {
+    console.error("Error in getVotedEntryIds:", err);
     return [];
   }
 }
