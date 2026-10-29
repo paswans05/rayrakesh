@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "@/images/logo.png";
 import { Button } from "@/components/ui/button";
+import AdminRangoliTab from "@/components/admin/admin-rangoli-tab";
 
 interface RegistrationItem {
   id: number;
@@ -46,6 +47,9 @@ interface AdminUserItem {
 }
 
 export default function AdminPage() {
+  // Main event navigation: Marathon vs Rangoli Festival
+  const [activeMainTab, setActiveMainTab] = useState<"marathon" | "rangoli">("marathon");
+
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [username, setUsername] = useState("");
@@ -908,11 +912,11 @@ export default function AdminPage() {
           {/* Right: Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
-              href="/marathon"
+              href={activeMainTab === "rangoli" ? "/rangoli" : "/marathon"}
               target="_blank"
               className="text-xs text-slate-400 hover:text-white px-3 py-2 rounded-lg border border-slate-800 hover:border-slate-700 transition-colors hidden md:inline-flex items-center gap-1.5"
             >
-              <span>View Public Page</span>
+              <span>{activeMainTab === "rangoli" ? "View Rangoli Page" : "View Marathon Page"}</span>
               <svg className="size-3 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                 <polyline points="15 3 21 3 21 9" />
@@ -999,9 +1003,42 @@ export default function AdminPage() {
 
       {/* ── MAIN CONTENT CONTAINER ── */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
-        
-        {/* Title Banner */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-2 border-b border-slate-800/60">
+        {/* ── TOP EVENT SWITCHER TABS ── */}
+        <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[#0c1422] border border-slate-800/80 w-fit">
+          <button
+            type="button"
+            onClick={() => setActiveMainTab("marathon")}
+            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center gap-2.5 cursor-pointer ${
+              activeMainTab === "marathon"
+                ? "bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-500/20"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/40"
+            }`}
+          >
+            <span className="text-base">🏃</span>
+            <span>Marathon Registrations</span>
+            <span className="px-2 py-0.5 rounded-full text-[10px] bg-slate-950/40 text-current font-mono">
+              {registrations.length}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveMainTab("rangoli")}
+            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center gap-2.5 cursor-pointer ${
+              activeMainTab === "rangoli"
+                ? "bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-500/20"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/40"
+            }`}
+          >
+            <span className="text-base">🪔</span>
+            <span>Rangoli Festival</span>
+          </button>
+        </div>
+
+        {activeMainTab === "marathon" ? (
+          <>
+            {/* Title Banner */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-2 border-b border-slate-800/60">
           <div>
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-black uppercase tracking-wider">
@@ -1424,6 +1461,10 @@ export default function AdminPage() {
             </table>
           </div>
         </div>
+        </>
+      ) : (
+        <AdminRangoliTab />
+      )}
 
       </main>
 

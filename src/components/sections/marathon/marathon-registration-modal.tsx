@@ -286,10 +286,10 @@ export default function MarathonRegistrationModal() {
           <button
             type="button"
             onClick={closeRegistrationModal}
-            className="p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="size-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer text-sm"
             aria-label="Close registration popup"
           >
-            <Cross className="size-5" />
+            <Cross className="size-5 cursor-pointer text-white/80 hover:text-white transition-colors duration-300" />
           </button>
         </div>
 

@@ -779,3 +779,102 @@ export async function getVotedEntryIds(voterIdentifier: string): Promise<string[
     return [];
   }
 }
+
+export async function getAllRangoliAdmin(): Promise<RangoliEntryRecord[]> {
+  try {
+    await ensureTable();
+    const client = getTursoClient();
+    const res = await client.execute(`SELECT * FROM rangoli_entries ORDER BY votes_count DESC, id DESC`);
+    return res.rows.map((r) => ({
+      id: Number(r.id),
+      entry_id: String(r.entry_id),
+      full_name: String(r.full_name),
+      email: r.email ? String(r.email) : undefined,
+      phone: String(r.phone),
+      address: String(r.address),
+      title: String(r.title),
+      description: r.description ? String(r.description) : undefined,
+      image_url: String(r.image_url),
+      votes_count: Number(r.votes_count || 0),
+      status: (r.status as "pending" | "approved" | "rejected") || "approved",
+      created_at: r.created_at ? String(r.created_at) : undefined,
+    }));
+  } catch (err) {
+    console.error("Error in getAllRangoliAdmin:", err);
+    return [];
+  }
+}
+
+export async function deleteRangoliEntryById(id: number | string): Promise<boolean> {
+  try {
+    await ensureTable();
+    const client = getTursoClient();
+
+    // Fetch entry_id first to clean up its votes as well
+    const selectRes = await client.execute({
+      sql: `SELECT entry_id FROM rangoli_entries WHERE id = ? OR entry_id = ? LIMIT 1`,
+      args: [id, String(id)],
+    });
+
+    if (selectRes.rows.length === 0) return false;
+    const entryId = String(selectRes.rows[0].entry_id);
+
+    // Delete votes and entry
+    await client.execute({
+      sql: `DELETE FROM rangoli_votes WHERE entry_id = ?`,
+      args: [entryId],
+    });
+
+    const delRes = await client.execute({
+      sql: `DELETE FROM rangoli_entries WHERE entry_id = ?`,
+      args: [entryId],
+    });
+
+    return Number(delRes.rowsAffected || 0) > 0;
+  } catch (err) {
+    console.error("Error in deleteRangoliEntryById:", err);
+    return false;
+  }
+}
+
+export async function getRangoliStatsAdmin(): Promise<{
+  totalEntries: number;
+  totalVotes: number;
+  topVoted: { title: string; votes: number; artist: string; entry_id: string } | null;
+}> {
+  try {
+    await ensureTable();
+    const client = getTursoClient();
+    const [entriesCountRes, votesSumRes, topRes] = await Promise.all([
+      client.execute(`SELECT COUNT(*) as count FROM rangoli_entries`),
+      client.execute(`SELECT COALESCE(SUM(votes_count), 0) as totalVotes FROM rangoli_entries`),
+      client.execute(`SELECT title, votes_count, full_name, entry_id FROM rangoli_entries ORDER BY votes_count DESC LIMIT 1`),
+    ]);
+
+    const totalEntries = Number(entriesCountRes.rows[0]?.count || 0);
+    const totalVotes = Number(votesSumRes.rows[0]?.totalVotes || 0);
+
+    let topVoted: { title: string; votes: number; artist: string; entry_id: string } | null = null;
+    if (topRes.rows.length > 0 && totalEntries > 0) {
+      topVoted = {
+        title: String(topRes.rows[0].title),
+        votes: Number(topRes.rows[0].votes_count || 0),
+        artist: String(topRes.rows[0].full_name),
+        entry_id: String(topRes.rows[0].entry_id),
+      };
+    }
+
+    return {
+      totalEntries,
+      totalVotes,
+      topVoted,
+    };
+  } catch (err) {
+    console.error("Error in getRangoliStatsAdmin:", err);
+    return {
+      totalEntries: 0,
+      totalVotes: 0,
+      topVoted: null,
+    };
+  }
+}
