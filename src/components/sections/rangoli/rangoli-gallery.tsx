@@ -55,7 +55,7 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
               const merged = new Set([...Array.from(prev), ...data.userVotedIds]);
               try {
                 localStorage.setItem("rakesh_rangoli_voted_ids", JSON.stringify(Array.from(merged)));
-              } catch {}
+              } catch { }
               return merged;
             });
           }
@@ -95,7 +95,7 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
 
     try {
       localStorage.setItem("rakesh_rangoli_voted_ids", JSON.stringify(Array.from(nextVoted)));
-    } catch {}
+    } catch { }
 
     try {
       const res = await fetch("/api/rangoli/vote", {
@@ -133,7 +133,7 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
         title: entry.title,
         text: `${shareText} ${shareUrl}`,
         url: shareUrl,
-      }).catch(() => {});
+      }).catch(() => { });
     } else {
       const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`;
       window.open(whatsappUrl, "_blank");
@@ -275,8 +275,8 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
                       isTopRank && index === 0
                         ? "border-amber-400 shadow-xl shadow-amber-500/15"
                         : isTopRank
-                        ? "border-amber-500/50"
-                        : "border-white/10 hover:border-white/25"
+                          ? "border-amber-500/50"
+                          : "border-white/10 hover:border-white/25"
                     )}
                   >
                     {/* Image Area with Zoom click */}
@@ -306,12 +306,12 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
                                 ? "१st स्थान (शीर्ष)"
                                 : "1st Rank (Leader)"
                               : index === 1
-                              ? isNepali
-                                ? "२nd स्थान"
-                                : "2nd Rank"
-                              : isNepali
-                              ? "३rd स्थान"
-                              : "3rd Rank"}
+                                ? isNepali
+                                  ? "२nd स्थान"
+                                  : "2nd Rank"
+                                : isNepali
+                                  ? "३rd स्थान"
+                                  : "3rd Rank"}
                           </span>
                         </div>
                       )}
@@ -370,10 +370,10 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
                           {hasVoted
                             ? t("rangoli.voted_btn", "Voted ❤️")
                             : isVoting
-                            ? isNepali
-                              ? "भोटिङ..."
-                              : "Voting..."
-                            : t("rangoli.vote_btn", "Vote for this")}
+                              ? isNepali
+                                ? "भोटिङ..."
+                                : "Voting..."
+                              : t("rangoli.vote_btn", "Vote for this")}
                         </Button>
 
                         <Button
