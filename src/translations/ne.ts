@@ -58,7 +58,7 @@ export const ne: Record<TranslationKey, string> = {
   "rangoli.hero_cta_submit": "आफ्नो रङ्गोली पठाउनुहोस्",
   "rangoli.hero_cta_vote": "रङ्गोली हेर्नुहोस् र भोट दिनुहोस्",
   "rangoli.prizes_heading": "कलाको सम्मान। जित्नुहोस् आकर्षक दीपावली पुरस्कार।",
-  "rangoli.prizes_subheading": "प्रथम: रु. २१,०००/- • दोस्रो: रु. ११,०००/- • तेस्रो: रु. ५,१००/- • शीर्ष १० लाई पदक र उपहार 🏅 • सबै सहभागीलाई प्रमाणपत्र 📜",
+  "rangoli.prizes_subheading": "प्रथम: रु. ३,१००/- • दोस्रो: रु. २,१००/- • तेस्रो: रु. १,१००/- • शीर्ष १० लाई पदक र उपहार 🏅 • सबै सहभागीलाई प्रमाणपत्र 📜",
   "rangoli.first_prize": "प्रथम पुरस्कार (सर्वाधिक भोट)",
   "rangoli.second_prize": "दोस्रो पुरस्कार",
   "rangoli.third_prize": "तेस्रो पुरस्कार",

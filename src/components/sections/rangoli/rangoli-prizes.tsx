@@ -54,7 +54,7 @@ export default function RangoliPrizes() {
                     {isNepali ? "दोस्रो पुरस्कार (2nd Place)" : "2nd Place (Most Voted)"}
                   </div>
                   <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mt-1 tracking-tight">
-                    {isNepali ? "रु. ११,०००" : secondPrize.amountNPR}
+                    {isNepali ? "रु. २,१००" : secondPrize.amountNPR}
                   </div>
                   <p className="text-sm text-slate-300/80 mt-3 pb-6 border-b border-white/10">
                     {secondPrize.description}
@@ -97,7 +97,7 @@ export default function RangoliPrizes() {
                     {isNepali ? "सर्वोत्कृष्ट रङ्गोली विजेता" : "Grand Champion (Highest Votes)"}
                   </div>
                   <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-linear-to-r from-[#ffd700] via-[#fffbeb] to-[#f59e0b] mt-1 tracking-tight">
-                    {isNepali ? "रु. २१,०००" : firstPrize.amountNPR}
+                    {isNepali ? "रु. ३,१००" : firstPrize.amountNPR}
                   </div>
                   <p className="text-sm text-white/90 mt-3 pb-6 border-b border-amber-400/30">
                     {firstPrize.description}
@@ -134,7 +134,7 @@ export default function RangoliPrizes() {
                     {isNepali ? "तेस्रो पुरस्कार (3rd Place)" : "3rd Place (Most Voted)"}
                   </div>
                   <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mt-1 tracking-tight">
-                    {isNepali ? "रु. ५,१००" : thirdPrize.amountNPR}
+                    {isNepali ? "रु. १,१००" : thirdPrize.amountNPR}
                   </div>
                   <p className="text-sm text-amber-100/70 mt-3 pb-6 border-b border-white/10">
                     {thirdPrize.description}

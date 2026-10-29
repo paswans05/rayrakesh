@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Diwali Rangoli Festival 2026 | Vote & Win Grand Prizes",
     description:
-      "Celebrate creativity and Diwali tradition in Parsa, Nepal. Submit your Rangoli and vote for your favorites. 1st: NPR 21,000, 2nd: NPR 11,000, 3rd: NPR 5,100, medals for Top 10, certificates for all participants.",
+      "Celebrate creativity and Diwali tradition in Parsa, Nepal. Submit your Rangoli and vote for your favorites. 1st: NPR 3,100, 2nd: NPR 2,100, 3rd: NPR 1,100, medals for Top 10, certificates for all participants.",
     type: "website",
     locale: "en_US",
     siteName: "Rakesh Ray Official",

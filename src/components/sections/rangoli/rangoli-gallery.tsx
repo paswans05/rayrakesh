@@ -124,8 +124,8 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
 
   const handleShare = (entry: RangoliShowcaseEntry) => {
     const shareText = isNepali
-      ? `दीपावली रङ्गोली प्रतियोगिता २०८३ मा ${entry.full_name} को रङ्गोली "${entry.title}" लाई भोट गर्नुहोस्! सर्वाधिक भोट पाउनेले जित्नेछन् रु. २१,००० सम्मका पुरस्कार:`
-      : `Vote for "${entry.title}" by ${entry.full_name} in the Diwali Rangoli Festival! Most voted entries win up to NPR 21,000 in grand prizes:`;
+      ? `दीपावली रङ्गोली प्रतियोगिता २०८३ मा ${entry.full_name} को रङ्गोली "${entry.title}" लाई भोट गर्नुहोस्! सर्वाधिक भोट पाउनेले जित्नेछन् रु. ३,१०० सम्मका पुरस्कार:`
+      : `Vote for "${entry.title}" by ${entry.full_name} in the Diwali Rangoli Festival! Most voted entries win up to NPR 3,100 in grand prizes:`;
     const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/rangoli#entry-${entry.entry_id}` : "";
 
     if (navigator.share) {
@@ -452,8 +452,8 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
               </h4>
               <p className="text-xs sm:text-sm text-white/75">
                 {isNepali
-                  ? "अहिले नै तस्बिर पठाउनुहोस् र रु. २१,००० सम्मका भव्य पुरस्कार जित्ने अवसर नछुटाउनुहोस्!"
-                  : "Submit your entry right now to start collecting votes and win up to NPR 21,000!"}
+                  ? "अहिले नै तस्बिर पठाउनुहोस् र रु. ३,१०० सम्मका भव्य पुरस्कार जित्ने अवसर नछुटाउनुहोस्!"
+                  : "Submit your entry right now to start collecting votes and win up to NPR 3,100!"}
               </p>
             </div>
             <Button

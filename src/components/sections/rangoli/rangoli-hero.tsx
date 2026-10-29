@@ -221,10 +221,10 @@ export default function RangoliHero({ onOpenSubmitModal, className }: RangoliHer
                     >
                       {isNepali
                         ? prize.rank === 1
-                          ? "रु. २१,०००"
+                          ? "रु. ३,१००"
                           : prize.rank === 2
-                          ? "रु. ११,०००"
-                          : "रु. ५,१००"
+                          ? "रु. २,१००"
+                          : "रु. १,१००"
                         : prize.amountNPR}
                     </div>
                     <p className="text-xs text-white/70 mt-2 line-clamp-2">

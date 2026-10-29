@@ -39,8 +39,8 @@ export default function RangoliHowItWorks() {
       icon: "🏆",
       title: isNepali ? "भव्य पुरस्कार जित्नुहोस्" : "4. Win Grand Prizes",
       desc: isNepali
-        ? "सर्वाधिक भोट पाउने शीर्ष ३ ले १st रु. २१,०००, २nd रु. ११,००० र ३rd रु. ५,१०० नगद, शीर्ष १० लाई पदक र सबैलाई प्रमाणपत्र!"
-        : "The top 3 most voted win 1st (NPR 21,000), 2nd (NPR 11,000), 3rd (NPR 5,100), top 10 receive medals & hampers, and everyone gets a certificate!",
+        ? "सर्वाधिक भोट पाउने शीर्ष ३ ले १st रु. ३,१००, २nd रु. २,१०० र ३rd रु. १,१०० नगद, शीर्ष १० लाई पदक र सबैलाई प्रमाणपत्र!"
+        : "The top 3 most voted win 1st (NPR 3,100), 2nd (NPR 2,100), 3rd (NPR 1,100), top 10 receive medals & hampers, and everyone gets a certificate!",
     },
   ];
 

@@ -34,7 +34,7 @@ export const RANGOLI_FESTIVAL_DETAILS = {
   campaignLeaderTitle: "Youth Leader & Social Worker",
   location: "Parsa, Madhesh Province, Nepal",
   currency: "NPR",
-  totalPrizePool: "NPR 37,100 + Hampers & Medals",
+  totalPrizePool: "NPR 6,300 + Hampers & Medals",
   
   schedule: {
     status: "Submissions & Voting Open",
@@ -46,8 +46,8 @@ export const RANGOLI_FESTIVAL_DETAILS = {
 
   prizesHeading: "CELEBRATE ART. WIN GRAND DIWALI PRIZES.",
   prizesHeadingNepali: "कलाको सम्मान। जित्नुहोस् आकर्षक दीपावली पुरस्कार।",
-  prizesSubheading: "1st: NPR 21,000/- • 2nd: NPR 11,000/- • 3rd: NPR 5,100/- • Top 10: Medals & Hampers 🏅 • Certificate for Every Participant 📜",
-  prizesSubheadingNepali: "प्रथम: रु. २१,०००/- • दोस्रो: रु. ११,०००/- • तेस्रो: रु. ५,१००/- • शीर्ष १० लाई पदक र उपहार 🏅 • सबै सहभागीलाई प्रमाणपत्र 📜",
+  prizesSubheading: "1st: NPR 3,100/- • 2nd: NPR 2,100/- • 3rd: NPR 1,100/- • Top 10: Medals & Hampers 🏅 • Certificate for Every Participant 📜",
+  prizesSubheadingNepali: "प्रथम: रु. ३,१००/- • दोस्रो: रु. २,१००/- • तेस्रो: रु. १,१००/- • शीर्ष १० लाई पदक र उपहार 🏅 • सबै सहभागीलाई प्रमाणपत्र 📜",
 };
 
 export const RANGOLI_PRIZES: RangoliPrize[] = [
@@ -55,12 +55,12 @@ export const RANGOLI_PRIZES: RangoliPrize[] = [
     rank: 1,
     label: "Grand Champion",
     badge: "1st Place (Most Voted)",
-    amountNPR: "NPR 21,000",
-    amountNumber: 21000,
+    amountNPR: "NPR 3,100",
+    amountNumber: 3100,
     tier: "gold",
     description: "The Rangoli with the highest verified public votes across the festival.",
     perks: [
-      "Cash Award: NPR 21,000/-",
+      "Cash Award: NPR 3,100/-",
       "Grand Diwali Champion Trophy & Gold Medal 🏅",
       "Special Festive Sweets & Gift Hamper",
       "Certificate of Artistic Excellence",
@@ -71,12 +71,12 @@ export const RANGOLI_PRIZES: RangoliPrize[] = [
     rank: 2,
     label: "First Runner-Up",
     badge: "2nd Place",
-    amountNPR: "NPR 11,000",
-    amountNumber: 11000,
+    amountNPR: "NPR 2,100",
+    amountNumber: 2100,
     tier: "silver",
     description: "Second most voted Rangoli in the competition.",
     perks: [
-      "Cash Award: NPR 11,000/-",
+      "Cash Award: NPR 2,100/-",
       "Runner-Up Silver Trophy & Silver Medal 🥈",
       "Festive Gift Hamper",
       "Certificate of High Artistic Merit",
@@ -87,12 +87,12 @@ export const RANGOLI_PRIZES: RangoliPrize[] = [
     rank: 3,
     label: "Second Runner-Up",
     badge: "3rd Place",
-    amountNPR: "NPR 5,100",
-    amountNumber: 5100,
+    amountNPR: "NPR 1,100",
+    amountNumber: 1100,
     tier: "bronze",
     description: "Third most voted Rangoli in the competition.",
     perks: [
-      "Cash Award: NPR 5,100/-",
+      "Cash Award: NPR 1,100/-",
       "Bronze Trophy & Bronze Medal 🥉",
       "Festive Gift Hamper",
       "Certificate of High Artistic Merit",
@@ -158,7 +158,7 @@ export const RANGOLI_FAQS: RangoliFAQ[] = [
   },
   {
     question: "How are the winners decided?",
-    answer: "Winners are decided transparently based on the highest number of public votes received by the deadline. The entry with the most votes wins 1st prize (NPR 21,000), followed by 2nd prize (NPR 11,000) and 3rd prize (NPR 5,100).",
+    answer: "Winners are decided transparently based on the highest number of public votes received by the deadline. The entry with the most votes wins 1st prize (NPR 3,100), followed by 2nd prize (NPR 2,100) and 3rd prize (NPR 1,100).",
   },
   {
     question: "Is there any registration or entry fee?",
@@ -170,7 +170,7 @@ export const RANGOLI_FAQS: RangoliFAQ[] = [
   },
   {
     question: "What prizes will participants receive?",
-    answer: "1st place wins NPR 21,000 + Champion Trophy + Hamper; 2nd place wins NPR 11,000 + Silver Trophy; 3rd place wins NPR 5,100 + Bronze Trophy. The Top 10 will receive special medals and gift hampers, and every single participant receives an official Certificate of Participation.",
+    answer: "1st place wins NPR 3,100 + Champion Trophy + Hamper; 2nd place wins NPR 2,100 + Silver Trophy; 3rd place wins NPR 1,100 + Bronze Trophy. The Top 10 will receive special medals and gift hampers, and every single participant receives an official Certificate of Participation.",
   },
   {
     question: "Can I share my Rangoli to get more votes?",

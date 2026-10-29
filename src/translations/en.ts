@@ -56,7 +56,7 @@ export const en = {
   "rangoli.hero_cta_submit": "Submit Your Rangoli",
   "rangoli.hero_cta_vote": "Browse & Vote",
   "rangoli.prizes_heading": "CELEBRATE ART. WIN GRAND DIWALI PRIZES.",
-  "rangoli.prizes_subheading": "1st: NPR 21,000/- • 2nd: NPR 11,000/- • 3rd: NPR 5,100/- • Top 10: Medals & Hampers 🏅 • Certificate for Every Participant 📜",
+  "rangoli.prizes_subheading": "1st: NPR 3,100/- • 2nd: NPR 2,100/- • 3rd: NPR 1,100/- • Top 10: Medals & Hampers 🏅 • Certificate for Every Participant 📜",
   "rangoli.first_prize": "1st Prize (Most Voted)",
   "rangoli.second_prize": "2nd Prize",
   "rangoli.third_prize": "3rd Prize",
