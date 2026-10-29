@@ -353,3 +353,4 @@ export default function RangoliSubmitModal({ isOpen, onClose, onSubmittedSuccess
     </div>
   );
 }
+

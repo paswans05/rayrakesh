@@ -35,3 +35,4 @@ export const metadata: Metadata = {
 export default function RangoliPage() {
   return <RangoliView />;
 }
+

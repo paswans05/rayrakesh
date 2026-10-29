@@ -235,3 +235,4 @@ export const RANGOLI_FAQS: RangoliFAQ[] = [
     answer: "Yes, absolutely! Each submitted Rangoli has a direct link and a one-click WhatsApp share button. You can share it with your friends, family, and social networks to gather votes.",
   },
 ];
+
