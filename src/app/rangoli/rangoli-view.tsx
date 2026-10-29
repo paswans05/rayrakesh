@@ -10,13 +10,17 @@ import RangoliSubmitModal from "@/components/sections/rangoli/rangoli-submit-mod
 
 export default function RangoliView() {
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   return (
     <React.Fragment>
       <RangoliHero onOpenSubmitModal={() => setIsSubmitModalOpen(true)} />
       <main className="relative min-h-screen flex flex-col justify-between overflow-x-hidden">
         <RangoliPrizes />
-        <RangoliGallery onOpenSubmitModal={() => setIsSubmitModalOpen(true)} />
+        <RangoliGallery
+          onOpenSubmitModal={() => setIsSubmitModalOpen(true)}
+          refreshTrigger={refreshTrigger}
+        />
         <RangoliHowItWorks />
         <RangoliFAQs />
       </main>
@@ -26,7 +30,7 @@ export default function RangoliView() {
         isOpen={isSubmitModalOpen}
         onClose={() => setIsSubmitModalOpen(false)}
         onSubmittedSuccess={() => {
-          // Can refresh or let gallery re-fetch
+          setRefreshTrigger((n) => n + 1);
         }}
       />
     </React.Fragment>

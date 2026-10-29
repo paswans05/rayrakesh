@@ -1,6 +1,5 @@
 import { createClient, type Client } from "@libsql/client";
 import crypto from "node:crypto";
-import { INITIAL_RANGOLI_SHOWCASE } from "@/data/rangoli";
 
 // Global singleton to reuse client connection across Next.js invocations / hot-reloads
 const globalForDb = globalThis as unknown as {
@@ -195,34 +194,14 @@ export async function ensureTable(): Promise<void> {
     // Index exists
   }
 
-  // Auto-seed showcase Rangoli entries if table is empty
+  // Clean up any earlier mock/example showcase entries so only real submissions are shown
   try {
-    const rangoliCountRes = await client.execute(`SELECT COUNT(*) as count FROM rangoli_entries;`);
-    const rangoliCount = Number(rangoliCountRes.rows[0]?.count || 0);
-    if (rangoliCount === 0 && INITIAL_RANGOLI_SHOWCASE.length > 0) {
-      for (const item of INITIAL_RANGOLI_SHOWCASE) {
-        await client.execute({
-          sql: `
-            INSERT INTO rangoli_entries 
-            (entry_id, full_name, email, phone, address, title, description, image_url, votes_count, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved')
-          `,
-          args: [
-            item.entry_id,
-            item.full_name,
-            "participant@diwali.np",
-            "+977 9800000000",
-            item.address,
-            item.title,
-            item.description,
-            item.image_url,
-            item.votes_count,
-          ],
-        });
-      }
-    }
+    await client.execute(`
+      DELETE FROM rangoli_entries 
+      WHERE entry_id IN ('RF2026-101', 'RF2026-102', 'RF2026-103', 'RF2026-104', 'RF2026-105', 'RF2026-106')
+    `);
   } catch (err) {
-    console.warn("Could not seed initial rangoli showcase entries:", err);
+    // Ignore cleanup error
   }
 
   tableInitialized = true;
@@ -659,20 +638,7 @@ export async function getRangoliEntries(sortBy: "votes" | "latest" = "votes"): P
     const res = await client.execute(`SELECT * FROM rangoli_entries WHERE status = 'approved' ${orderByClause}`);
     
     if (res.rows.length === 0) {
-      // Fallback to showcase entries if table has no rows
-      return INITIAL_RANGOLI_SHOWCASE.map((item, index) => ({
-        id: index + 1,
-        entry_id: item.entry_id,
-        full_name: item.full_name,
-        address: item.address,
-        phone: "+977 9800000000",
-        title: item.title,
-        description: item.description,
-        image_url: item.image_url,
-        votes_count: item.votes_count,
-        status: "approved",
-        created_at: new Date().toISOString(),
-      }));
+      return [];
     }
 
     return res.rows.map((r) => ({
@@ -690,20 +656,8 @@ export async function getRangoliEntries(sortBy: "votes" | "latest" = "votes"): P
       created_at: r.created_at ? String(r.created_at) : undefined,
     }));
   } catch (err) {
-    console.error("Error in getRangoliEntries, using fallback:", err);
-    return INITIAL_RANGOLI_SHOWCASE.map((item, index) => ({
-      id: index + 1,
-      entry_id: item.entry_id,
-      full_name: item.full_name,
-      address: item.address,
-      phone: "+977 9800000000",
-      title: item.title,
-      description: item.description,
-      image_url: item.image_url,
-      votes_count: item.votes_count,
-      status: "approved",
-      created_at: new Date().toISOString(),
-    }));
+    console.error("Error in getRangoliEntries:", err);
+    return [];
   }
 }
 

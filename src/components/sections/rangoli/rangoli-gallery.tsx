@@ -12,12 +12,13 @@ import { cn } from "@/lib/utils";
 
 interface RangoliGalleryProps {
   onOpenSubmitModal: () => void;
+  refreshTrigger?: number;
   className?: string;
 }
 
-export default function RangoliGallery({ onOpenSubmitModal, className }: RangoliGalleryProps) {
+export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, className }: RangoliGalleryProps) {
   const { t, isNepali } = useLanguage();
-  const [entries, setEntries] = useState<RangoliShowcaseEntry[]>(INITIAL_RANGOLI_SHOWCASE);
+  const [entries, setEntries] = useState<RangoliShowcaseEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [votedIds, setVotedIds] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
@@ -44,8 +45,10 @@ export default function RangoliGallery({ onOpenSubmitModal, className }: Rangoli
         const res = await fetch("/api/rangoli");
         if (res.ok) {
           const data = await res.json();
-          if (data?.entries && Array.isArray(data.entries) && data.entries.length > 0) {
+          if (data?.entries && Array.isArray(data.entries)) {
             setEntries(data.entries);
+          } else {
+            setEntries([]);
           }
           if (data?.userVotedIds && Array.isArray(data.userVotedIds)) {
             setVotedIds((prev) => {
@@ -56,16 +59,19 @@ export default function RangoliGallery({ onOpenSubmitModal, className }: Rangoli
               return merged;
             });
           }
+        } else {
+          setEntries([]);
         }
       } catch (err) {
-        console.warn("Could not fetch remote rangoli entries, using starter showcase:", err);
+        console.warn("Could not fetch remote rangoli entries:", err);
+        setEntries([]);
       } finally {
         setLoading(false);
       }
     }
 
     fetchEntries();
-  }, []);
+  }, [refreshTrigger]);
 
   const handleVote = async (entry: RangoliShowcaseEntry) => {
     if (votedIds.has(entry.entry_id)) {
@@ -388,15 +394,41 @@ export default function RangoliGallery({ onOpenSubmitModal, className }: Rangoli
             })}
           </div>
 
-          {/* Empty Search State */}
-          {filteredEntries.length === 0 && (
+          {/* Empty State when no entries exist at all */}
+          {!loading && entries.length === 0 && (
+            <div className="text-center py-16 sm:py-20 px-6 rounded-3xl bg-linear-to-b from-white/5 to-transparent border border-amber-500/30 max-w-lg mx-auto my-8 shadow-2xl">
+              <div className="size-20 rounded-full bg-amber-500/20 border border-amber-500/40 text-4xl flex items-center justify-center mx-auto mb-4">
+                🪔
+              </div>
+              <h4 className="text-2xl font-black text-white">
+                {isNepali ? "प्रतियोगितामा पहिलो बन्नुहोस्!" : "Be the First to Enter!"}
+              </h4>
+              <p className="text-sm text-white/75 mt-2 leading-relaxed">
+                {isNepali
+                  ? "अहिलेसम्म कुनै रङ्गोली प्रविष्टि दर्ता भएको छैन। आफ्नो रङ्गोलीको तस्बिर पेश गरी प्रतियोगिताको सुरुवात गर्नुहोस् र अग्रता लिनुहोस्!"
+                  : "No Rangolis have been submitted yet. Upload a photo of your handmade Rangoli to be the first on the leaderboard and win grand prizes!"}
+              </p>
+              <Button
+                variant="default"
+                size="lg"
+                onClick={onOpenSubmitModal}
+                className="mt-6 bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-darker font-black shadow-lg shadow-amber-500/20 cursor-pointer"
+              >
+                <span className="text-lg">🪔</span>
+                {isNepali ? "आफ्नो रङ्गोली पठाउनुहोस्" : "Submit Your Rangoli Now"}
+              </Button>
+            </div>
+          )}
+
+          {/* Empty Search / Filter State */}
+          {!loading && entries.length > 0 && filteredEntries.length === 0 && (
             <div className="text-center py-16 px-4 rounded-3xl bg-white/5 border border-white/10 max-w-md mx-auto my-8">
-              <span className="text-4xl">🪔</span>
+              <span className="text-4xl">🔍</span>
               <h4 className="text-lg font-bold text-white mt-3">
                 {isNepali ? "कुनै रङ्गोली फेला परेन" : "No Rangoli Found"}
               </h4>
               <p className="text-xs text-white/60 mt-1">
-                {isNepali ? "फरक खोज शब्द प्रयोग गर्नुहोस् वा पहिलो प्रविष्टि पठाउनुहोस्!" : "Try searching another artist or area, or submit your own creation!"}
+                {isNepali ? "फरक खोज शब्द प्रयोग गर्नुहोस्।" : "Try searching another artist or area."}
               </p>
               <Button
                 variant="default"

@@ -118,65 +118,7 @@ export const RANGOLI_SPECIAL_AWARDS = {
   },
 };
 
-export const INITIAL_RANGOLI_SHOWCASE: RangoliShowcaseEntry[] = [
-  {
-    entry_id: "RF2026-101",
-    full_name: "Sunita Kumari Shah",
-    address: "Birgunj-12, Parsa",
-    title: "Peacock Splendor (मयूर रङ्गोली)",
-    description: "An intricate traditional peacock Rangoli designed with vibrant organic powders, petals, and traditional diyas symbolizing prosperity and graceful joy.",
-    image_url: "https://images.unsplash.com/photo-1605335193910-b4bc2f8c0506?auto=format&fit=crop&w=800&q=80",
-    votes_count: 168,
-    featured: true,
-  },
-  {
-    entry_id: "RF2026-102",
-    full_name: "Anjali & Team",
-    address: "Jingadawa, Parsa",
-    title: "Lotus & Diya Mandala (कमल र दीप)",
-    description: "Sacred lotus mandala crafted with natural marigold flower petals, gulal, and clay oil lamps inviting Goddess Lakshmi into our community.",
-    image_url: "https://images.unsplash.com/photo-1574096079513-d8259312b785?auto=format&fit=crop&w=800&q=80",
-    votes_count: 142,
-    featured: true,
-  },
-  {
-    entry_id: "RF2026-103",
-    full_name: "Pooja Shrestha",
-    address: "Ghanta Ghar, Birgunj",
-    title: "Shree Ganesha Swastik (गणेश शुभ-लाभ)",
-    description: "Centering Lord Ganesha and sacred Swastika auspicious motifs with dual contrast shades of vermilion, turmeric yellow, and rice flour.",
-    image_url: "https://images.unsplash.com/photo-1605335193616-b82522778738?auto=format&fit=crop&w=800&q=80",
-    votes_count: 119,
-    featured: true,
-  },
-  {
-    entry_id: "RF2026-104",
-    full_name: "Rita & Suman Mahato",
-    address: "Bahudarmai, Parsa",
-    title: "Navrang Sanskar (नवरंग संस्कार चक्र)",
-    description: "Geometric nine-color circular mandala reflecting unity, peace, and heritage handed down through generations of Madhesh art.",
-    image_url: "https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&w=800&q=80",
-    votes_count: 97,
-  },
-  {
-    entry_id: "RF2026-105",
-    full_name: "Priya Gupta",
-    address: "Pokhariya, Parsa",
-    title: "Pushpanjali Festive Bloom (पुष्पाञ्जली)",
-    description: "Eco-friendly floral Rangoli crafted using fresh marigold, rose petals, and whole grains glowing with handmade earthen lamps.",
-    image_url: "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=800&q=80",
-    votes_count: 84,
-  },
-  {
-    entry_id: "RF2026-106",
-    full_name: "Kavita Chaudhary",
-    address: "Alau, Birgunj",
-    title: "Aura of Deepawali (दीपोत्सव रश्मि)",
-    description: "Traditional threshold Rangoli featuring concentric circular petals illuminated by sixteen ghee diyas spreading warmth and community fellowship.",
-    image_url: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
-    votes_count: 73,
-  },
-];
+export const INITIAL_RANGOLI_SHOWCASE: RangoliShowcaseEntry[] = [];
 
 export const RANGOLI_RULES = [
   {
