@@ -74,9 +74,14 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
   }, [refreshTrigger]);
 
   const handleVote = async (entry: RangoliShowcaseEntry) => {
-    if (votedIds.has(entry.entry_id)) {
-      setToastMessage(isNepali ? "तपाईंले यस रङ्गोलीलाई पहिले नै भोट दिइसक्नुभएको छ!" : "You have already voted for this Rangoli!");
-      setTimeout(() => setToastMessage(null), 3000);
+    // Strict 1 vote per person IP policy: If user has already voted for any entry
+    if (votedIds.size > 0) {
+      if (votedIds.has(entry.entry_id)) {
+        setToastMessage(isNepali ? "तपाईंले यस रङ्गोलीलाई आफ्नो १ भोट दिइसक्नुभएको छ!" : "You have already cast your 1 official vote for this Rangoli!");
+      } else {
+        setToastMessage(isNepali ? "तपाईंले आफ्नो १ आधिकारिक भोट पहिले नै प्रयोग गरिसक्नुभएको छ! (प्रति व्यक्ति १ भोट मात्र मान्य छ)" : "You have already cast your 1 allowed vote! (Strict 1 vote per person IP rule)");
+      }
+      setTimeout(() => setToastMessage(null), 4000);
       return;
     }
 
@@ -95,6 +100,7 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
 
     try {
       localStorage.setItem("rakesh_rangoli_voted_ids", JSON.stringify(Array.from(nextVoted)));
+      localStorage.setItem("rakesh_rangoli_single_voted_id", entry.entry_id);
     } catch { }
 
     try {
@@ -108,17 +114,26 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
       if (res.ok && data.success) {
         setToastMessage(
           isNepali
-            ? `धन्यवाद! ${entry.full_name} को रङ्गोलीका लागि तपाईंको भोट दर्ता भयो।`
-            : `Thank you! Your vote for "${entry.title}" by ${entry.full_name} has been counted.`
+            ? `धन्यवाद! ${entry.full_name} को रङ्गोलीका लागि तपाईंको १ आधिकारिक भोट दर्ता भयो।`
+            : `Thank you! Your 1 official vote for "${entry.title}" by ${entry.full_name} has been counted.`
         );
       } else {
+        // If rejected by server (already voted by IP)
+        if (data?.alreadyVoted && data?.votedEntryId) {
+          const syncVoted = new Set([data.votedEntryId]);
+          setVotedIds(syncVoted);
+          try {
+            localStorage.setItem("rakesh_rangoli_voted_ids", JSON.stringify([data.votedEntryId]));
+            localStorage.setItem("rakesh_rangoli_single_voted_id", data.votedEntryId);
+          } catch { }
+        }
         setToastMessage(data.message || (isNepali ? "भोट दर्ता हुन सकेन।" : "Could not record vote."));
       }
     } catch {
       setToastMessage(isNepali ? "भोट सुरक्षित गरियो।" : "Vote saved!");
     } finally {
       setVotingId(null);
-      setTimeout(() => setToastMessage(null), 3500);
+      setTimeout(() => setToastMessage(null), 4000);
     }
   };
 
@@ -258,10 +273,33 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
             </div>
           </div>
 
+          {/* Active Single Vote Status Banner */}
+          {votedIds.size > 0 && (
+            <div className="max-w-6xl mx-auto mb-6 p-4 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-between gap-4 text-xs sm:text-sm text-amber-200">
+              <div className="flex items-center gap-3">
+                <span className="text-xl">🪔</span>
+                <div>
+                  <strong className="text-white">
+                    {isNepali ? "तपाईंको आधिकारिक १ भोट दर्ता भइसकेको छ!" : "Your 1 official vote has been recorded!"}
+                  </strong>
+                  <p className="text-white/70 text-xs mt-0.5">
+                    {isNepali
+                      ? "प्रति व्यक्ति १ भोट (IP-wise) नियम लागू छ। स्वच्छ र निष्पक्ष नतिजाका लागि धन्यवाद।"
+                      : "Strict 1 vote per person (IP-wise) policy is active. Thank you for voting fairly."}
+                  </p>
+                </div>
+              </div>
+              <span className="shrink-0 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-[11px] font-bold text-amber-300">
+                {isNepali ? "१ भोट सुरक्षित" : "1 Vote Used"}
+              </span>
+            </div>
+          )}
+
           {/* Rangoli Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {filteredEntries.map((entry, index) => {
-              const hasVoted = votedIds.has(entry.entry_id);
+              const hasVotedForThis = votedIds.has(entry.entry_id);
+              const hasVotedAny = votedIds.size > 0;
               const isVoting = votingId === entry.entry_id;
               const isTopRank = activeTab === "leaderboard" && index < 3;
               const rankEmoji = index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉";
@@ -355,25 +393,29 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
                       {/* Card Action Buttons */}
                       <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-3">
                         <Button
-                          variant={hasVoted ? "outline" : "default"}
+                          variant={hasVotedForThis ? "outline" : "default"}
                           size="md"
-                          disabled={hasVoted || isVoting}
+                          disabled={hasVotedAny || isVoting}
                           onClick={() => handleVote(entry)}
                           className={cn(
                             "flex-1 font-black text-xs sm:text-sm cursor-pointer transition-all flex items-center justify-center gap-2",
-                            hasVoted
+                            hasVotedForThis
                               ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 cursor-default"
-                              : "bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-darker shadow-lg shadow-amber-500/20"
+                              : hasVotedAny
+                                ? "bg-white/5 text-white/40 border border-white/10 cursor-not-allowed opacity-60"
+                                : "bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-darker shadow-lg shadow-amber-500/20"
                           )}
                         >
-                          <HeartFill className={cn("size-4", hasVoted ? "text-rose-400 fill-rose-400" : "text-darker")} />
-                          {hasVoted
+                          <HeartFill className={cn("size-4", hasVotedForThis ? "text-rose-400 fill-rose-400" : hasVotedAny ? "text-white/30" : "text-darker")} />
+                          {hasVotedForThis
                             ? t("rangoli.voted_btn", "Voted ❤️")
-                            : isVoting
-                              ? isNepali
-                                ? "भोटिङ..."
-                                : "Voting..."
-                              : t("rangoli.vote_btn", "Vote for this")}
+                            : hasVotedAny
+                              ? isNepali ? "१ भोट प्रयोग भयो" : "1 Vote Used"
+                              : isVoting
+                                ? isNepali
+                                  ? "भोटिङ..."
+                                  : "Voting..."
+                                : t("rangoli.vote_btn", "Vote for this")}
                         </Button>
 
                         <Button

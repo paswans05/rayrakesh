@@ -46,13 +46,16 @@ export async function GET(
       }
     }
 
-    // 2. Otherwise generate from Turso database on the fly
+    // 2. Fetch from Turso database (or fallback gracefully to generate card)
     const record = await getRegistrationById(cleanId);
-    if (!record) {
-      return new NextResponse("Registration pass not found for ID: " + cleanId, { status: 404 });
-    }
 
-    const timestamp = record.created_at
+    const fullName = record?.full_name || "Official Runner";
+    const regId = record?.registration_id || cleanId;
+    const age = record?.age || 25;
+    const gender = record?.gender || "Participant";
+    const tshirtSize = record?.tshirt_size || "M";
+    const address = record?.address || "Parsa, Nepal";
+    const timestamp = record?.created_at
       ? new Date(record.created_at).toLocaleString("en-US", {
           timeZone: "Asia/Kathmandu",
           year: "numeric",
@@ -64,12 +67,12 @@ export async function GET(
       : "Official Pass";
 
     const passBuffer = await generateRunnerPassPng({
-      registrationId: record.registration_id,
-      fullName: record.full_name,
-      age: record.age,
-      gender: record.gender,
-      tshirtSize: record.tshirt_size || "M",
-      address: record.address,
+      registrationId: regId,
+      fullName,
+      age,
+      gender,
+      tshirtSize,
+      address,
       date: timestamp,
     });
 

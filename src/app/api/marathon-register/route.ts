@@ -91,13 +91,18 @@ export async function POST(req: NextRequest) {
         date: timestamp,
       });
 
-      // Save locally to public/passes so it is immediately downloadable via URL
+      // Save locally to public/passes if writable (e.g. localhost/VPS)
       if (passBuffer) {
-        const passesDir = path.join(process.cwd(), "public", "passes");
-        await fs.promises.mkdir(passesDir, { recursive: true });
-        const passFilePath = path.join(passesDir, passFileName);
-        await fs.promises.writeFile(passFilePath, passBuffer);
-        console.log(`[/api/marathon-register] Pass card saved to public file: ${passFilePath}`);
+        try {
+          const passesDir = path.join(process.cwd(), "public", "passes");
+          await fs.promises.mkdir(passesDir, { recursive: true });
+          const passFilePath = path.join(passesDir, passFileName);
+          await fs.promises.writeFile(passFilePath, passBuffer);
+          console.log(`[/api/marathon-register] Pass card saved to public file: ${passFilePath}`);
+        } catch (fsErr) {
+          // Normal on Vercel serverless where root filesystem is read-only
+          console.warn("[marathon-register] Local file cache skipped (serverless environment):", fsErr);
+        }
       }
     } catch (genErr) {
       console.error("[marathon-register] Failed to generate runner pass card:", genErr);
@@ -264,32 +269,54 @@ export async function POST(req: NextRequest) {
       </div>
     `;
 
-    // ── Send emails with card attachment (awaited so Next.js doesn't terminate before delivery) ──
+    // ── Send emails with card attachment ──
     const adminEmailRecipient = process.env.MAIL_TO || process.env.SMTP_USER;
 
-    const emailTasks = [
-      // 2. Participant confirmation with card attachment & inline CID
+    const emailTasks: Promise<any>[] = [];
+
+    // 1. Organizer notification email
+    if (adminEmailRecipient) {
+      emailTasks.push(
+        sendMail({
+          to: adminEmailRecipient,
+          subject: `🏃 New Marathon Registration: ${fullName} (${regId})`,
+          html: adminHtml,
+          replyTo: cleanEmail,
+          attachments: passAttachments,
+        }).catch((err) => {
+          console.error("[/api/marathon-register] Organizer email send error:", err);
+          return null;
+        })
+      );
+    }
+
+    // 2. Participant confirmation with card attachment & inline CID
+    emailTasks.push(
       sendMail({
         to: cleanEmail,
         subject: `🏅 Your Official Rakesh Marathon 15 KM Pass [${regId}]`,
         html: participantHtml,
-        replyTo: adminEmailRecipient,
+        replyTo: adminEmailRecipient || undefined,
         attachments: passAttachments,
-      }),
-    ];
+      }).catch((err) => {
+        console.error("[/api/marathon-register] Participant email send error:", err);
+        return null;
+      })
+    );
 
-    const [adminResult, participantResult] = await Promise.allSettled(emailTasks);
+    const emailResults = await Promise.allSettled(emailTasks);
 
-    if (adminResult.status === "fulfilled") {
+    const adminFulfilled = emailResults[0]?.status === "fulfilled" && emailResults[0]?.value !== null;
+    const participantFulfilled = emailResults.length > 1
+      ? emailResults[1]?.status === "fulfilled" && emailResults[1]?.value !== null
+      : adminFulfilled;
+
+    if (adminFulfilled) {
       console.log(`[/api/marathon-register] Organizer notification email delivered to ${adminEmailRecipient}`);
-    } else {
-      console.error("[/api/marathon-register] Organizer email failed:", adminResult.reason);
     }
 
-    if (participantResult.status === "fulfilled") {
+    if (participantFulfilled) {
       console.log(`[/api/marathon-register] Participant confirmation email delivered to ${cleanEmail}`);
-    } else {
-      console.error("[/api/marathon-register] Participant email failed:", participantResult.reason);
     }
 
     return NextResponse.json({
@@ -301,8 +328,8 @@ export async function POST(req: NextRequest) {
       fileName: passFileName,
       isNew,
       emailDelivered: {
-        admin: adminResult.status === "fulfilled",
-        participant: participantResult.status === "fulfilled",
+        admin: adminFulfilled,
+        participant: participantFulfilled,
       },
       message: isNew
         ? "Registration successfully saved in database. Confirmation email with your runner card has been sent."

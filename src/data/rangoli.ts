@@ -137,9 +137,9 @@ export const RANGOLI_RULES = [
   },
   {
     step: "03",
-    title: "Fair Public Voting",
-    titleNepali: "निष्पक्ष अनलाइन भोटिङ",
-    description: "Anyone can browse entries and vote for their favorites! Share your entry's direct link with friends, family, and neighbors. Anti-bot checks prevent spam.",
+    title: "Fair Public Voting (1 Vote Per IP)",
+    titleNepali: "निष्पक्ष अनलाइन भोटिङ (प्रति व्यक्ति १ भोट)",
+    description: "Anyone can browse entries and cast their 1 official vote (strictly 1 vote per person IP-wise) for their favorite artwork to ensure 100% fair, transparent, and authentic results.",
     icon: "vote",
   },
   {
@@ -165,8 +165,8 @@ export const RANGOLI_FAQS: RangoliFAQ[] = [
     answer: "No. Participation is 100% complimentary as part of Rakesh Ray's Diwali community cultural initiatives.",
   },
   {
-    question: "How do I cast my vote?",
-    answer: "Browse the live Rangoli gallery on this page and click the 'Vote' button on your favorite artwork. You can vote for multiple different designs you love!",
+    question: "How do I cast my vote? Can I vote multiple times?",
+    answer: "Browse the live Rangoli gallery and click 'Vote for this' on your favorite artwork. To ensure 100% fair, transparent, and spam-free competition, each voter (verified strictly by IP address) is permitted only ONE single vote across the entire festival. Once cast, your vote is officially locked.",
   },
   {
     question: "What prizes will participants receive?",

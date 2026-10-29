@@ -11,6 +11,73 @@ export interface RunnerPassData {
   date?: string;
 }
 
+// In-memory font cache across serverless invocations
+let cachedRegularFont: ArrayBuffer | null = null;
+let cachedBoldFont: ArrayBuffer | null = null;
+
+async function fetchFontWithFallbacks(urls: string[]): Promise<ArrayBuffer | null> {
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, {
+        signal: AbortSignal.timeout(6000),
+      });
+      if (res.ok) {
+        const buf = await res.arrayBuffer();
+        if (buf && buf.byteLength > 1000) {
+          return buf;
+        }
+      }
+    } catch (err) {
+      console.warn(`[runner-pass] Could not fetch font from ${url}:`, err);
+    }
+  }
+  return null;
+}
+
+async function getPassFonts() {
+  if (!cachedRegularFont) {
+    cachedRegularFont = await fetchFontWithFallbacks([
+      "https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/files/inter-latin-400-normal.woff",
+      "https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/Inter-Regular.woff",
+      "https://unpkg.com/@fontsource/inter@5.0.8/files/inter-latin-400-normal.woff",
+    ]);
+  }
+  if (!cachedBoldFont) {
+    cachedBoldFont = await fetchFontWithFallbacks([
+      "https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/files/inter-latin-700-normal.woff",
+      "https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/Inter-Bold.woff",
+      "https://unpkg.com/@fontsource/inter@5.0.8/files/inter-latin-700-normal.woff",
+    ]);
+  }
+
+  const fonts: Array<{
+    name: string;
+    data: ArrayBuffer;
+    weight: 400 | 700;
+    style: "normal";
+  }> = [];
+
+  if (cachedRegularFont) {
+    fonts.push({
+      name: "Inter",
+      data: cachedRegularFont,
+      weight: 400,
+      style: "normal",
+    });
+  }
+
+  if (cachedBoldFont) {
+    fonts.push({
+      name: "Inter",
+      data: cachedBoldFont,
+      weight: 700,
+      style: "normal",
+    });
+  }
+
+  return fonts;
+}
+
 /**
  * Generates an official high-resolution PNG Runner Pass Card (900x520)
  * using Next.js native `ImageResponse` (Satori + Resvg engine).
@@ -59,7 +126,7 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
         border: "3px solid #CAA05C",
         padding: "24px 32px",
         color: "#FFFFFF",
-        fontFamily: "sans-serif",
+        fontFamily: "Inter, sans-serif",
         boxSizing: "border-box",
       }}
     >
@@ -78,8 +145,9 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
             style={{
               color: "#CAA05C",
               fontSize: "26px",
-              fontWeight: "bold",
+              fontWeight: 700,
               letterSpacing: "2px",
+              fontFamily: "Inter, sans-serif",
             }}
           >
             RAKESH MARATHON
@@ -88,9 +156,10 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
             style={{
               color: "#E5E7EB",
               fontSize: "12px",
-              fontWeight: "bold",
+              fontWeight: 700,
               letterSpacing: "1.5px",
               marginTop: "2px",
+              fontFamily: "Inter, sans-serif",
             }}
           >
             OFFICIAL PARTICIPANT BIB PASS • 15 KM RACE
@@ -103,9 +172,10 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
             padding: "8px 24px",
             borderRadius: "20px",
             fontSize: "15px",
-            fontWeight: "bold",
+            fontWeight: 700,
             letterSpacing: "1px",
             border: "1.5px solid rgba(255,255,255,0.3)",
+            fontFamily: "Inter, sans-serif",
           }}
         >
           15 KM RACE
@@ -127,8 +197,9 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
             style={{
               color: "#CAA05C",
               fontSize: "11px",
-              fontWeight: "bold",
+              fontWeight: 700,
               letterSpacing: "1.5px",
+              fontFamily: "Inter, sans-serif",
             }}
           >
             REGISTERED RUNNER
@@ -136,9 +207,10 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
           <span
             style={{
               color: "#FFFFFF",
-              fontSize: "32px",
-              fontWeight: "bold",
+              fontSize: "30px",
+              fontWeight: 700,
               margin: "4px 0 16px",
+              fontFamily: "Inter, sans-serif",
             }}
           >
             {fullName}
@@ -147,18 +219,18 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <div style={{ display: "flex", gap: "30px" }}>
               <div style={{ display: "flex", flexDirection: "column", width: "200px" }}>
-                <span style={{ color: "#9CA3AF", fontSize: "11px", fontWeight: "bold" }}>
+                <span style={{ color: "#9CA3AF", fontSize: "11px", fontWeight: 700, fontFamily: "Inter, sans-serif" }}>
                   RACE CATEGORY
                 </span>
-                <span style={{ color: "#FFFFFF", fontSize: "15px", fontWeight: "bold" }}>
+                <span style={{ color: "#FFFFFF", fontSize: "15px", fontWeight: 700, fontFamily: "Inter, sans-serif" }}>
                   15 KM Single Distance
                 </span>
               </div>
               <div style={{ display: "flex", flexDirection: "column" }}>
-                <span style={{ color: "#9CA3AF", fontSize: "11px", fontWeight: "bold" }}>
+                <span style={{ color: "#9CA3AF", fontSize: "11px", fontWeight: 700, fontFamily: "Inter, sans-serif" }}>
                   T-SHIRT SIZE
                 </span>
-                <span style={{ color: "#DFCD95", fontSize: "15px", fontWeight: "bold" }}>
+                <span style={{ color: "#DFCD95", fontSize: "15px", fontWeight: 700, fontFamily: "Inter, sans-serif" }}>
                   {tshirtSize} (Official Kit)
                 </span>
               </div>
@@ -166,28 +238,28 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
 
             <div style={{ display: "flex", gap: "30px" }}>
               <div style={{ display: "flex", flexDirection: "column", width: "200px" }}>
-                <span style={{ color: "#9CA3AF", fontSize: "11px", fontWeight: "bold" }}>
+                <span style={{ color: "#9CA3AF", fontSize: "11px", fontWeight: 700, fontFamily: "Inter, sans-serif" }}>
                   AGE & GENDER
                 </span>
-                <span style={{ color: "#FFFFFF", fontSize: "15px", fontWeight: "bold" }}>
+                <span style={{ color: "#FFFFFF", fontSize: "15px", fontWeight: 700, fontFamily: "Inter, sans-serif" }}>
                   {age} Yrs • {gender}
                 </span>
               </div>
               <div style={{ display: "flex", flexDirection: "column" }}>
-                <span style={{ color: "#9CA3AF", fontSize: "11px", fontWeight: "bold" }}>
+                <span style={{ color: "#9CA3AF", fontSize: "11px", fontWeight: 700, fontFamily: "Inter, sans-serif" }}>
                   CITY / LOCATION
                 </span>
-                <span style={{ color: "#FFFFFF", fontSize: "15px", fontWeight: "bold" }}>
+                <span style={{ color: "#FFFFFF", fontSize: "15px", fontWeight: 700, fontFamily: "Inter, sans-serif" }}>
                   {address}
                 </span>
               </div>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", marginTop: "4px" }}>
-              <span style={{ color: "#9CA3AF", fontSize: "11px", fontWeight: "bold" }}>
+              <span style={{ color: "#9CA3AF", fontSize: "11px", fontWeight: 700, fontFamily: "Inter, sans-serif" }}>
                 REGISTRATION DATE
               </span>
-              <span style={{ color: "#CAA05C", fontSize: "13px", fontWeight: "bold" }}>
+              <span style={{ color: "#CAA05C", fontSize: "13px", fontWeight: 700, fontFamily: "Inter, sans-serif" }}>
                 {date}
               </span>
             </div>
@@ -221,8 +293,9 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
             style={{
               color: "#CAA05C",
               fontSize: "11px",
-              fontWeight: "bold",
+              fontWeight: 700,
               letterSpacing: "1.5px",
+              fontFamily: "Inter, sans-serif",
             }}
           >
             BIB / REGISTRATION NUMBER
@@ -230,10 +303,11 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
           <span
             style={{
               color: "#FFFFFF",
-              fontSize: "36px",
-              fontWeight: "bold",
+              fontSize: "34px",
+              fontWeight: 700,
               letterSpacing: "3px",
               margin: "8px 0",
+              fontFamily: "Inter, sans-serif",
             }}
           >
             {registrationId}
@@ -246,9 +320,10 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
               borderRadius: "14px",
               padding: "4px 16px",
               fontSize: "11px",
-              fontWeight: "bold",
+              fontWeight: 700,
               letterSpacing: "1px",
               marginBottom: "12px",
+              fontFamily: "Inter, sans-serif",
             }}
           >
             STATUS: CONFIRMED
@@ -262,8 +337,9 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
             style={{
               color: "#9CA3AF",
               fontSize: "11px",
-              fontFamily: "monospace",
+              fontFamily: "Inter, monospace, sans-serif",
               marginTop: "4px",
+              letterSpacing: "2px",
             }}
           >
             * {registrationId} *
@@ -282,22 +358,24 @@ export async function generateRunnerPassPng(data: RunnerPassData): Promise<Buffe
           fontSize: "12px",
         }}
       >
-        <span style={{ color: "#CAA05C", fontWeight: "bold" }}>
+        <span style={{ color: "#CAA05C", fontWeight: 700, fontFamily: "Inter, sans-serif" }}>
           &ldquo;Run Together. Build a Better Tomorrow.&rdquo;
         </span>
-        <span style={{ color: "#9CA3AF" }}>
+        <span style={{ color: "#9CA3AF", fontFamily: "Inter, sans-serif" }}>
           Rakesh Ray Community Initiative • Parsa, Nepal
         </span>
       </div>
     </div>
   );
 
+  const fonts = await getPassFonts();
+
   const imageResponse = new ImageResponse(passElement, {
     width: 900,
     height: 520,
+    ...(fonts.length > 0 ? { fonts } : {}),
   });
 
   const arrayBuffer = await imageResponse.arrayBuffer();
   return Buffer.from(arrayBuffer);
 }
-

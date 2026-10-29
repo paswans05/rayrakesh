@@ -473,7 +473,7 @@ export async function getRegistrationById(registrationId: string): Promise<Regis
     await ensureTable();
     const client = getTursoClient();
     const result = await client.execute({
-      sql: `SELECT * FROM registrations WHERE registration_id = ? LIMIT 1`,
+      sql: `SELECT * FROM registrations WHERE LOWER(registration_id) = LOWER(?) LIMIT 1`,
       args: [registrationId],
     });
 
