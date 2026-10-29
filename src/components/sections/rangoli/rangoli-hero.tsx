@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { useLanguage } from "@/context/language-context";
 import { RANGOLI_FESTIVAL_DETAILS, RANGOLI_PRIZES } from "@/data/rangoli";
-import { MedalFill, AwardFill, MapPinFill, CalendarAlt, Sparkles } from "@/components/icons";
+import { MedalFill, AwardFill, MapPinFill, CalendarAlt } from "@/components/icons";
 
 interface RangoliHeroProps {
   onOpenSubmitModal: () => void;

@@ -7,7 +7,7 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/language-context";
 import { INITIAL_RANGOLI_SHOWCASE, type RangoliShowcaseEntry } from "@/data/rangoli";
-import { MapPinFill, HeartFill, ShareAlt, Search, CheckCircleFill, Trophy, Sparkles } from "@/components/icons";
+import { MapPinFill, HeartFill, ShareAlt, Search, CheckCircleFill, Trophy } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
 interface RangoliGalleryProps {
@@ -349,7 +349,7 @@ export default function RangoliGallery({ onOpenSubmitModal, className }: Rangoli
                       {/* Card Action Buttons */}
                       <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-3">
                         <Button
-                          variant={hasVoted ? "secondary" : "default"}
+                          variant={hasVoted ? "outline" : "default"}
                           size="md"
                           disabled={hasVoted || isVoting}
                           onClick={() => handleVote(entry)}
@@ -400,7 +400,7 @@ export default function RangoliGallery({ onOpenSubmitModal, className }: Rangoli
               </p>
               <Button
                 variant="default"
-                size="sm"
+                size="md"
                 onClick={() => {
                   setSearchQuery("");
                   setActiveTab("all");
