@@ -536,58 +536,61 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
       {selectedEntry && (
         <div
           onClick={() => setSelectedEntry(null)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/90 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto cursor-pointer"
+          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/90 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto cursor-pointer"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-2xl w-full max-h-[92vh] flex flex-col rounded-3xl overflow-hidden bg-[#1a082b] border border-amber-500/40 shadow-2xl my-auto cursor-default"
+            className="relative w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl max-h-[92vh] sm:max-h-[90vh] flex flex-col rounded-2xl sm:rounded-3xl overflow-hidden bg-[#1a082b] border border-amber-500/40 shadow-2xl my-auto cursor-default"
           >
             {/* Close Button */}
             <button
               type="button"
               onClick={() => setSelectedEntry(null)}
               aria-label="Close popup"
-              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 size-10 rounded-full bg-black/80 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-all cursor-pointer shadow-xl backdrop-blur-sm"
+              className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5 z-20 size-8 sm:size-9 rounded-full bg-black/75 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-all cursor-pointer shadow-xl backdrop-blur-sm text-sm sm:text-base font-bold"
             >
               ✕
             </button>
 
             {/* High-res Image Preview */}
-            <div className="relative aspect-4/3 max-h-[58vh] w-full bg-black/90 flex items-center justify-center overflow-hidden">
+            <div className="relative aspect-4/3 max-h-[46vh] sm:max-h-[52vh] md:max-h-[56vh] w-full bg-black/95 flex items-center justify-center overflow-hidden">
               <Image
                 src={selectedEntry.image_url}
                 alt={selectedEntry.title}
-                width={900}
-                height={675}
+                width={600}
+                height={375}
                 unoptimized
                 className="w-full h-full object-contain"
               />
             </div>
 
             {/* Details (Scrollable if viewport is small) */}
-            <div className="p-5 sm:p-6 overflow-y-auto max-h-[34vh] bg-[#1a082b]">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <span className="text-xs font-mono text-amber-300">#{selectedEntry.entry_id}</span>
-                  <h3 className="text-xl sm:text-2xl font-black text-white mt-0.5">{selectedEntry.title}</h3>
-                  <p className="text-xs sm:text-sm text-amber-400 font-semibold mt-0.5">
-                    {isNepali ? "कलाकार:" : "Artist:"} {selectedEntry.full_name} • {selectedEntry.address}
-                  </p>
+            <div className="p-3.5 sm:p-5 md:p-6 overflow-y-auto max-h-[44vh] sm:max-h-[38vh] bg-[#1a082b] flex flex-col justify-between">
+              <div>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[10px] sm:text-xs font-mono text-amber-300">#{selectedEntry.entry_id}</span>
+                    <h3 className="text-base sm:text-xl md:text-2xl font-black text-white truncate mt-0.5">{selectedEntry.title}</h3>
+                    <p className="text-[11px] sm:text-xs md:text-sm text-amber-400 font-semibold truncate mt-0.5">
+                      {isNepali ? "कलाकार:" : "Artist:"} {selectedEntry.full_name} • {selectedEntry.address}
+                    </p>
+                  </div>
+
+                  <div className="text-right shrink-0 bg-white/5 border border-white/10 px-2.5 py-1 rounded-xl">
+                    <div className="text-lg sm:text-xl md:text-2xl font-black text-amber-300 leading-none">{selectedEntry.votes_count}</div>
+                    <div className="text-[10px] sm:text-xs text-white/60 uppercase tracking-wider font-semibold">{t("rangoli.votes_label", "votes")}</div>
+                  </div>
                 </div>
 
-                <div className="text-right shrink-0">
-                  <div className="text-xl sm:text-2xl font-black text-amber-300">{selectedEntry.votes_count}</div>
-                  <div className="text-xs text-white/60">{t("rangoli.votes_label", "votes")}</div>
-                </div>
+                {selectedEntry.description && (
+                  <p className="text-[11px] sm:text-xs md:text-sm text-white/80 mt-2 sm:mt-3 leading-relaxed line-clamp-3 sm:line-clamp-none">
+                    {selectedEntry.description}
+                  </p>
+                )}
               </div>
 
-              {selectedEntry.description && (
-                <p className="text-xs sm:text-sm text-white/80 mt-3 leading-relaxed">
-                  {selectedEntry.description}
-                </p>
-              )}
-
-              <div className="mt-5 pt-4 border-t border-white/10 flex items-center gap-3">
+              {/* Action Buttons Row */}
+              <div className="mt-3.5 sm:mt-5 pt-3 sm:pt-4 border-t border-white/10 flex items-center gap-2 sm:gap-3">
                 <Button
                   variant="default"
                   size="md"
@@ -599,7 +602,7 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
                     }
                   }}
                   className={cn(
-                    "flex-1 font-bold cursor-pointer transition-all flex items-center justify-center gap-2",
+                    "flex-1 font-bold text-xs sm:text-sm py-2 sm:py-2.5 cursor-pointer transition-all flex items-center justify-center gap-1.5 sm:gap-2",
                     votedIds.has(selectedEntry.entry_id)
                       ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 cursor-default"
                       : votedIds.size > 0
@@ -607,31 +610,33 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
                         : "bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-darker shadow-lg shadow-amber-500/20"
                   )}
                 >
-                  <HeartFill className={cn("size-4", votedIds.has(selectedEntry.entry_id) ? "text-rose-400 fill-rose-400" : "text-darker")} />
-                  {votedIds.has(selectedEntry.entry_id)
-                    ? t("rangoli.voted_btn", "Voted ❤️")
-                    : votedIds.size > 0
-                      ? (isNepali ? "१ भोट प्रयोग भयो" : "1 Vote Used")
-                      : t("rangoli.vote_btn", "Vote for this Rangoli")}
+                  <HeartFill className={cn("size-3.5 sm:size-4", votedIds.has(selectedEntry.entry_id) ? "text-rose-400 fill-rose-400" : "text-darker")} />
+                  <span>
+                    {votedIds.has(selectedEntry.entry_id)
+                      ? t("rangoli.voted_btn", "Voted ❤️")
+                      : votedIds.size > 0
+                        ? (isNepali ? "१ भोट प्रयोग भयो" : "1 Vote Used")
+                        : t("rangoli.vote_btn", "Vote for this")}
+                  </span>
                 </Button>
 
                 <Button
                   variant="outline"
                   size="md"
                   onClick={() => handleShare(selectedEntry)}
-                  className="bg-white/10 text-white hover:bg-white/20 cursor-pointer"
+                  className="bg-white/10 text-white hover:bg-white/20 cursor-pointer text-xs sm:text-sm px-2.5 sm:px-3.5 py-2 sm:py-2.5"
                 >
-                  <ShareAlt className="size-4" />
-                  {t("rangoli.share_btn", "Share")}
+                  <ShareAlt className="size-3.5 sm:size-4" />
+                  <span className="hidden xs:inline sm:inline">{t("rangoli.share_btn", "Share")}</span>
                 </Button>
 
                 <Button
                   variant="outline"
                   size="md"
                   onClick={() => setSelectedEntry(null)}
-                  className="bg-white/5 text-white/70 hover:bg-white/15 cursor-pointer text-xs"
+                  className="bg-white/5 text-white/70 hover:bg-white/15 cursor-pointer text-xs sm:text-sm px-2.5 sm:px-3 py-2 sm:py-2.5"
                 >
-                  {isNepali ? "बन्द गर्नुहोस्" : "Close"}
+                  {isNepali ? "बन्द" : "Close"}
                 </Button>
               </div>
             </div>
