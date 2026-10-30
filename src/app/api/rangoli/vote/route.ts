@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { voteRangoliEntry } from "@/lib/db";
 
-function getVoterId(req: NextRequest): string {
+function getClientIp(req: NextRequest): string {
+  // Grab clean IP address (first address in x-forwarded-for if behind proxy/Cloudflare/Vercel)
   const forwarded = req.headers.get("x-forwarded-for");
-  const ip = forwarded ? forwarded.split(",")[0].trim() : req.headers.get("x-real-ip") || "unknown-ip";
-  const userAgent = (req.headers.get("user-agent") || "").slice(0, 50);
-  return `${ip}::${userAgent}`;
+  if (forwarded) {
+    const firstIp = forwarded.split(",")[0].trim();
+    if (firstIp) return firstIp;
+  }
+  const realIp = req.headers.get("x-real-ip");
+  if (realIp) return realIp.trim();
+  const cfConnectingIp = req.headers.get("cf-connecting-ip");
+  if (cfConnectingIp) return cfConnectingIp.trim();
+  return "unknown-ip";
 }
 
 export async function POST(req: NextRequest) {
@@ -20,12 +27,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const voterId = getVoterId(req);
-    const result = await voteRangoliEntry(entry_id, voterId);
+    // Strict IP address extraction (IP-wise check)
+    const clientIp = getClientIp(req);
+    const result = await voteRangoliEntry(entry_id, clientIp);
 
     if (!result.success) {
       return NextResponse.json(
-        { success: false, message: result.message },
+        {
+          success: false,
+          alreadyVoted: result.alreadyVoted ?? true,
+          votedEntryId: result.votedEntryId,
+          message: result.message,
+        },
         { status: 400 }
       );
     }
@@ -33,6 +46,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       entry_id,
+      votedEntryId: entry_id,
       newVotesCount: result.newVotesCount,
       message: result.message,
     });
@@ -48,4 +62,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

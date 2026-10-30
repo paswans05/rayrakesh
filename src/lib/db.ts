@@ -184,12 +184,12 @@ export async function ensureTable(): Promise<void> {
       entry_id TEXT NOT NULL,
       voter_identifier TEXT NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      UNIQUE(entry_id, voter_identifier)
+      UNIQUE(voter_identifier)
     );
   `);
 
   try {
-    await client.execute(`CREATE INDEX IF NOT EXISTS idx_rangoli_voter ON rangoli_votes(voter_identifier);`);
+    await client.execute(`CREATE INDEX IF NOT EXISTS idx_rangoli_single_voter ON rangoli_votes(voter_identifier);`);
   } catch {
     // Index exists
   }
@@ -710,21 +710,24 @@ export async function createRangoliEntry(entry: {
 export async function voteRangoliEntry(
   entryId: string,
   voterIdentifier: string
-): Promise<{ success: boolean; newVotesCount: number; message: string }> {
+): Promise<{ success: boolean; newVotesCount: number; message: string; votedEntryId?: string; alreadyVoted?: boolean }> {
   await ensureTable();
   const client = getTursoClient();
 
-  // 1. Check if already voted
-  const checkVote = await client.execute({
-    sql: `SELECT id FROM rangoli_votes WHERE entry_id = ? AND voter_identifier = ? LIMIT 1`,
-    args: [entryId, voterIdentifier],
+  // 1. Strict 1 vote per person IP policy: Check if voter/IP has ALREADY cast their single vote on ANY rangoli entry
+  const checkAnyVote = await client.execute({
+    sql: `SELECT entry_id FROM rangoli_votes WHERE voter_identifier = ? LIMIT 1`,
+    args: [voterIdentifier],
   });
 
-  if (checkVote.rows.length > 0) {
+  if (checkAnyVote.rows.length > 0) {
+    const existingEntryId = String(checkAnyVote.rows[0].entry_id);
     return {
       success: false,
       newVotesCount: 0,
-      message: "You have already voted for this Rangoli!",
+      votedEntryId: existingEntryId,
+      alreadyVoted: true,
+      message: "You have already cast your 1 official vote! Only 1 vote is allowed per person (IP-wise). (तपाईंले आफ्नो १ आधिकारिक भोट पहिले नै प्रयोग गरिसक्नुभएको छ!)",
     };
   }
 

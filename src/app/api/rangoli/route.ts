@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getRangoliEntries, createRangoliEntry, getVotedEntryIds } from "@/lib/db";
 
-function getVoterId(req: NextRequest): string {
+function getClientIp(req: NextRequest): string {
   const forwarded = req.headers.get("x-forwarded-for");
-  const ip = forwarded ? forwarded.split(",")[0].trim() : req.headers.get("x-real-ip") || "unknown-ip";
-  const userAgent = (req.headers.get("user-agent") || "").slice(0, 50);
-  return `${ip}::${userAgent}`;
+  if (forwarded) {
+    const firstIp = forwarded.split(",")[0].trim();
+    if (firstIp) return firstIp;
+  }
+  const realIp = req.headers.get("x-real-ip");
+  if (realIp) return realIp.trim();
+  const cfConnectingIp = req.headers.get("cf-connecting-ip");
+  if (cfConnectingIp) return cfConnectingIp.trim();
+  return "unknown-ip";
 }
 
 export async function GET(req: NextRequest) {
@@ -13,13 +19,16 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const sort = (searchParams.get("sort") === "latest" ? "latest" : "votes") as "votes" | "latest";
     const entries = await getRangoliEntries(sort);
-    const voterId = getVoterId(req);
-    const userVotedIds = await getVotedEntryIds(voterId);
+    const clientIp = getClientIp(req);
+    const userVotedIds = await getVotedEntryIds(clientIp);
 
     return NextResponse.json({
       success: true,
       entries,
       userVotedIds,
+      userVotedEntryId: userVotedIds.length > 0 ? userVotedIds[0] : null,
+      hasVoted: userVotedIds.length > 0,
+      clientIp,
     });
   } catch (error: any) {
     console.error("GET /api/rangoli error:", error);
