@@ -27,6 +27,26 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [selectedEntry, setSelectedEntry] = useState<RangoliShowcaseEntry | null>(null);
 
+  // Close lightbox modal on Escape key press and prevent background scrolling
+  useEffect(() => {
+    if (!selectedEntry) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedEntry(null);
+      }
+    };
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedEntry]);
+
   // Load entries and user vote state
   useEffect(() => {
     // 1. Load local votes from storage
@@ -514,18 +534,26 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
 
       {/* Lightbox Modal for Selected Entry */}
       {selectedEntry && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative max-w-2xl w-full rounded-3xl overflow-hidden bg-[#1a082b] border border-amber-500/40 shadow-2xl">
+        <div
+          onClick={() => setSelectedEntry(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/90 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto cursor-pointer"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative max-w-2xl w-full max-h-[92vh] flex flex-col rounded-3xl overflow-hidden bg-[#1a082b] border border-amber-500/40 shadow-2xl my-auto cursor-default"
+          >
             {/* Close Button */}
             <button
+              type="button"
               onClick={() => setSelectedEntry(null)}
-              className="absolute top-4 right-4 z-10 size-10 rounded-full bg-darker/80 text-white flex items-center justify-center hover:bg-white hover:text-darker transition-colors cursor-pointer"
+              aria-label="Close popup"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 size-10 rounded-full bg-black/80 hover:bg-white text-white hover:text-black border border-white/20 flex items-center justify-center transition-all cursor-pointer shadow-xl backdrop-blur-sm"
             >
               ✕
             </button>
 
             {/* High-res Image Preview */}
-            <div className="relative aspect-4/3 w-full bg-black">
+            <div className="relative aspect-4/3 max-h-[58vh] w-full bg-black/90 flex items-center justify-center overflow-hidden">
               <Image
                 src={selectedEntry.image_url}
                 alt={selectedEntry.title}
@@ -536,42 +564,55 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
               />
             </div>
 
-            {/* Details */}
-            <div className="p-6">
+            {/* Details (Scrollable if viewport is small) */}
+            <div className="p-5 sm:p-6 overflow-y-auto max-h-[34vh] bg-[#1a082b]">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <span className="text-xs font-mono text-amber-300">#{selectedEntry.entry_id}</span>
-                  <h3 className="text-2xl font-black text-white mt-1">{selectedEntry.title}</h3>
-                  <p className="text-sm text-amber-400 font-semibold mt-0.5">
+                  <h3 className="text-xl sm:text-2xl font-black text-white mt-0.5">{selectedEntry.title}</h3>
+                  <p className="text-xs sm:text-sm text-amber-400 font-semibold mt-0.5">
                     {isNepali ? "कलाकार:" : "Artist:"} {selectedEntry.full_name} • {selectedEntry.address}
                   </p>
                 </div>
 
-                <div className="text-right">
-                  <div className="text-2xl font-black text-amber-300">{selectedEntry.votes_count}</div>
+                <div className="text-right shrink-0">
+                  <div className="text-xl sm:text-2xl font-black text-amber-300">{selectedEntry.votes_count}</div>
                   <div className="text-xs text-white/60">{t("rangoli.votes_label", "votes")}</div>
                 </div>
               </div>
 
-              <p className="text-sm text-white/80 mt-4 leading-relaxed">
-                {selectedEntry.description}
-              </p>
+              {selectedEntry.description && (
+                <p className="text-xs sm:text-sm text-white/80 mt-3 leading-relaxed">
+                  {selectedEntry.description}
+                </p>
+              )}
 
-              <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-3">
+              <div className="mt-5 pt-4 border-t border-white/10 flex items-center gap-3">
                 <Button
                   variant="default"
                   size="md"
-                  disabled={votedIds.has(selectedEntry.entry_id)}
+                  disabled={votedIds.size > 0}
                   onClick={() => {
                     handleVote(selectedEntry);
-                    setSelectedEntry((prev) => prev ? { ...prev, votes_count: prev.votes_count + 1 } : null);
+                    if (!votedIds.has(selectedEntry.entry_id) && votedIds.size === 0) {
+                      setSelectedEntry((prev) => prev ? { ...prev, votes_count: prev.votes_count + 1 } : null);
+                    }
                   }}
-                  className="flex-1 bg-amber-500 hover:bg-amber-400 text-darker font-bold cursor-pointer"
+                  className={cn(
+                    "flex-1 font-bold cursor-pointer transition-all flex items-center justify-center gap-2",
+                    votedIds.has(selectedEntry.entry_id)
+                      ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 cursor-default"
+                      : votedIds.size > 0
+                        ? "bg-white/5 text-white/40 border border-white/10 cursor-not-allowed opacity-60"
+                        : "bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-darker shadow-lg shadow-amber-500/20"
+                  )}
                 >
-                  <HeartFill className="size-4" />
+                  <HeartFill className={cn("size-4", votedIds.has(selectedEntry.entry_id) ? "text-rose-400 fill-rose-400" : "text-darker")} />
                   {votedIds.has(selectedEntry.entry_id)
                     ? t("rangoli.voted_btn", "Voted ❤️")
-                    : t("rangoli.vote_btn", "Vote for this Rangoli")}
+                    : votedIds.size > 0
+                      ? (isNepali ? "१ भोट प्रयोग भयो" : "1 Vote Used")
+                      : t("rangoli.vote_btn", "Vote for this Rangoli")}
                 </Button>
 
                 <Button
@@ -582,6 +623,15 @@ export default function RangoliGallery({ onOpenSubmitModal, refreshTrigger, clas
                 >
                   <ShareAlt className="size-4" />
                   {t("rangoli.share_btn", "Share")}
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="md"
+                  onClick={() => setSelectedEntry(null)}
+                  className="bg-white/5 text-white/70 hover:bg-white/15 cursor-pointer text-xs"
+                >
+                  {isNepali ? "बन्द गर्नुहोस्" : "Close"}
                 </Button>
               </div>
             </div>
