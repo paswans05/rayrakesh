@@ -154,7 +154,7 @@ export const RANGOLI_RULES = [
 export const RANGOLI_FAQS: RangoliFAQ[] = [
   {
     question: "Who can participate in the Rangoli Festival?",
-    answer: "Anyone! The competition is completely free and open to individuals, families, students, and art enthusiasts residing in Parsa, Madhesh Province, or across Nepal.",
+    answer: "This competition is exclusively for female participants (women & girls). It is completely free and open to all female artists, students, homemakers, and art enthusiasts residing in Parsa, Madhesh Province, or across Nepal.",
   },
   {
     question: "How are the winners decided?",

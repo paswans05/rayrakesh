@@ -19,6 +19,7 @@ export default function RangoliSubmitModal({ isOpen, onClose, onSubmittedSuccess
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [gender, setGender] = useState("female");
   const [address, setAddress] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -56,6 +57,11 @@ export default function RangoliSubmitModal({ isOpen, onClose, onSubmittedSuccess
       return;
     }
 
+    if (gender !== "female") {
+      setError(isNepali ? "यो प्रतियोगिता महिलाहरूका लागि मात्र हो। कृपया लिङ्ग 'महिला' छान्नुहोस्।" : "This competition is exclusively for females. Please select 'Female' as gender.");
+      return;
+    }
+
     if (!imageBase64) {
       setError(isNepali ? "कृपया आफ्नो रङ्गोलीको तस्बिर अपलोड गर्नुहोस्।" : "Please upload a photo of your Rangoli.");
       return;
@@ -71,6 +77,7 @@ export default function RangoliSubmitModal({ isOpen, onClose, onSubmittedSuccess
           full_name: fullName.trim(),
           phone: phone.trim(),
           email: email.trim() || undefined,
+          gender: gender,
           address: address.trim(),
           title: title.trim(),
           description: description.trim() || undefined,
@@ -98,6 +105,7 @@ export default function RangoliSubmitModal({ isOpen, onClose, onSubmittedSuccess
     setFullName("");
     setPhone("");
     setEmail("");
+    setGender("female");
     setAddress("");
     setTitle("");
     setDescription("");
@@ -254,6 +262,29 @@ export default function RangoliSubmitModal({ isOpen, onClose, onSubmittedSuccess
                 </div>
               </div>
 
+              {/* Gender - Female Only */}
+              <div>
+                <label className="block text-xs font-semibold text-white/80 mb-1">
+                  {isNepali ? "लिङ्ग*" : "Gender*"}
+                </label>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 px-3.5 py-2.5 rounded-xl bg-rose-500/10 border border-rose-400/40 text-rose-200 text-xs sm:text-sm font-bold flex items-center gap-2">
+                    <span className="text-base">👩</span>
+                    {isNepali ? "महिला (Female)" : "Female"}
+                    <span className="ml-auto text-[10px] font-medium px-2 py-0.5 rounded-full bg-rose-400/20 text-rose-300 border border-rose-400/30">
+                      {isNepali ? "महिला मात्र" : "Women Only"}
+                    </span>
+                  </div>
+                  <input type="hidden" value="female" />
+                </div>
+                <p className="text-[11px] text-amber-300/80 mt-1.5 flex items-center gap-1">
+                  <span>🪔</span>
+                  {isNepali
+                    ? "यो रङ्गोली प्रतियोगिता दीपावलीमा महिला कलाकारहरूका लागि मात्र आयोजित गरिएको हो।"
+                    : "This Diwali Rangoli competition is exclusively organized for female artists."}
+                </p>
+              </div>
+
               {/* Email & Address */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
@@ -315,7 +346,7 @@ export default function RangoliSubmitModal({ isOpen, onClose, onSubmittedSuccess
 
               {/* Terms note */}
               <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-[11px] text-white/70 leading-relaxed">
-                💡 <strong>{isNepali ? "नियम:" : "Notice:"}</strong> {isNepali ? "मौलिक हस्तनिर्मित रङ्गोली हुनुपर्दछ। तस्बिर दर्ता भएपछि तत्काल ग्यालरीमा प्रदर्शित हुनेछ।" : "Rangolis must be handmade and authentic. Entries will be listed immediately in the public gallery for voting."}
+                💡 <strong>{isNepali ? "नियम:" : "Notice:"}</strong> {isNepali ? "यो प्रतियोगिता महिला कलाकारहरूका लागि मात्र हो। मौलिक हस्तनिर्मित रङ्गोली हुनुपर्दछ। तस्बिर दर्ता भएपछि तत्काल ग्यालरीमा प्रदर्शित हुनेछ।" : "This competition is exclusively for female artists. Rangolis must be handmade and authentic. Entries will be listed immediately in the public gallery for voting."}
               </div>
 
               {/* Actions */}

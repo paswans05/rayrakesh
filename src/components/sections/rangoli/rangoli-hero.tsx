@@ -54,7 +54,7 @@ export default function RangoliHero({ onOpenSubmitModal, className }: RangoliHer
                 </span>
 
                 <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-rose-500/20 text-rose-200 border border-rose-500/40">
-                  {isNepali ? "राकेश रायको नेतृत्वमा अभियान" : `Initiative by ${RANGOLI_FESTIVAL_DETAILS.campaignLeader}`}
+                  {isNepali ? "महिला कलाकारहरूका लागि मात्र 👩" : "For Female Artists Only 👩"}
                 </span>
               </div>
 
@@ -85,8 +85,8 @@ export default function RangoliHero({ onOpenSubmitModal, className }: RangoliHer
               {/* Subtitle */}
               <p className="text-base sm:text-lg md:text-xl text-white/85 max-w-2xl leading-relaxed font-normal">
                 {isNepali
-                  ? "यस दीपावलीमा आफ्नो सुन्दर रङ्गोली बनाउनुहोस्, तस्बिर पठाउनुहोस् र भोट सङ्कलन गर्नुहोस्! सर्वाधिक भोट पाउने शीर्ष ३ रङ्गोलीले नगद पुरस्कार जित्नेछन्, शीर्ष १० लाई पदक र सबै सहभागीलाई प्रमाणपत्र!"
-                  : "Create your festive Diwali Rangoli, submit your photo, and collect public votes! The entries with the most votes win grand cash awards (1st, 2nd & 3rd), top 10 receive medals & gift hampers, and every participant gets a certificate!"}
+                  ? "यस दीपावलीमा महिला कलाकारहरूलाई विशेष अवसर! आफ्नो सुन्दर रङ्गोली बनाउनुहोस्, तस्बिर पठाउनुहोस् र भोट सङ्कलन गर्नुहोस्! सर्वाधिक भोट पाउने शीर्ष ३ रङ्गोलीले नगद पुरस्कार जित्नेछन्, शीर्ष १० लाई पदक र सबै सहभागीलाई प्रमाणपत्र!"
+                  : "This Diwali, a special competition exclusively for female artists! Create your festive Rangoli, submit your photo, and collect public votes! The top 3 most voted entries win grand cash prizes, top 10 receive medals & hampers, and every participant gets a certificate!"}
               </p>
 
               {/* Action Buttons */}

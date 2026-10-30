@@ -37,13 +37,25 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { full_name, email, phone, address, title, description, image_url } = body;
+    const { full_name, email, phone, gender, address, title, description, image_url } = body;
 
     if (!full_name || !phone || !address || !title || !image_url) {
       return NextResponse.json(
         {
           success: false,
           error: "Missing required fields: Name, Phone, Address, Title, and Rangoli Photo are required.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Female-only competition: reject non-female submissions
+    const cleanGender = (gender || "").toString().trim().toLowerCase();
+    if (cleanGender !== "female") {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "This Diwali Rangoli competition is exclusively for female participants only. (यो प्रतियोगिता महिलाहरूका लागि मात्र हो।)",
         },
         { status: 400 }
       );
@@ -76,4 +88,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
