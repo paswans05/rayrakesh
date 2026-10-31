@@ -41,9 +41,9 @@ export async function POST(req: NextRequest) {
     }
 
     const ageNum = parseInt(age, 10);
-    if (isNaN(ageNum) || ageNum < 16 || ageNum > 100) {
+    if (isNaN(ageNum) || ageNum < 14 || ageNum > 100) {
       return NextResponse.json(
-        { error: "Age must be between 16 and 100." },
+        { error: "Age must be between 14 and 100." },
         { status: 400 }
       );
     }

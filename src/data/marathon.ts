@@ -50,7 +50,7 @@ export const MARATHON_DETAILS = {
     reportingVenue: "Parsa, Nepal (Official Landmark TBA)",
     finishVenue: "Parsa, Nepal (Official Landmark TBA)",
     registrationPeriod: "Open Now — Closing Date TBA",
-    eligibility: "Open to running enthusiasts aged 16 and above. No prior marathon certification required.",
+    eligibility: "Open to running enthusiasts aged 14 and above. No prior marathon certification required.",
   },
 
   prizesHeading: "RUN FOR GLORY. RACE FOR THE PRIZE.",

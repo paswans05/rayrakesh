@@ -84,7 +84,7 @@ export const en = {
   "modal.email_placeholder": "runner@example.com",
   "modal.phone": "Phone Number",
   "modal.phone_placeholder": "+977 98XXXXXXXX",
-  "modal.age": "Age (16+ years)",
+  "modal.age": "Age (14+ years)",
   "modal.age_placeholder": "Age in years",
   "modal.gender": "Gender",
   "modal.gender_male": "Male",

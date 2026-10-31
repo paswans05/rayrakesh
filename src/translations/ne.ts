@@ -86,7 +86,7 @@ export const ne: Record<TranslationKey, string> = {
   "modal.email_placeholder": "runner@example.com",
   "modal.phone": "सम्पर्क फोन नम्बर",
   "modal.phone_placeholder": "+९७७ ९८XXXXXXXX",
-  "modal.age": "उमेर (१६+ वर्ष)",
+  "modal.age": "उमेर (१४+ वर्ष)",
   "modal.age_placeholder": "वर्षमा उमेर",
   "modal.gender": "लिङ्ग",
   "modal.gender_male": "पुरुष",

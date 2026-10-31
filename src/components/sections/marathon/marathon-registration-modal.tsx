@@ -97,11 +97,11 @@ export default function MarathonRegistrationModal() {
 
     const ageNum = parseInt(formData.age, 10);
     if (!formData.age || isNaN(ageNum)) {
-      newErrors.age = "Please provide your age.";
-    } else if (ageNum < 16) {
-      newErrors.age = "Minimum age to participate in 15 KM is 16 years.";
+      newErrors.age = isNepali ? "कृपया आफ्नो उमेर उल्लेख गर्नुहोस्।" : "Please provide your age.";
+    } else if (ageNum < 14) {
+      newErrors.age = isNepali ? "१५ किमी म्याराथनमा सहभागी हुन न्यूनतम उमेर १४ वर्ष हुनुपर्छ।" : "Minimum age to participate in 15 KM is 14 years.";
     } else if (ageNum > 100) {
-      newErrors.age = "Please enter a valid age.";
+      newErrors.age = isNepali ? "कृपया मान्य उमेर प्रविष्ट गर्नुहोस्।" : "Please enter a valid age.";
     }
 
     if (!formData.address.trim()) {
@@ -534,12 +534,12 @@ export default function MarathonRegistrationModal() {
 
                   <div>
                     <label htmlFor={`${formId}-modal-age`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1">
-                      {t("modal.age", "Age (Min 16+)")} *
+                      {t("modal.age", "Age (Min 14+)")} *
                     </label>
                     <input
                       id={`${formId}-modal-age`}
                       type="number"
-                      min="16"
+                      min="14"
                       max="99"
                       value={formData.age}
                       onChange={(e) => setFormData({ ...formData, age: e.target.value })}

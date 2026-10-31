@@ -104,8 +104,8 @@ export default function MarathonRegistration() {
     const ageNum = parseInt(formData.age, 10);
     if (!formData.age || isNaN(ageNum)) {
       newErrors.age = "Please provide your age.";
-    } else if (ageNum < 16) {
-      newErrors.age = "Minimum age to participate in the 15 KM Marathon is 16 years.";
+    } else if (ageNum < 14) {
+      newErrors.age = "Minimum age to participate in the 15 KM Marathon is 14 years.";
     } else if (ageNum > 100) {
       newErrors.age = "Please enter a valid age.";
     }
@@ -508,12 +508,12 @@ export default function MarathonRegistration() {
                       {/* Age */}
                       <div>
                         <label htmlFor={`${formId}-age`} className="block text-xs font-bold uppercase tracking-wider text-darker mb-1.5">
-                          Age (Minimum 16 yrs) *
+                          Age (Minimum 14 yrs) *
                         </label>
                         <input
                           id={`${formId}-age`}
                           type="number"
-                          min="16"
+                          min="14"
                           max="99"
                           value={formData.age}
                           onChange={(e) => setFormData({ ...formData, age: e.target.value })}
