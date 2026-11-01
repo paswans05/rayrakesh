@@ -4,7 +4,7 @@ export const CONTACT_INFO_CONFIG = [
   {
     icon: Location,
     title: 'Our Address',
-    info: 'Jingadawa, Madhesh Province, Nepal'
+    info: 'Parsa, 4(Jingarwa)Sarlahi, Nepal'
   },
   {
     icon: CallAlt,

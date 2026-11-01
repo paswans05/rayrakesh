@@ -9,7 +9,7 @@ export const en = {
   "nav.register_now": "Register Now",
 
   // Topbar Contact Info
-  "contact.address": "Jingadawa, Madhesh Province, Nepal",
+  "contact.address": "Parsa, 4(Jingarwa)Sarlahi, Nepal",
   "contact.phone": "+977-9818888722",
   "contact.email": "erakesh.ray@gmail.com",
 
