@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RangoliHero from "@/components/sections/rangoli/rangoli-hero";
 import RangoliPrizes from "@/components/sections/rangoli/rangoli-prizes";
 import RangoliGallery from "@/components/sections/rangoli/rangoli-gallery";
@@ -11,6 +11,18 @@ import RangoliSubmitModal from "@/components/sections/rangoli/rangoli-submit-mod
 export default function RangoliView() {
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  // Auto-open registration modal if user lands via QR code scan (e.g. /rangoli?register=1 or /rangoli#register)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      const isRegisterParam = url.searchParams.get("register") === "1" || url.searchParams.get("submit") === "1";
+      const isRegisterHash = window.location.hash === "#register" || window.location.hash === "#submit";
+      if (isRegisterParam || isRegisterHash) {
+        setIsSubmitModalOpen(true);
+      }
+    }
+  }, []);
 
   return (
     <React.Fragment>
