@@ -8,21 +8,27 @@ import RangoliHowItWorks from "@/components/sections/rangoli/rangoli-how-it-work
 import RangoliFAQs from "@/components/sections/rangoli/rangoli-faqs";
 import RangoliSubmitModal from "@/components/sections/rangoli/rangoli-submit-modal";
 
-export default function RangoliView() {
-  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+interface RangoliViewProps {
+  initialOpenSubmitModal?: boolean;
+}
+
+export default function RangoliView({ initialOpenSubmitModal = false }: RangoliViewProps) {
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(initialOpenSubmitModal);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // Auto-open registration modal if user lands via QR code scan (e.g. /rangoli?register=1 or /rangoli#register)
+  // Auto-open registration modal if user lands via URL param/hash or direct /rangoli/register path
   useEffect(() => {
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
+      const isRegisterPath = window.location.pathname.endsWith("/rangoli/register") || window.location.pathname.endsWith("/rangoli/register/");
       const isRegisterParam = url.searchParams.get("register") === "1" || url.searchParams.get("submit") === "1";
       const isRegisterHash = window.location.hash === "#register" || window.location.hash === "#submit";
-      if (isRegisterParam || isRegisterHash) {
+
+      if (initialOpenSubmitModal || isRegisterPath || isRegisterParam || isRegisterHash) {
         setIsSubmitModalOpen(true);
       }
     }
-  }, []);
+  }, [initialOpenSubmitModal]);
 
   return (
     <React.Fragment>
@@ -48,4 +54,3 @@ export default function RangoliView() {
     </React.Fragment>
   );
 }
-
