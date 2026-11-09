@@ -627,13 +627,13 @@ export default function MarathonRegistration() {
                   <div className="pt-6">
                     <Button
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={true}
                       size="xl"
                       variant="default"
                       full
                       className="font-bold text-base shadow-xl shadow-primary/20 hover:scale-[1.01] active:scale-[0.99] transition-all"
                     >
-                      {isSubmitting ? "Processing Registration..." : "Submit 15 KM Marathon Registration"}
+                      Register are closed for this event. Please check back later for future events.
                     </Button>
                     <p className="text-center text-xs text-body mt-3">
                       Complimentary Community Entry • Zero Registration Fees • Secure Client Validation
