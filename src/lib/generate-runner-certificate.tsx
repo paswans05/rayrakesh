@@ -173,8 +173,8 @@ export async function generateRunnerCertificatePng(
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#FFFFFF",
-          borderBottom: "1.5px solid #0C2340",
+          // backgroundColor: "#FFFFFF",
+          // borderBottom: "1.5px solid #0C2340",
           fontFamily: "NotoSansDevanagari, Inter, sans-serif",
           fontSize,
           fontWeight: 700,
@@ -191,13 +191,13 @@ export async function generateRunnerCertificatePng(
         <div
           style={{
             position: "absolute",
-            left: "40px",
+            left: "65px",
             top: "22px",
             display: "flex",
             alignItems: "center",
             fontSize: "11px",
             fontWeight: 700,
-            color: "#64748B",
+            color: "#000000ff",
             fontFamily: "Inter, sans-serif",
             letterSpacing: "0.5px",
           }}

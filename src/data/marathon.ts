@@ -41,10 +41,10 @@ export const MARATHON_DETAILS = {
   currency: "NPR",
   totalPrizePool: "NPR 50,000",
   campaignLeader: "Rakesh Ray",
-  
+
   // Official parameters - marked as To Be Announced where pending
   schedule: {
-    eventDate: "Date To Be Announced (Coming Soon)",
+    eventDate: "14th November, 2026",
     assemblyTime: "6:00 AM NPT (Tentative)",
     flagOffTime: "6:30 AM NPT (Tentative)",
     reportingVenue: "Parsa, Nepal (Official Landmark TBA)",

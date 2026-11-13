@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Section, SectionHead, SectionContent } from "@/components/layout/section";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { ROUTE_CHECKPOINTS, PREPARATION_GUIDELINES } from "@/data/marathon";
-import marathonRouteMap from "@/images/marathon-route-map.jpg";
+import marathonRouteMap from "@/images/marathon-route-map.png";
 import {
   MapPinFill,
   Activity,
@@ -19,7 +19,7 @@ export default function MarathonRoute() {
   return (
     <Section id="route" gap="default" className="bg-lightest relative overflow-hidden">
       <div className="container">
-        
+
         {/* Section Heading */}
         <SectionHead className="text-center max-w-3xl mx-auto">
           <ScrollReveal mode="fade" direction="bottom">
@@ -47,10 +47,10 @@ export default function MarathonRoute() {
                   height={900}
                   className="w-full h-full object-cover object-center"
                 />
-                
+
                 {/* Gradient vignette */}
                 <div className="absolute inset-0 bg-linear-to-t from-darker via-transparent to-transparent opacity-80" />
-                
+
                 {/* Overlay Badge */}
                 <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-darker/90 backdrop-blur-md border border-white/15 text-white">
                   <div>
