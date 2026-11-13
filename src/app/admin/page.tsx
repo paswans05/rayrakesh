@@ -68,6 +68,8 @@ export default function AdminPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [deleteCandidate, setDeleteCandidate] = useState<RegistrationItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDownloadingAllPasses, setIsDownloadingAllPasses] = useState(false);
+  const [isDownloadingAllCertificates, setIsDownloadingAllCertificates] = useState(false);
 
   // Database connection state (displayed on login page & header)
   const [dbStatus, setDbStatus] = useState<DbStatus | null>(null);
@@ -514,6 +516,70 @@ export default function AdminPage() {
     link.download = `rakesh-marathon-registrations-${new Date().toISOString().split("T")[0]}.csv`;
     link.click();
     URL.revokeObjectURL(url);
+  };
+
+  // Download All Passes (ZIP archive)
+  const handleDownloadAllPasses = async () => {
+    if (registrations.length === 0) {
+      alert("No runner registrations found to download.");
+      return;
+    }
+
+    setIsDownloadingAllPasses(true);
+    try {
+      const res = await fetch("/api/admin/download-all-passes");
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        throw new Error(errorData?.error || `Failed to download passes (HTTP ${res.status})`);
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Rakesh-Marathon-All-Passes-${new Date().toISOString().split("T")[0]}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err: any) {
+      console.error("Download all passes error:", err);
+      alert(err.message || "Failed to download all passes. Please try again.");
+    } finally {
+      setIsDownloadingAllPasses(false);
+    }
+  };
+
+  // Download All Certificates (ZIP archive for all participants)
+  const handleDownloadAllCertificates = async () => {
+    if (registrations.length === 0) {
+      alert("No runner registrations found to download certificates.");
+      return;
+    }
+
+    setIsDownloadingAllCertificates(true);
+    try {
+      const res = await fetch("/api/admin/download-all-certificates");
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        throw new Error(errorData?.error || `Failed to download certificates (HTTP ${res.status})`);
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Rakesh-Marathon-All-Certificates-${new Date().toISOString().split("T")[0]}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err: any) {
+      console.error("Download all certificates error:", err);
+      alert(err.message || "Failed to download certificates. Please try again.");
+    } finally {
+      setIsDownloadingAllCertificates(false);
+    }
   };
 
   // ── LOADING STATE ──
@@ -985,6 +1051,61 @@ export default function AdminPage() {
 
             <Button
               type="button"
+              variant="default"
+              size="default"
+              onClick={handleDownloadAllPasses}
+              disabled={isDownloadingAllPasses || registrations.length === 0}
+              className="text-xs bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black cursor-pointer h-9 px-3.5 shadow-md shadow-amber-500/20 transition-all flex items-center gap-1.5"
+              title="Download all generated participant pass cards in a single ZIP file"
+            >
+              {isDownloadingAllPasses ? (
+                <>
+                  <svg className="size-3.5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="12" />
+                  </svg>
+                  <span>Zipping Passes...</span>
+                </>
+              ) : (
+                <>
+                  <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  <span>Download All Passes ({registrations.length})</span>
+                </>
+              )}
+            </Button>
+
+            <Button
+              type="button"
+              variant="default"
+              size="default"
+              onClick={handleDownloadAllCertificates}
+              disabled={isDownloadingAllCertificates || registrations.length === 0}
+              className="text-xs bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black cursor-pointer h-9 px-3.5 shadow-md shadow-emerald-500/20 transition-all flex items-center gap-1.5"
+              title="Download official participation certificates for all members in a single ZIP file"
+            >
+              {isDownloadingAllCertificates ? (
+                <>
+                  <svg className="size-3.5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="12" />
+                  </svg>
+                  <span>Zipping Certificates...</span>
+                </>
+              ) : (
+                <>
+                  <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <circle cx="12" cy="8" r="6" />
+                    <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                  </svg>
+                  <span>All Certificates ({registrations.length})</span>
+                </>
+              )}
+            </Button>
+
+            <Button
+              type="button"
               variant="outline"
               size="default"
               onClick={handleLogout}
@@ -1250,7 +1371,7 @@ export default function AdminPage() {
         {/* ── REGISTRATIONS TABLE ── */}
         <div className="bg-[#0b121e] border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
           {/* Table Header Bar */}
-          <div className="px-5 py-4 border-b border-slate-800/80 flex items-center justify-between">
+          <div className="px-5 py-4 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <h2 className="text-sm sm:text-base font-black uppercase tracking-wide text-white">
                 Registered Runners
@@ -1259,9 +1380,67 @@ export default function AdminPage() {
                 {filteredRegistrations.length}
               </span>
             </div>
-            <span className="text-xs text-slate-400">
-              Showing {filteredRegistrations.length} of {registrations.length} total
-            </span>
+
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-slate-400">
+                Showing {filteredRegistrations.length} of {registrations.length} total
+              </span>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="default"
+                onClick={handleDownloadAllPasses}
+                disabled={isDownloadingAllPasses || registrations.length === 0}
+                className="text-xs bg-amber-500/10 border-amber-500/30 text-amber-300 hover:bg-amber-500/20 hover:text-white cursor-pointer h-8 px-3 font-bold"
+                title="Download all runner passes in one ZIP file"
+              >
+                {isDownloadingAllPasses ? (
+                  <>
+                    <svg className="size-3 animate-spin mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="12" />
+                    </svg>
+                    <span>Downloading ZIP...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="size-3 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    <span>All Passes (ZIP)</span>
+                  </>
+                )}
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="default"
+                onClick={handleDownloadAllCertificates}
+                disabled={isDownloadingAllCertificates || registrations.length === 0}
+                className="text-xs bg-emerald-500/10 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20 hover:text-white cursor-pointer h-8 px-3 font-bold"
+                title="Download official participation certificates for all members in one ZIP file"
+              >
+                {isDownloadingAllCertificates ? (
+                  <>
+                    <svg className="size-3 animate-spin mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="12" />
+                    </svg>
+                    <span>Downloading ZIP...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="size-3 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <circle cx="12" cy="8" r="6" />
+                      <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                    </svg>
+                    <span>All Certificates (ZIP)</span>
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
 
           {/* Table Element */}
@@ -1427,7 +1606,7 @@ export default function AdminPage() {
 
                         {/* ACTIONS */}
                         <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                          <div className="flex items-center justify-end gap-2">
+                          <div className="flex items-center justify-end gap-1.5 sm:gap-2">
                             <a
                               href={`/api/marathon-pass/${runner.registration_id}`}
                               download={`Rakesh-Marathon-Pass-${runner.registration_id}.png`}
@@ -1441,7 +1620,22 @@ export default function AdminPage() {
                                 <polyline points="7 10 12 15 17 10" />
                                 <line x1="12" y1="15" x2="12" y2="3" />
                               </svg>
-                              <span>Pass PNG</span>
+                              <span>Pass</span>
+                            </a>
+
+                            <a
+                              href={`/api/marathon-certificate/${runner.registration_id}`}
+                              download={`Rakesh-Marathon-Certificate-${runner.registration_id}.png`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 text-xs text-emerald-300 hover:text-white bg-emerald-500/10 hover:bg-emerald-500/20 px-2.5 py-1.5 rounded-lg border border-emerald-500/30 transition-colors cursor-pointer"
+                              title="Download Official Certificate of Participation (PNG)"
+                            >
+                              <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                                <circle cx="12" cy="8" r="6" />
+                                <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                              </svg>
+                              <span>Certificate</span>
                             </a>
 
                             <button
