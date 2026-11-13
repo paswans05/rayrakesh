@@ -641,13 +641,13 @@ export default function MarathonRegistrationModal() {
               <div className="pt-2">
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={true}
                   size="xl"
                   variant="default"
                   full
                   className="font-bold text-base shadow-lg shadow-primary/25 cursor-pointer"
                 >
-                  {isSubmitting ? "Saving to Database..." : "Complete Registration & Get ID Card"}
+                  Register are closed for this event. Please check back later for future events.
                 </Button>
                 <p className="text-center text-[11px] text-body mt-2">
                   Complimentary Community Entry • Instant Digital Card Generation
