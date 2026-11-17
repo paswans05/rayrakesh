@@ -42,15 +42,16 @@ export const MARATHON_DETAILS = {
   totalPrizePool: "NPR 50,000",
   campaignLeader: "Rakesh Ray",
 
-  // Official parameters - marked as To Be Announced where pending
+  // Official parameters - Event Completed on 15 Nov 2026
   schedule: {
-    eventDate: "14th November, 2026",
-    assemblyTime: "6:00 AM NPT (Tentative)",
-    flagOffTime: "6:30 AM NPT (Tentative)",
-    reportingVenue: "Parsa, Nepal (Official Landmark TBA)",
-    finishVenue: "Parsa, Nepal (Official Landmark TBA)",
-    registrationPeriod: "Open Now — Closing Date TBA",
-    eligibility: "Open to running enthusiasts aged 14 and above. No prior marathon certification required.",
+    eventDate: "15th November, 2026",
+    status: "Completed",
+    assemblyTime: "6:00 AM NPT",
+    flagOffTime: "6:30 AM NPT",
+    reportingVenue: "Parsa RM, Sarlahi, Nepal",
+    finishVenue: "Parsa RM, Sarlahi, Nepal",
+    registrationPeriod: "Concluded • Certificates Available Online",
+    eligibility: "Completed with energetic youth & community participation.",
   },
 
   prizesHeading: "RUN FOR GLORY. RACE FOR THE PRIZE.",
@@ -269,5 +270,108 @@ export const COMMUNITY_PILLARS = [
   {
     title: "Positive Civic Engagement",
     description: "Fostering collective pride in our cities, public spaces, and social development through active community collaboration.",
+  },
+];
+
+export interface MarathonGalleryItem {
+  id: string;
+  src: string;
+  title: string;
+  titleNe: string;
+  description: string;
+  descriptionNe: string;
+  category: "all" | "race" | "ceremony" | "community";
+}
+
+export const MARATHON_GALLERY_PHOTOS: MarathonGalleryItem[] = [
+  {
+    id: "photo-01",
+    src: "/images/marathon-complete/marathon-event-01.jpg",
+    title: "15 KM Flag-off & Runner Rally",
+    titleNe: "१५ किमी दौड प्रारम्भ तथा र्‍याली",
+    description: "Athletes, youth, and organizers assembled for the historic Rakesh Marathon 15 KM race in Parsa.",
+    descriptionNe: "पर्सामा आयोजित ऐतिहासिक १५ किमी राकेश म्याराथनमा सहभागी धावकहरू।",
+    category: "race",
+  },
+  {
+    id: "photo-02",
+    src: "/images/marathon-complete/marathon-event-02.jpg",
+    title: "Community Spirit & Warm-Up",
+    titleNe: "सामुदायिक ऊर्जा तथा वार्म-अप",
+    description: "Enthusiastic runners and local supporters gathered at the starting arena in Parsa RM, Sarlahi.",
+    descriptionNe: "पर्सा, सर्लाहीमा सुरुवाती विन्दुमा भेला भएका ऊर्जावान धावकहरू।",
+    category: "community",
+  },
+  {
+    id: "photo-03",
+    src: "/images/marathon-complete/marathon-event-03.jpg",
+    title: "Er Rakesh Ray with Participants",
+    titleNe: "ई. राकेश राय धावकहरूसँग",
+    description: "Chief Patron Er Rakesh Ray cheering on runners, participants, and youth volunteers.",
+    descriptionNe: "मुख्य संरक्षक ई. राकेश राय सहभागी धावक तथा युवाहरूलाई हौसला प्रदान गर्दै।",
+    category: "community",
+  },
+  {
+    id: "photo-04",
+    src: "/images/marathon-complete/marathon-event-04.jpg",
+    title: "Drug-Free Parsa Campaign March",
+    titleNe: "लागूऔषधमुक्त पर्सा अभियान–२०८३",
+    description: "Raising strong community awareness for healthy lifestyles, sportsmanship, and drug-free youth.",
+    descriptionNe: "लागूऔषधमुक्त पर्सा अभियान-२०८३ अन्तर्गत स्वस्थ समाज निर्माणको साझा संकल्प।",
+    category: "community",
+  },
+  {
+    id: "photo-05",
+    src: "/images/marathon-complete/marathon-event-05.jpg",
+    title: "Race Route & Volunteer Safety",
+    titleNe: "दौड रुट तथा स्वयम्सेवक परिचालन",
+    description: "Athletes pacing through the 15 KM course with dedicated hydration and safety checkpoints.",
+    descriptionNe: "१५ किमी रुटमा सुरक्षा तथा स्वास्थ्य सहायता साथ अगाडि बढ्दै धावकहरू।",
+    category: "race",
+  },
+  {
+    id: "photo-06",
+    src: "/images/marathon-complete/marathon-event-06.jpg",
+    title: "Finish Line Moments & Celebration",
+    titleNe: "समापन विन्दु तथा उत्सव",
+    description: "Joy and celebration as runners cross the finish line after completing the endurance challenge.",
+    descriptionNe: "कठिन १५ किमी दौड पूरा गरी फिनिश लाइन पार गरेपछिको विजय उत्सव।",
+    category: "race",
+  },
+  {
+    id: "photo-07",
+    src: "/images/marathon-complete/marathon-event-07.jpg",
+    title: "Podium & Medal Ceremony",
+    titleNe: "पदक तथा पुरस्कार वितरण समारोह",
+    description: "Distributing official medals to the Top 10 finishers and recognizing exceptional athletes.",
+    descriptionNe: "शीर्ष १० स्थान हासिल गर्ने धावकहरूलाई पदक तथा पुरस्कार प्रदान।",
+    category: "ceremony",
+  },
+  {
+    id: "photo-08",
+    src: "/images/marathon-complete/marathon-event-08.jpg",
+    title: "NPR 50,000 Cash Prize & Trophies",
+    titleNe: "नगद ५०,००० पुरस्कार तथा ट्रफी वितरण",
+    description: "Grand cash awards distributed to Champion (25k), Runner-up (15k), and 3rd Place (10k).",
+    descriptionNe: "प्रथम (२५,०००), द्वितीय (१५,०००) र तृतीय (१०,०००) विजेताहरूलाई सम्मान।",
+    category: "ceremony",
+  },
+  {
+    id: "photo-09",
+    src: "/images/marathon-complete/marathon-event-09.jpg",
+    title: "Youth Unity & Group Photo",
+    titleNe: "युवा शक्ति तथा सामूहिक तस्बिर",
+    description: "Organizers, runners, and Parsa youth uniting in mutual celebration of community fitness.",
+    descriptionNe: "स्वस्थ नागरिक, सुरक्षित समाज, समृद्ध राष्ट्रको साझा संकल्प।",
+    category: "community",
+  },
+  {
+    id: "photo-10",
+    src: "/images/marathon-complete/marathon-event-10.jpg",
+    title: "Official Certificate Distribution",
+    titleNe: "आधिकारिक प्रमाणपत्र वितरण",
+    description: "Every participant honored with the official Certificate of Participation by Chief Patron Er Rakesh Ray.",
+    descriptionNe: "प्रत्येक सहभागी धावकलाई आधिकारिक प्रमाणपत्र प्रदान गरिँदै।",
+    category: "ceremony",
   },
 ];

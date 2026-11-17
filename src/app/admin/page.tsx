@@ -70,6 +70,7 @@ export default function AdminPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDownloadingAllPasses, setIsDownloadingAllPasses] = useState(false);
   const [isDownloadingAllCertificates, setIsDownloadingAllCertificates] = useState(false);
+  const [viewingCertificateRunner, setViewingCertificateRunner] = useState<RegistrationItem | null>(null);
 
   // Database connection state (displayed on login page & header)
   const [dbStatus, setDbStatus] = useState<DbStatus | null>(null);
@@ -1623,19 +1624,30 @@ export default function AdminPage() {
                               <span>Pass</span>
                             </a>
 
-                            <a
-                              href={`/api/marathon-certificate/${runner.registration_id}`}
-                              download={`Rakesh-Marathon-Certificate-${runner.registration_id}.png`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 text-xs text-emerald-300 hover:text-white bg-emerald-500/10 hover:bg-emerald-500/20 px-2.5 py-1.5 rounded-lg border border-emerald-500/30 transition-colors cursor-pointer"
-                              title="Download Official Certificate of Participation (PNG)"
+                            <button
+                              type="button"
+                              onClick={() => setViewingCertificateRunner(runner)}
+                              className="inline-flex items-center gap-1.5 text-xs text-emerald-300 hover:text-white bg-emerald-500/15 hover:bg-emerald-500/25 px-2.5 py-1.5 rounded-lg border border-emerald-500/30 transition-colors cursor-pointer"
+                              title="View Official Certificate of Participation"
                             >
                               <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                                 <circle cx="12" cy="8" r="6" />
                                 <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
                               </svg>
-                              <span>Certificate</span>
+                              <span>View Cert</span>
+                            </button>
+
+                            <a
+                              href={`/api/marathon-certificate/${runner.registration_id}?download=1`}
+                              download={`Rakesh-Marathon-Certificate-${runner.registration_id}.png`}
+                              className="inline-flex items-center gap-1 text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-2 py-1.5 rounded-lg border border-slate-700 transition-colors cursor-pointer"
+                              title="Download Official Certificate PNG directly"
+                            >
+                              <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                              </svg>
                             </a>
 
                             <button
@@ -1911,6 +1923,98 @@ export default function AdminPage() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ── CERTIFICATE PREVIEW MODAL ── */}
+      {viewingCertificateRunner && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setViewingCertificateRunner(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md animate-fade-in"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative max-w-4xl w-full bg-[#0E1626] border border-slate-700 rounded-3xl p-5 sm:p-7 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto"
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+                  <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <circle cx="12" cy="8" r="6" />
+                    <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-base sm:text-lg font-black text-white">
+                    Official Certificate of Participation
+                  </h3>
+                  <p className="text-xs text-slate-400 font-mono">
+                    Runner: {viewingCertificateRunner.full_name} • BIB: {viewingCertificateRunner.registration_id}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <a
+                  href={`/api/marathon-certificate/${viewingCertificateRunner.registration_id}?download=1`}
+                  download={`Rakesh-Marathon-Certificate-${viewingCertificateRunner.registration_id}.png`}
+                  className="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-md shadow-emerald-500/20"
+                >
+                  <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  <span>Download PNG</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setViewingCertificateRunner(null)}
+                  className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Certificate Render View */}
+            <div className="rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 p-2 sm:p-4 flex items-center justify-center shadow-inner">
+              <img
+                src={`/api/marathon-certificate/${viewingCertificateRunner.registration_id}`}
+                alt="Official Certificate"
+                className="w-full h-auto max-h-[65vh] object-contain rounded-xl shadow-2xl"
+              />
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs text-slate-400">
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-emerald-400" />
+                <span>Rakesh Marathon 15 KM • Parsa, Nepal</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => window.print()}
+                  className="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-white font-semibold cursor-pointer"
+                >
+                  Print Certificate
+                </button>
+                <a
+                  href={`/api/marathon-certificate/${viewingCertificateRunner.registration_id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-white font-semibold"
+                >
+                  Open in New Tab
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       )}

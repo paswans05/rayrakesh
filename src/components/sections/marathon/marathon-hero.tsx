@@ -42,8 +42,11 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
                 
                 {/* Badges Bar */}
                 <div className="flex flex-wrap items-center gap-3">
+                  <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-black tracking-wider uppercase bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-400/20">
+                    <span className="size-2 rounded-full bg-slate-950 animate-ping" />
+                    {isNepali ? "दौड सम्पन्न 🎉" : "EVENT CONCLUDED 🎉"}
+                  </span>
                   <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-bold tracking-wider uppercase bg-primary text-darker shadow-lg shadow-primary/20">
-                    <span className="size-2 rounded-full bg-darker animate-pulse" />
                     {isNepali ? "१५ किमी दौड" : "15 KM RACE"}
                   </span>
                   <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white/10 text-white/90 backdrop-blur-md border border-white/15">
@@ -70,7 +73,9 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
 
                 {/* Supporting Text */}
                 <p className="text-base sm:text-lg md:text-xl text-white/85 max-w-2xl leading-relaxed font-normal">
-                  Challenge yourself, celebrate fitness, and run toward a stronger community in Nepal. Join runners across Parsa in this 15 KM community marathon.
+                  {isNepali
+                    ? "पर्सा, सर्लाहीमा आयोजित १५ किमी राकेश म्याराथन भव्यताका साथ सम्पन्न भएको छ। सहभागी सबै धावकहरू, विजेताहरू र सहयोगी हातहरूलाई हार्दिक बधाई तथा धन्यवाद!"
+                    : "The 15 KM Rakesh Marathon in Parsa, Nepal has concluded with resounding success! Explore race day photos, award highlights, and view or download your official participation certificate."}
                 </p>
 
                 {/* Primary CTA Buttons */}
@@ -78,19 +83,20 @@ export default function MarathonHero({ className }: MarathonHeroProps) {
                   <Button
                     size="xl"
                     variant="default"
-                    data-open-register-modal="true"
+                    nativeButton={false}
+                    render={<a href="#gallery" />}
                     className="font-bold shadow-xl shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
                   >
-                    {t("nav.register_now", "Register Now")}
+                    {isNepali ? "📸 कार्यक्रमका तस्बिरहरू हेर्नुहोस्" : "📸 View Event Photos"}
                   </Button>
                   <Button
                     size="xl"
                     variant="outline"
                     nativeButton={false}
-                    render={<a href="#prizes" />}
-                    className="bg-white/5 border-white/25 hover:bg-white/15 text-white backdrop-blur-sm"
+                    render={<a href="#gallery" />}
+                    className="bg-emerald-500/10 border-emerald-500/40 hover:bg-emerald-500/20 text-emerald-300 backdrop-blur-sm font-bold"
                   >
-                    {isNepali ? "पुरस्कार हेर्नुहोस्" : "View Prizes"}
+                    {isNepali ? "📜 प्रमाणपत्र हेर्नुहोस्" : "📜 View Certificate"}
                   </Button>
                 </div>
 
