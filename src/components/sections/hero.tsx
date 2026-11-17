@@ -61,7 +61,7 @@ export default function Hero({ className, wrapperClassName }: HeroProps) {
 
                       <div className="flex flex-wrap items-center gap-4 xl:gap-7.5 pt-8 lg:pt-12 xl:pt-17 transition-all duration-700 ease-out transform translate-y-12 opacity-0 group-data-active/slide:translate-y-0 group-data-active/slide:opacity-100 group-data-active/slide:delay-500">
                         <Button type="button" data-open-register-modal="true" variant="default" pill size="xl" icon={<ArrowRight />} className="cursor-pointer">
-                          <span>{t("hero.cta_register", "Register for the Marathon")}</span>
+                          <span>{t("hero.cta_marathon", "Explore Marathon Highlights")}</span>
                         </Button>
 
                         

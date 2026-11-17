@@ -324,7 +324,7 @@ function DropdownItem({ label, items, onNavigate, align = "left" }: DropdownItem
 
 function NavContent({ onNavigate, className }: { onNavigate: () => void; className?: string; }) {
   const pathname = usePathname();
-  const { t } = useLanguage();
+  const { t, isNepali } = useLanguage();
 
   const getTranslatedLabel = (label: string) => {
     switch (label.toLowerCase()) {
@@ -392,7 +392,7 @@ export default function Menubar({
   fullWidth: propFullWidth,
   hideTopBar: propHideTopBar,
 }: MenubarProps = {}) {
-  const { t } = useLanguage();
+  const { t, isNepali } = useLanguage();
   const pathname = usePathname();
   const navContext = useNavbar();
   const isFullWidth = propFullWidth ?? (navContext ? navContext.fullWidth : false);
@@ -547,9 +547,34 @@ export default function Menubar({
                   <NavContent className="flex items-center mx-auto gap-3 lg:gap-6 xl:gap-10" onNavigate={closeMobile} />
                   <div className="flex items-center gap-3">
                     <LanguageSwitcher variant="navbar" />
-                    <Button type="button" data-open-register-modal="true" className="capitalize cursor-pointer" variant="default">
-                      {t("nav.register_now", "Register Now")}
-                    </Button>
+                    {pathname?.startsWith("/marathon") ? (
+                      <Button
+                        nativeButton={false}
+                        render={<a href="/marathon#gallery" />}
+                        className="capitalize cursor-pointer bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold"
+                        variant="default"
+                      >
+                        {isNepali ? "प्रमाणपत्र हेर्नुहोस्" : "View Certificate"}
+                      </Button>
+                    ) : pathname?.startsWith("/rangoli") ? (
+                      <Button
+                        nativeButton={false}
+                        render={<Link href="/rangoli/register" />}
+                        className="capitalize cursor-pointer"
+                        variant="default"
+                      >
+                        {t("nav.register_now", "Register Now")}
+                      </Button>
+                    ) : (
+                      <Button
+                        nativeButton={false}
+                        render={<Link href="/marathon#gallery" />}
+                        className="capitalize cursor-pointer"
+                        variant="default"
+                      >
+                        {isNepali ? "म्याराथन तस्बिरहरू" : "Marathon Photos"}
+                      </Button>
+                    )}
                   </div>
                 </nav>
                 <div className="ml-auto self-center my-4">
@@ -566,9 +591,34 @@ export default function Menubar({
         <nav className="px-6 pb-10 pt-10 flex flex-1 flex-col">
           <NavContent className="flex flex-1 flex-col gap-1" onNavigate={closeMobile} />
           <LanguageSwitcher variant="drawer" />
-          <Button type="button" data-open-register-modal="true" onClick={closeMobile} className="capitalize cursor-pointer" variant="default">
-            {t("nav.register_now", "Register Now")}
-          </Button>
+          {pathname?.startsWith("/marathon") ? (
+            <Button
+              nativeButton={false}
+              render={<a href="/marathon#gallery" onClick={closeMobile} />}
+              className="capitalize cursor-pointer bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold"
+              variant="default"
+            >
+              {isNepali ? "प्रमाणपत्र हेर्नुहोस्" : "View Certificate"}
+            </Button>
+          ) : pathname?.startsWith("/rangoli") ? (
+            <Button
+              nativeButton={false}
+              render={<Link href="/rangoli/register" onClick={closeMobile} />}
+              className="capitalize cursor-pointer"
+              variant="default"
+            >
+              {t("nav.register_now", "Register Now")}
+            </Button>
+          ) : (
+            <Button
+              nativeButton={false}
+              render={<Link href="/marathon#gallery" onClick={closeMobile} />}
+              className="capitalize cursor-pointer"
+              variant="default"
+            >
+              {isNepali ? "म्याराथन तस्बिरहरू" : "Marathon Photos"}
+            </Button>
+          )}
         </nav>
       </aside>
     </>

@@ -78,11 +78,12 @@ export default function MarathonCommunity() {
                     <Button
                       size="lg"
                       variant="default"
-                      data-open-register-modal="true"
+                      nativeButton={false}
+                      render={<a href="#gallery" />}
                       full
                       className="font-bold text-sm shadow-lg shadow-primary/25 cursor-pointer"
                     >
-                      Be Part of Rakesh Marathon
+                      📸 View Event Photos & Certificates
                     </Button>
                   </div>
                 </div>
@@ -134,23 +135,33 @@ export default function MarathonCommunity() {
             </div>
           </div>
 
-          {/* Clear Call to Action Bottom Box */}
+          {/* Concluded Event Call to Action Bottom Box */}
           <div className="mt-16 p-8 sm:p-12 rounded-3xl bg-linear-to-r from-[#1f1910] via-darker to-[#1f1910] border border-primary/30 text-center max-w-4xl mx-auto shadow-2xl">
-            <span className="text-xs uppercase tracking-[0.25em] text-primary font-bold">Join The Movement</span>
+            <span className="text-xs uppercase tracking-[0.25em] text-emerald-400 font-bold">Event Successfully Concluded</span>
             <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mt-2">
-              Be Part of Rakesh Marathon
+              Rakesh Marathon 15 KM — Historic Success
             </h3>
             <p className="text-sm sm:text-base text-white/75 mt-3 max-w-xl mx-auto">
-              Run for fitness, compete for the podium prizes, and join the community in Parsa. Every participant receives an official runner card, bib pass, certificate, and medals for the top finishers.
+              Heartfelt thanks to all athletes, youth, volunteers, and the community of Parsa, Sarlahi. Every participant can now view and download their official Certificate of Participation.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
               <Button
                 size="xl"
                 variant="default"
-                data-open-register-modal="true"
+                nativeButton={false}
+                render={<a href="#gallery" />}
                 className="font-bold shadow-xl shadow-primary/25 cursor-pointer"
               >
-                Register Now for 15 KM
+                📸 View Event Photos
+              </Button>
+              <Button
+                size="xl"
+                variant="outline"
+                nativeButton={false}
+                render={<a href="#gallery" />}
+                className="bg-emerald-500/10 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/20 font-bold"
+              >
+                📜 View / Download Certificate
               </Button>
               <Button
                 size="xl"
@@ -159,7 +170,7 @@ export default function MarathonCommunity() {
                 render={<a href="#prizes" />}
                 className="border-white/20 text-white hover:bg-white/10"
               >
-                View Prize Money
+                View Prize Winners
               </Button>
             </div>
           </div>
